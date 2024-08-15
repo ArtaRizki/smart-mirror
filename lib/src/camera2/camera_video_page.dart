@@ -10,19 +10,18 @@ import 'package:smart_mirror/common/component/custom_navigator.dart';
 import 'package:smart_mirror/common/helper/constant.dart';
 import 'package:smart_mirror/generated/assets.dart';
 import 'package:smart_mirror/src/camera/camera_page.dart';
-import 'package:smart_mirror/src/camera2/camera_video_page.dart';
 import 'package:smart_mirror/utils/utils.dart';
 
 const xHEdgeInsets12 = EdgeInsets.symmetric(horizontal: 12);
 
-class OcrCameraPage2 extends StatefulWidget {
-  const OcrCameraPage2({super.key});
+class CameraVideoPage extends StatefulWidget {
+  const CameraVideoPage({super.key});
 
   @override
-  State<OcrCameraPage2> createState() => _OcrCameraPage2State();
+  State<CameraVideoPage> createState() => _CameraVideoPageState();
 }
 
-class _OcrCameraPage2State extends State<OcrCameraPage2> {
+class _CameraVideoPageState extends State<CameraVideoPage> {
   late CameraController controller;
   Completer<String?> cameraSetupCompleter = Completer();
   Completer? isFlippingCamera;
@@ -203,95 +202,100 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
   Widget noPictureTaken() {
     return SizedBox(
       width: double.infinity,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
+      child: Column(
         children: [
-          Expanded(
-            flex: 6,
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: InkWell(
-                onTap: () {
-                  controller.takePicture().then((imageFile) async {
-                    // File tmp = await compressImage(
-                    //     File(imageFile.path));
-                    file = File(imageFile.path);
-                    // if (controller
-                    //     .value.isPreviewPaused)
-                    //   await controller.resumePreview();
-                    // else
-                    await controller.pausePreview();
-                  });
-                },
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 2),
-                      ),
-                      width: 60,
-                      height: 60,
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 6,
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: InkWell(
+                    onTap: () {
+                      controller.takePicture().then((imageFile) async {
+                        // File tmp = await compressImage(
+                        //     File(imageFile.path));
+                        file = File(imageFile.path);
+                        // if (controller
+                        //     .value.isPreviewPaused)
+                        //   await controller.resumePreview();
+                        // else
+                        await controller.pausePreview();
+                      });
+                    },
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 2),
+                          ),
+                          width: 60,
+                          height: 60,
+                        ),
+                        Icon(
+                          Icons.circle,
+                          color: Colors.red,
+                          size: 60,
+                        ),
+                      ],
                     ),
-                    Icon(
-                      Icons.circle,
-                      color: Colors.white,
-                      size: 60,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 4,
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Visibility(
-                visible: isFlipCameraSupported,
-                child: InkWell(
-                  onTap: () async {
-                    ///[Flip Camera]
-                    if (isFlippingCamera == null ||
-                        isFlippingCamera!.isCompleted) {
-                      isFlippingCamera = Completer();
-                      isFlippingCamera!.complete(
-                          await availableCameras().then((value) async {
-                        for (var camera in value) {
-                          if (camera.lensDirection ==
-                              (controller.description.lensDirection ==
-                                      CameraLensDirection.front
-                                  ? CameraLensDirection.back
-                                  : CameraLensDirection.front)) {
-                            await controller.dispose();
-                            cameraSetupCompleter = Completer();
-
-                            await _initCamera(camera: camera);
-                            setState(() {});
-                            break;
-                          }
-                        }
-
-                        await Future.delayed(
-                            const Duration(seconds: 1, milliseconds: 500));
-                      }));
-                    } else {
-                      print('Not completed!');
-                    }
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.only(right: 16),
-                    width: 35,
-                    height: 35,
-                    decoration: const BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.black26),
-                    child: Icon(Icons.autorenew_rounded, color: Colors.white),
                   ),
                 ),
               ),
-            ),
+              Expanded(
+                flex: 4,
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Visibility(
+                    visible: isFlipCameraSupported,
+                    child: InkWell(
+                      onTap: () async {
+                        ///[Flip Camera]
+                        if (isFlippingCamera == null ||
+                            isFlippingCamera!.isCompleted) {
+                          isFlippingCamera = Completer();
+                          isFlippingCamera!.complete(
+                              await availableCameras().then((value) async {
+                            for (var camera in value) {
+                              if (camera.lensDirection ==
+                                  (controller.description.lensDirection ==
+                                          CameraLensDirection.front
+                                      ? CameraLensDirection.back
+                                      : CameraLensDirection.front)) {
+                                await controller.dispose();
+                                cameraSetupCompleter = Completer();
+
+                                await _initCamera(camera: camera);
+                                setState(() {});
+                                break;
+                              }
+                            }
+
+                            await Future.delayed(
+                                const Duration(seconds: 1, milliseconds: 500));
+                          }));
+                        } else {
+                          print('Not completed!');
+                        }
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 16),
+                        width: 35,
+                        height: 35,
+                        decoration: const BoxDecoration(
+                            shape: BoxShape.circle, color: Colors.black26),
+                        child:
+                            Icon(Icons.autorenew_rounded, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -566,47 +570,9 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Align(
-                              alignment: Alignment.bottomRight,
-                              child: Container(
-                                margin: EdgeInsets.only(right: 16),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 10),
-                                decoration: BoxDecoration(
-                                    color: Colors.black12,
-                                    borderRadius: BorderRadius.circular(20)),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    iconSidebar(() async {
-                                      CusNav.nPush(context, CameraVideoPage());
-                                    }, Assets.iconsIcCamera),
-                                    Constant.xSizedBox12,
-                                    iconSidebar(
-                                        () async {}, Assets.iconsIcFlipCamera),
-                                    Constant.xSizedBox12,
-                                    iconSidebar(
-                                        () async {}, Assets.iconsIcScale),
-                                    Constant.xSizedBox12,
-                                    iconSidebar(
-                                        () async {}, Assets.iconsIcCompare),
-                                    Constant.xSizedBox12,
-                                    iconSidebar(
-                                        () async {}, Assets.iconsIcReset),
-                                    Constant.xSizedBox12,
-                                    iconSidebar(
-                                        () async {}, Assets.iconsIcChoose),
-                                    Constant.xSizedBox12,
-                                    iconSidebar(
-                                        () async {}, Assets.iconsIcShare),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Constant.xSizedBox16,
-                            sheet(),
-                            // file != null ? pictureTaken() : noPictureTaken(),
+                            file != null ? pictureTaken() : noPictureTaken(),
                             // pictureTaken(),
+                            Constant.xSizedBox32,
                           ],
                         ),
                       ),
