@@ -63,7 +63,7 @@ class Utils {
             colorScheme: ColorScheme.light(
               primary: Constant.primaryColor,
             ),
-            buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
+            buttonTheme: const ButtonThemeData(textTheme: ButtonTextTheme.primary),
           ),
           child: child!,
         );
@@ -90,8 +90,9 @@ class Utils {
   static InkWell RoundedButton(
       {Material.VoidCallback? onpressed, Widget? child}) {
     return InkWell(
-      onTap: onpressed ?? () => null,
+      onTap: onpressed ?? () {},
       child: Material.Card(
+          shape: const CircleBorder(),
           child: Padding(
             child: child ??
                 Icon(
@@ -99,8 +100,7 @@ class Utils {
                   color: Constant.primaryColor,
                 ),
             padding: EdgeInsets.all(8),
-          ),
-          shape: CircleBorder()),
+          )),
     );
   }
 
@@ -110,18 +110,18 @@ class Utils {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image(
+          const Image(
             image: AssetImage(
               "assets/images/main-image-not-found.png",
             ),
             width: 275,
           ),
-          SizedBox(
+          const SizedBox(
             height: 15,
           ),
           Text(
             text ?? "Data tidak ditemukan!",
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.bold,
             ),
@@ -176,13 +176,13 @@ class Utils {
               ),
             ),
           ),
-          Text("Sukses",
+          const Text("Sukses",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
           Visibility(
             visible: msg != "",
             child: Padding(
               padding: const EdgeInsets.only(top: 8),
-              child: Text(msg, style: TextStyle(fontWeight: FontWeight.w500)),
+              child: Text(msg, style: const TextStyle(fontWeight: FontWeight.w500)),
             ),
           ),
         ],
@@ -216,13 +216,13 @@ class Utils {
               ),
             ),
           ),
-          Text("Gagal",
+          const Text("Gagal",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
           Visibility(
             visible: msg != "",
             child: Padding(
               padding: const EdgeInsets.only(top: 8),
-              child: Text(msg, style: TextStyle(fontWeight: FontWeight.w500)),
+              child: Text(msg, style: const TextStyle(fontWeight: FontWeight.w500)),
             ),
           ),
         ],
@@ -270,7 +270,7 @@ class Utils {
       textInputAction: Material.TextInputAction.next,
       keyboardType: inputType,
       style: (forDetail)
-          ? Material.TextStyle(fontSize: Constant.fontSizeRegular)
+          ? const Material.TextStyle(fontSize: Constant.fontSizeRegular)
           : null,
       controller: controller,
       inputFormatters: (price)
@@ -284,7 +284,7 @@ class Utils {
           isCollapsed: (forDetail),
           prefixIcon: (forDetail) ? null : prefixIcon,
           suffixIcon: (forDetail) ? null : suffixIcon,
-          suffixIconConstraints: BoxConstraints.loose(Size(108, 38))),
+          suffixIconConstraints: BoxConstraints.loose(const Size(108, 38))),
     ));
     if (nextWidget != null) {
       widgets.addAll(nextWidget
@@ -295,17 +295,17 @@ class Utils {
           .toList());
     }
     return Padding(
-      padding: EdgeInsets.only(bottom: Constant.standartMarginSize),
+      padding: const EdgeInsets.only(bottom: Constant.standartMarginSize),
       child: Wrap(
         children: [
           Padding(
             padding: (forDetail)
-                ? Material.EdgeInsets.only(bottom: 8)
+                ? const Material.EdgeInsets.only(bottom: 8)
                 : Material.EdgeInsets.zero,
             child: Text(
               label,
               style: (forDetail)
-                  ? TextStyle(
+                  ? const TextStyle(
                       fontWeight: Material.FontWeight.bold,
                       fontSize: Constant.fontSizeRegular)
                   : null,
@@ -370,7 +370,7 @@ class Utils {
     return SnackBar(
       content: Text(
         message,
-        style: TextStyle(color: Colors.white, fontSize: 14.0),
+        style: const TextStyle(color: Colors.white, fontSize: 14.0),
       ),
       action: (actionMessage != null)
           ? SnackBarAction(
@@ -381,7 +381,7 @@ class Utils {
               },
             )
           : null,
-      duration: Duration(seconds: 2),
+      duration: const Duration(seconds: 2),
       backgroundColor: bgColor ?? Colors.red,
     );
   }
@@ -438,7 +438,7 @@ class Utils {
         return onClick();
       },
       child: Container(
-        padding: EdgeInsets.all(12),
+        padding: const EdgeInsets.all(12),
         child: Text(
           str,
           style: TextStyle(
@@ -490,8 +490,8 @@ class Utils {
       decoration: InputDecoration(
         isDense: true,
         prefixIcon: (prefixIcon != null) ? prefixIcon : null,
-        prefixIconConstraints: BoxConstraints(minWidth: 0, minHeight: 0),
-        prefixStyle: TextStyle(
+        prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
+        prefixStyle: const TextStyle(
           color: Colors.black87,
           fontSize: 15,
         ),
@@ -513,8 +513,8 @@ class Utils {
   }) {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-        actionsPadding: EdgeInsets.fromLTRB(20, 4, 20, 20),
-        contentPadding: EdgeInsets.fromLTRB(20, 5, 20, 20),
+        actionsPadding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
+        contentPadding: const EdgeInsets.fromLTRB(20, 5, 20, 20),
         title: Center(
           child: Text(
             "Pilih Paket",
@@ -528,11 +528,12 @@ class Utils {
           children: [
             Text("Pilih paket Anda",
                 style: Constant.primaryTextStyle.copyWith(fontSize: 14)),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 InkWell(
+                  onTap: umrohCallback,
                   child: Column(
                     children: [
                       Container(
@@ -548,9 +549,9 @@ class Utils {
                       )
                     ],
                   ),
-                  onTap: umrohCallback,
                 ),
                 InkWell(
+                  onTap: hajiCallback,
                   child: Column(
                     children: [
                       Container(
@@ -566,13 +567,12 @@ class Utils {
                       )
                     ],
                   ),
-                  onTap: hajiCallback,
                 ),
               ],
             )
           ],
         ),
-        actions: []
+        actions: const []
         // [
         //   Row(
         //     children: [
@@ -611,8 +611,8 @@ class Utils {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       backgroundColor: Colors.white,
-      actionsPadding: EdgeInsets.fromLTRB(20, 4, 20, 20),
-      contentPadding: EdgeInsets.all(20),
+      actionsPadding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
+      contentPadding: const EdgeInsets.all(20),
       title: Center(
         child: Text(
           title,
@@ -629,7 +629,7 @@ class Utils {
           [
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Expanded(child: CustomButton.secondaryButton(noText, noCallback)),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Expanded(child: CustomButton.mainButton(yesText, yesCallback)),
             ]),
           ],
@@ -657,11 +657,11 @@ class Utils {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       backgroundColor: Colors.white,
-      actionsPadding: EdgeInsets.fromLTRB(20, 4, 20, 20),
-      contentPadding: EdgeInsets.all(20),
+      actionsPadding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
+      contentPadding: const EdgeInsets.all(20),
       title: Column(
         children: [
-          Icon(
+          const Icon(
             Icons.error_outlined,
             color: Colors.red,
             size: 48,
@@ -686,7 +686,7 @@ class Utils {
           [
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Expanded(child: CustomButton.secondaryButton(noText, noCallback)),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Expanded(
                   child: CustomButton.mainButton(yesText, yesCallback,
                       color: Colors.red)),
@@ -716,8 +716,8 @@ class Utils {
     String note = "";
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      actionsPadding: EdgeInsets.fromLTRB(20, 4, 20, 20),
-      contentPadding: EdgeInsets.all(20),
+      actionsPadding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
+      contentPadding: const EdgeInsets.all(20),
       title: Center(
         child: Text(
           title,
@@ -751,7 +751,7 @@ class Utils {
               children: [
                 Expanded(
                     child: CustomButton.secondaryButton(noText, noCallback)),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Expanded(
                     child: CustomButton.mainButton(yesText, yesCallback,
                         color: yesText == "Approve"
@@ -778,19 +778,16 @@ class Utils {
       double border = 12,
       ShapeBorder? shape,
       bool? chainvertical = false}) {
-    if (margin == null) {
-      margin = chainvertical!
+    margin ??= chainvertical!
           ? Material.EdgeInsets.only(top: 12, left: 12, right: 12)
           : Material.EdgeInsets.all(12);
-    }
-    if (shape == null)
-      shape = Material.RoundedRectangleBorder(
+    shape ??= Material.RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(border));
     return Material.Card(
-      child: child,
       shape: shape,
       elevation: elevation,
       margin: margin,
+      child: child,
     );
   }
 
@@ -849,7 +846,7 @@ class Utils {
   }
 
   static String digitOnly(String s) {
-    return s.replaceAll(new RegExp(r'[^0-9]'), '');
+    return s.replaceAll(RegExp(r'[^0-9]'), '');
   }
 
   static cleanFile(File? file) async {
@@ -864,11 +861,11 @@ class Utils {
       {double maxwidth = double.infinity, Material.TextAlign? textAlign}) {
     return Container(
         constraints: Material.BoxConstraints(maxWidth: maxwidth),
-        color: Color(0xfff8ebc7),
-        padding: EdgeInsets.all(10),
+        color: const Color(0xfff8ebc7),
+        padding: const EdgeInsets.all(10),
         child: Text(
           s,
-          style: Material.TextStyle(
+          style: const Material.TextStyle(
             fontSize: Constant.fontSizeRegular,
             fontWeight: FontWeight.bold,
           ),
@@ -901,7 +898,7 @@ class Utils {
   static Material.Widget ListLoading() {
     return Container(
         alignment: Alignment.center,
-        child: Material.CircularProgressIndicator());
+        child: const Material.CircularProgressIndicator());
   }
 
   static http.MultipartFile MultipartFile(String s, Uint8List uint8list,
@@ -914,12 +911,14 @@ class Utils {
     print(date);
     if (currentformat != null) {
       dt = currentformat.parse(date);
-    } else
+    } else {
       dt = DateTime.tryParse(date);
-    if (dt == null)
+    }
+    if (dt == null) {
       return '';
-    else
+    } else {
       return DateFormat('yyyy-MM-dd HH:mm:ss').format(dt);
+    }
   }
 
   static isOdd(int length) {
@@ -933,6 +932,7 @@ class Utils {
 }
 
 class CurrencyInputFormatter extends TextInputFormatter {
+  @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
     if (newValue.selection.baseOffset == 0) {
@@ -949,7 +949,7 @@ class CurrencyInputFormatter extends TextInputFormatter {
 
     return newValue.copyWith(
         text: newText,
-        selection: new TextSelection.collapsed(offset: newText.length));
+        selection: TextSelection.collapsed(offset: newText.length));
   }
 }
 

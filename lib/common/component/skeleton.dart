@@ -11,14 +11,13 @@ class Skeleton<Data> extends StatelessWidget {
   double? height;
   bool isCircle;
   Skeleton(
-      {Key? key,
+      {super.key,
       required this.child,
       this.value,
       this.silver = false,
       this.width,
       this.height,
-      this.isCircle = false})
-      : super(key: key);
+      this.isCircle = false});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +39,7 @@ class Skeleton<Data> extends StatelessWidget {
             color: Colors.black,
             shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
           ),
-          margin: EdgeInsets.all(2),
+          margin: const EdgeInsets.all(2),
           child: child,
         ),
       );

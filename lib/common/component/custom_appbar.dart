@@ -27,7 +27,7 @@ class CustomAppBar {
           ? leading ??
               IconButton(
                   onPressed: onBack ?? () => Navigator.pop(context),
-                  icon: Icon(Icons.keyboard_arrow_left))
+                  icon: const Icon(Icons.keyboard_arrow_left))
           : null,
       title: Text(
         title,
@@ -39,14 +39,14 @@ class CustomAppBar {
             ),
       ),
       flexibleSpace: flexibleSpace,
-      iconTheme: iconThemeData ?? null,
+      iconTheme: iconThemeData,
       titleSpacing: titleSpacing ?? 0,
-      shape: border ?? null,
+      shape: border,
       elevation: 0,
       backgroundColor: color ?? Colors.white,
       foregroundColor: foregroundColor ?? Colors.black,
       surfaceTintColor: color ?? Colors.white,
-      bottom: bottom ?? null,
+      bottom: bottom,
       automaticallyImplyLeading: isLeading,
       centerTitle: isCenter,
       actions: action,
@@ -81,21 +81,21 @@ class CustomAppBar {
           ? leading ??
               IconButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: Icon(Icons.keyboard_arrow_left))
+                  icon: const Icon(Icons.keyboard_arrow_left))
           : null,
       title: title,
       flexibleSpace: flexibleSpace,
-      iconTheme: iconThemeData ?? null,
+      iconTheme: iconThemeData,
       titleSpacing: titleSpacing ?? 0,
-      shape: border ?? null,
+      shape: border,
       elevation: 0,
       backgroundColor: color ?? Colors.white,
       foregroundColor: foregroundColor ?? Colors.black,
-      bottom: bottom ?? null,
+      bottom: bottom,
       automaticallyImplyLeading: isLeading,
       centerTitle: isCenter,
       actions: action,
-      systemOverlayStyle: SystemUiOverlayStyle(
+      systemOverlayStyle: const SystemUiOverlayStyle(
         statusBarColor: Colors.white,
         statusBarIconBrightness:
             Brightness.dark, //<-- For Android SEE HERE (dark icons)

@@ -15,7 +15,7 @@ Future<Uint8List?> readFileByte(String filePath) async {
     print('reading of bytes is completed');
   }).catchError((onError) {
     print(
-        'Exception Error while reading audio from path:' + onError.toString());
+        'Exception Error while reading audio from path:$onError');
   });
   return bytes;
 }
@@ -41,7 +41,7 @@ Future<Uint8List> cropKTP(ui.Image image) async {
       (imageSize.height / 2) - (ktpSize.height / 2));
   final paint = Paint();
   final canvas = Canvas(recorder,
-      ui.Rect.fromPoints(Offset(0, 0), Offset(ktpSize.width, ktpSize.height)));
+      ui.Rect.fromPoints(const Offset(0, 0), Offset(ktpSize.width, ktpSize.height)));
 
   canvas.drawImageRect(
       image,
@@ -49,7 +49,7 @@ Future<Uint8List> cropKTP(ui.Image image) async {
           drawStartCoordinate,
           Offset(drawStartCoordinate.dx + ktpSize.width,
               drawStartCoordinate.dy + ktpSize.height)),
-      ui.Rect.fromPoints(Offset(0, 0), Offset(ktpSize.width, ktpSize.height)),
+      ui.Rect.fromPoints(const Offset(0, 0), Offset(ktpSize.width, ktpSize.height)),
       paint);
 
   final picture = recorder.endRecording();

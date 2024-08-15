@@ -9,15 +9,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:smart-mirror/common/helper/constant.dart';
-import 'package:smart-mirror/utils/utils.dart';
+import 'package:smart_mirror/common/helper/constant.dart';
+import 'package:smart_mirror/utils/utils.dart';
 
 import 'image_processor.dart';
 
 const xHEdgeInsets12 = EdgeInsets.symmetric(horizontal: 12);
 
 class OcrCameraPage2 extends StatefulWidget {
-  const OcrCameraPage2({Key? key}) : super(key: key);
+  const OcrCameraPage2({super.key});
 
   @override
   State<OcrCameraPage2> createState() => _OcrCameraPage2State();
@@ -30,6 +30,7 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
   late List<Permission> permissions;
   bool isRearCamera = true;
   bool isFlipCameraSupported = false;
+  File? file;
 
   @override
   void initState() {
@@ -142,9 +143,330 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
     }
   }
 
+  Widget pictureTaken() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        children: [
+          Expanded(
+            child: InkWell(
+              onTap: () {},
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.black54,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  'Edit',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Constant.xSizedBox24,
+          Expanded(
+            child: InkWell(
+              onTap: () {},
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Color(0xffCA9C43),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Share',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
+                    Constant.xSizedBox16,
+                    Icon(Icons.share_outlined, color: Colors.white),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget noPictureTaken() {
+    return SizedBox(
+      width: double.infinity,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 6,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: InkWell(
+                onTap: () {
+                  controller.takePicture().then((imageFile) async {
+                    // File tmp = await compressImage(
+                    //     File(imageFile.path));
+                    file = File(imageFile.path);
+                    // if (controller
+                    //     .value.isPreviewPaused)
+                    //   await controller.resumePreview();
+                    // else
+                    await controller.pausePreview();
+                  });
+                },
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 2),
+                      ),
+                      width: 60,
+                      height: 60,
+                    ),
+                    Icon(
+                      Icons.circle,
+                      color: Colors.white,
+                      size: 60,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 4,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Visibility(
+                visible: isFlipCameraSupported,
+                child: InkWell(
+                  onTap: () async {
+                    ///[Flip Camera]
+                    if (isFlippingCamera == null ||
+                        isFlippingCamera!.isCompleted) {
+                      isFlippingCamera = Completer();
+                      isFlippingCamera!.complete(
+                          await availableCameras().then((value) async {
+                        for (var camera in value) {
+                          if (camera.lensDirection ==
+                              (controller.description.lensDirection ==
+                                      CameraLensDirection.front
+                                  ? CameraLensDirection.back
+                                  : CameraLensDirection.front)) {
+                            await controller.dispose();
+                            cameraSetupCompleter = Completer();
+
+                            await _initCamera(camera: camera);
+                            setState(() {});
+                            break;
+                          }
+                        }
+
+                        await Future.delayed(
+                            const Duration(seconds: 1, milliseconds: 500));
+                      }));
+                    } else {
+                      print('Not completed!');
+                    }
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.only(right: 16),
+                    width: 35,
+                    height: 35,
+                    decoration: const BoxDecoration(
+                        shape: BoxShape.circle, color: Colors.black26),
+                    child: Icon(Icons.autorenew_rounded, color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget colorChip() {
+    return Container(
+      height: 30,
+      child: ListView.separated(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: 7,
+        separatorBuilder: (_, __) => Constant.xSizedBox8,
+        itemBuilder: (context, index) {
+          return Container(
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                  color: index == 0 ? Colors.white : Colors.transparent),
+            ),
+            child: Row(
+              children: [
+                CircleAvatar(radius: 8, backgroundColor: Colors.pink),
+                Constant.xSizedBox4,
+                Text(
+                  'Pink',
+                  style: TextStyle(color: Colors.white, fontSize: 10),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget colorChoice() {
+    return Container(
+      height: 30,
+      child: ListView.separated(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: 17,
+        separatorBuilder: (_, __) => Constant.xSizedBox12,
+        itemBuilder: (context, index) {
+          if (index == 0)
+            return InkWell(
+              onTap: () async {},
+              child: Icon(Icons.do_not_disturb_alt_sharp,
+                  color: Colors.white, size: 25),
+            );
+          return InkWell(
+              onTap: () async {},
+              child: CircleAvatar(radius: 12, backgroundColor: Colors.pink));
+        },
+      ),
+    );
+  }
+
+  Widget separator() {
+    return Divider(thickness: 1, color: Colors.white);
+  }
+
+  Widget typeChip() {
+    return Container(
+      height: 30,
+      child: ListView.separated(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: 7,
+        separatorBuilder: (_, __) => Constant.xSizedBox8,
+        itemBuilder: (context, index) {
+          return Container(
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Colors.white),
+            ),
+            child: Center(
+              child: Text(
+                'Sheer',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white, fontSize: 10),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget typeText() {
+    return Container(
+      height: 30,
+      child: ListView.separated(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: 7,
+        separatorBuilder: (_, __) => Constant.xSizedBox8,
+        itemBuilder: (context, index) {
+          return Center(
+            child: Text(
+              'Ombre',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                shadows: index != 0
+                    ? null
+                    : [
+                        BoxShadow(
+                          offset: Offset(0, 0),
+                          color: Colors.white,
+                          spreadRadius: 0,
+                          blurRadius: 10,
+                        ),
+                      ],
+              ),
+            ),
+          );
+          ;
+        },
+      ),
+    );
+  }
+
+  Widget sheet() {
+    return Container(
+      // height: 100,
+      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+      decoration: BoxDecoration(
+        color: Colors.black54,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
+        ),
+      ),
+      child: Column(
+        children: [
+          Constant.xSizedBox8,
+          colorChip(),
+          Constant.xSizedBox8,
+          colorChoice(),
+          Constant.xSizedBox8,
+          separator(),
+          Constant.xSizedBox4,
+          typeChip(),
+          Constant.xSizedBox4,
+          separator(),
+          typeText(),
+          Constant.xSizedBox8,
+        ],
+      ),
+    );
+  }
+
+  Widget cameraPreview(double scale) {
+    return Transform.scale(
+      scale: scale,
+      alignment: Alignment.center,
+      child: Container(
+        alignment: Alignment.center,
+        color: Colors.black,
+        child: CameraPreview(controller),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       backgroundColor: Colors.black,
       appBar: AppBar(
         // toolbarHeight: 0,
@@ -153,24 +475,33 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
         leading: InkWell(
           onTap: () => Navigator.pop(context),
           child: Container(
-            margin: EdgeInsets.only(top: 8),
+            margin: const EdgeInsets.only(top: 8),
             // padding: EdgeInsets.all(8),
             // width: 64,
-            decoration:
-                BoxDecoration(shape: BoxShape.circle, color: Colors.black26),
-            child: Icon(
-              Platform.isAndroid
-                  ? Icons.arrow_back_rounded
-                  : Icons.arrow_back_ios_new_rounded,
-              color: Colors.white,
-            ),
+            decoration: const BoxDecoration(
+                shape: BoxShape.circle, color: Colors.black26),
+            child: Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
           ),
         ),
+        actions: [
+          InkWell(
+            onTap: () => Navigator.pop(context),
+            child: Container(
+              margin: const EdgeInsets.only(top: 8),
+              // padding: EdgeInsets.only(right: 16, left: 16),
+              width: 100,
+              height: 100,
+              decoration: const BoxDecoration(
+                  shape: BoxShape.circle, color: Colors.black26),
+              child: Icon(Icons.close, color: Colors.white),
+            ),
+          ),
+        ],
         elevation: 0,
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
         systemOverlayStyle:
-            SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+            const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
       ),
       extendBodyBehindAppBar: true,
       body: FutureBuilder<String?>(
@@ -179,16 +510,16 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
           final isLoading = snapshot.connectionState != ConnectionState.done;
 
           if (isLoading) {
-            return Center(child: CircularProgressIndicator.adaptive());
+            return const Center(child: CircularProgressIndicator.adaptive());
           } else if (snapshot.data != null) {
             return Center(
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text('Setup Camera Failed'),
+                const Text('Setup Camera Failed'),
                 Text(
                   snapshot.data!,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
                 )
@@ -215,118 +546,52 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
 
                 return Stack(
                   children: [
-                    Transform.scale(
-                      scale: scale,
-                      alignment: Alignment.center,
-                      child: Container(
-                          alignment: Alignment.center,
-                          color: Colors.black,
-                          child: CameraPreview(
-                            controller,
-                          )),
-                    ),
+                    cameraPreview(scale),
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Container(
-                        margin: xHEdgeInsets12.add(EdgeInsets.only(bottom: 12)),
+                        // margin: xHEdgeInsets12
+                        //     .add(const EdgeInsets.only(bottom: 12)),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Visibility(
-                              visible: isFlipCameraSupported,
-                              child: Align(
-                                alignment: Alignment.bottomRight,
-                                child: Card(
-                                    shape: CircleBorder(),
-                                    color: Colors.blue,
-                                    margin: EdgeInsets.only(bottom: 24),
-                                    child: IconButton(
-                                      icon: Icon(controller
-                                                  .description.lensDirection ==
-                                              CameraLensDirection.front
-                                          ? Icons.camera_rear
-                                          : Icons.camera_front),
-                                      color: Colors.white,
-                                      onPressed: () async {
-                                        ///[Flip Camera]
-                                        if (isFlippingCamera == null ||
-                                            isFlippingCamera!.isCompleted) {
-                                          isFlippingCamera = Completer();
-                                          isFlippingCamera!.complete(
-                                              await availableCameras()
-                                                  .then((value) async {
-                                            for (var camera in value) {
-                                              if (camera.lensDirection ==
-                                                  (controller.description
-                                                              .lensDirection ==
-                                                          CameraLensDirection
-                                                              .front
-                                                      ? CameraLensDirection.back
-                                                      : CameraLensDirection
-                                                          .front)) {
-                                                await controller.dispose();
-                                                cameraSetupCompleter =
-                                                    Completer();
-
-                                                await _initCamera(
-                                                    camera: camera);
-                                                setState(() {});
-                                                break;
-                                              }
-                                            }
-
-                                            await Future.delayed(Duration(
-                                                seconds: 1, milliseconds: 500));
-                                          }));
-                                        } else {
-                                          print('Not completed!');
-                                        }
-                                      },
-                                    )),
-                              ),
+                            Container(
+                              decoration: BoxDecoration(color: Colors.black12, borderRadius: 20),
+                              child: Column(children: [
+                                Image.asset(Assets)
+                              ],),
                             ),
                             Align(
                               alignment: Alignment.bottomRight,
                               child: Card(
-                                  shape: CircleBorder(),
-                                  color: Constant.primaryColor,
-                                  margin: EdgeInsets.only(bottom: 24),
-                                  child: IconButton(
-                                    icon: controller.value.flashMode !=
-                                            FlashMode.off
-                                        ? Icon(Icons.flash_auto)
-                                        : Icon(Icons.flash_off),
-                                    color: Colors.white,
-                                    onPressed: () {
-                                      controller
-                                          .setFlashMode(
-                                              controller.value.flashMode !=
-                                                      FlashMode.off
-                                                  ? FlashMode.off
-                                                  : FlashMode.auto)
-                                          .then((value) {
-                                        setState(() {});
-                                      });
-                                    },
-                                  )),
-                            ),
-                            Container(
-                              width: double.infinity,
-                              child: ElevatedButton(
+                                shape: const CircleBorder(),
+                                color: Colors.black12,
+                                surfaceTintColor: Colors.transparent,
+                                margin: const EdgeInsets.only(bottom: 24),
+                                child: IconButton(
+                                  icon: controller.value.flashMode !=
+                                          FlashMode.off
+                                      ? const Icon(Icons.flash_auto)
+                                      : const Icon(Icons.flash_off),
+                                  color: Colors.white,
                                   onPressed: () {
                                     controller
-                                        .takePicture()
-                                        .then((imageFile) async {
-                                      // File tmp = await compressImage(
-                                      //     File(imageFile.path));
-
-                                      await controller.pausePreview();
-                                      Navigator.pop(context, imageFile);
-                                      // Navigator.pop(context, tmp);
+                                        .setFlashMode(
+                                            controller.value.flashMode !=
+                                                    FlashMode.off
+                                                ? FlashMode.off
+                                                : FlashMode.auto)
+                                        .then((value) {
+                                      setState(() {});
                                     });
                                   },
-                                  child: Text('Ambil Foto')),
+                                ),
+                              ),
                             ),
+                            sheet(),
+                            // file != null ? pictureTaken() : noPictureTaken(),
+                            // pictureTaken(),
+                            Constant.xSizedBox16,
                           ],
                         ),
                       ),

@@ -7,7 +7,7 @@ class ThousandsSeparatorInputFormatter extends TextInputFormatter {
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
     // Short-circuit if the new value is empty
-    if (newValue.text.length == 0) {
+    if (newValue.text.isEmpty) {
       return newValue.copyWith(text: '');
     }
 
@@ -28,8 +28,9 @@ class ThousandsSeparatorInputFormatter extends TextInputFormatter {
 
       String newString = '';
       for (int i = chars.length - 1; i >= 0; i--) {
-        if ((chars.length - 1 - i) % 3 == 0 && i != chars.length - 1)
+        if ((chars.length - 1 - i) % 3 == 0 && i != chars.length - 1) {
           newString = separator + newString;
+        }
         newString = chars[i] + newString;
       }
 

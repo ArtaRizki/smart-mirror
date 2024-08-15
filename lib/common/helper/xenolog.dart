@@ -82,10 +82,10 @@ class XenoLog {
   // belum ada
 
   String keySharedPreferences = 'MgeLog';
-  String _keyAlwaysLog = 'MgeAlwaysLog';
-  int _connectTimeOut = 30000; // timeout connect ke server
-  int _sendTimeout = 30000; // timeout send data ke server
-  int _receiveTimeOut = 30000; // timeout receive data dari server
+  final String _keyAlwaysLog = 'MgeAlwaysLog';
+  final int _connectTimeOut = 30000; // timeout connect ke server
+  final int _sendTimeout = 30000; // timeout send data ke server
+  final int _receiveTimeOut = 30000; // timeout receive data dari server
 
   // Dio dio;
   // FormData formData;
@@ -99,8 +99,8 @@ class XenoLog {
     this.version = version;
     this.id = id;
     this.logType = logType;
-    this.setDatabaseURL = setDatabaseURL;
-    this.getDatabaseURL = getDatabaseURL;
+    setDatabaseURL = setDatabaseURL;
+    getDatabaseURL = getDatabaseURL;
     this.webHookURL = webHookURL;
     this.emailAddress = emailAddress;
 
@@ -114,7 +114,7 @@ class XenoLog {
   // jika gagal, log + error tersimpan di local
   // jika berhasil, clear local
   void sendLog(String log) async {
-    if (this.logType == XenoLogType.Database) {
+    if (logType == XenoLogType.Database) {
       String unsendLog = await _getUnsendLog();
       String formattedLog = _formatLog(id.toString(), log);
       Map<String, dynamic> param = {
@@ -141,14 +141,9 @@ class XenoLog {
       //     _clearLog();
       //   }
       // });
-    } else if (this.logType == XenoLogType.Discord) {
+    } else if (logType == XenoLogType.Discord) {
       String unsendLog = await _getUnsendLog();
-      String title = "PROJECT LOG: " +
-          projectName.toString().toUpperCase() +
-          " < " +
-          version +
-          " >" +
-          "\r\n";
+      String title = "PROJECT LOG: ${projectName.toString().toUpperCase()} < $version >\r\n";
       String formattedLog = _formatLog(id.toString(), log);
       // _dioPost(webHookURL, {"content": title + unsendLog + formattedLog})
       //     .then((response) {
@@ -191,7 +186,7 @@ class XenoLog {
   }
 
   Future<bool> sendAll() async {
-    if (this.logType == XenoLogType.Database) {
+    if (logType == XenoLogType.Database) {
       String unsendLog = await _getUnsendLog();
       if ((unsendLog ?? "") == "") {
         unsendLog = _formatLog(id.toString(), 'No Data');
@@ -219,14 +214,9 @@ class XenoLog {
       //     _clearLog();
       //   }
       // });
-    } else if (this.logType == XenoLogType.Discord) {
+    } else if (logType == XenoLogType.Discord) {
       String unsendLog = await _getUnsendLog();
-      String title = "PROJECT LOG: " +
-          projectName.toString().toUpperCase() +
-          " < " +
-          version +
-          " >" +
-          "\r\n";
+      String title = "PROJECT LOG: ${projectName.toString().toUpperCase()} < $version >\r\n";
       if ((unsendLog ?? "") == "") {
         unsendLog = 'No Data';
       }
@@ -248,15 +238,11 @@ class XenoLog {
 
   Future<bool> shareAll() async {
     String unsendLog = await _getUnsendLog(days: 2);
-    String title = "< " +
-        "PROJECT LOG: " +
-        projectName.toString().toUpperCase() +
-        " >" +
-        "\r\n";
+    String title = "< PROJECT LOG: ${projectName.toString().toUpperCase()} >\r\n";
     if ((unsendLog ?? "") == "") {
       unsendLog = 'No Data';
     }
-    String fileName = await _writeToFile(title + "\r\n" + unsendLog);
+    String fileName = await _writeToFile("$title\r\n$unsendLog");
 
     if (fileName != '') {
       // await Share.shareXFiles([XFile(fileName)]);
@@ -268,9 +254,9 @@ class XenoLog {
   }
 
   void clearAll() async {
-    if (this.logType == XenoLogType.Database) {
+    if (logType == XenoLogType.Database) {
       _clearLog();
-    } else if (this.logType == XenoLogType.Discord) {
+    } else if (logType == XenoLogType.Discord) {
       _clearLog();
 
       // } else if (this.logType == XenoLogType.Email) {
@@ -329,14 +315,14 @@ class XenoLog {
     SharedPreferences prefs =
         await SharedPreferences.getInstance(); // .subtract(Duration(days: 2))
     String dateKey = DateFormat("yyyy-MM-dd").format(date ?? DateTime.now());
-    var data = prefs.getString(keySharedPreferences + "_" + dateKey) ?? "";
+    var data = prefs.getString("${keySharedPreferences}_$dateKey") ?? "";
     if (data != "") {
-      data = "\r\n" + data;
+      data = "\r\n$data";
     }
     data = logg + data;
-    prefs.setString(keySharedPreferences + "_" + dateKey, data);
+    prefs.setString("${keySharedPreferences}_$dateKey", data);
     String currData =
-        prefs.getString(keySharedPreferences + "_" + dateKey) ?? "";
+        prefs.getString("${keySharedPreferences}_$dateKey") ?? "";
     // log("SAVE LOG : $currData");
 
     // _clearOldLog();
@@ -346,16 +332,16 @@ class XenoLog {
   Future<String> _getUnsendLog({int days = 1}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String dateKey = DateFormat("yyyy-MM-dd").format(DateTime.now());
-    String data = prefs.getString(keySharedPreferences + "_" + dateKey) ?? "";
+    String data = prefs.getString("${keySharedPreferences}_$dateKey") ?? "";
 
     for (int i = 2; i <= days; i++) {
       dateKey = DateFormat("yyyy-MM-dd")
           .format(DateTime.now().subtract(Duration(days: i - 1)));
       String currData =
-          prefs.getString(keySharedPreferences + "_" + dateKey) ?? "";
+          prefs.getString("${keySharedPreferences}_$dateKey") ?? "";
       // log("CURR DATA : $currData");
       if (data != "" && currData != "") {
-        data = data + "\r\n";
+        data = "$data\r\n";
       }
       data = data + currData;
     }
@@ -368,12 +354,12 @@ class XenoLog {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     Set<String> list = prefs.getKeys();
-    list.forEach((element) {
+    for (var element in list) {
       if (element.toString().substring(0, keySharedPreferences.length) ==
           keySharedPreferences) {
         prefs.remove(element);
       }
-    });
+    }
   }
 
   // hapus semua log , kecuali 'days' hari terakhir
@@ -384,14 +370,14 @@ class XenoLog {
     for (int i = 1; i <= days; i++) {
       dateKey = DateFormat("yyyy-MM-dd")
           .format(DateTime.now().subtract(Duration(days: i - 1)));
-      listDate.add(keySharedPreferences + "_" + dateKey);
+      listDate.add("${keySharedPreferences}_$dateKey");
       // print('Debug: ' + 'listDate = ' + keySharedPreferences + "_" + dateKey);
     }
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     Set<String> list = prefs.getKeys();
-    list.forEach((element) {
+    for (var element in list) {
       // log("ELEMENT LENGTH : ${element.length}");
       // log("KEYSHARED LENGTH : ${keySharedPreferences.length}");
       if (element.length >= keySharedPreferences.length &&
@@ -404,19 +390,19 @@ class XenoLog {
           // print('Debug: ' + element.toString() + ' tidak hapus');
         }
       }
-    });
+    }
   }
 
   // format message sesuai format log
   String _formatLog(String id, String message) {
-    if (this.logType == XenoLogType.Database) {
+    if (logType == XenoLogType.Database) {
       return "Id: " +
           id.toString() +
           ' ' +
           DateFormat("[yyyy-MM-dd HH:mm:ss]").format(DateTime.now()) +
           ' ' +
           message;
-    } else if (this.logType == XenoLogType.Discord) {
+    } else if (logType == XenoLogType.Discord) {
       return "Id: " +
           id.toString() +
           ' ' +
@@ -451,8 +437,8 @@ class XenoLog {
         scrollable: true,
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        contentPadding: EdgeInsets.all(24),
-        insetPadding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+        contentPadding: const EdgeInsets.all(24),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
         content: Container(
           width: MediaQuery.of(context).size.width * 0.6,
           alignment: Alignment.center,
@@ -460,9 +446,9 @@ class XenoLog {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Text("Log File",
+              const Text("Log File",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              SizedBox(height: 32),
+              const SizedBox(height: 32),
               buttonDialog(
                   context, "CLEAR", Colors.red, Colors.white, Colors.red, () {
                 clearAll();
@@ -516,15 +502,15 @@ class XenoLog {
                 borderRadius: BorderRadius.circular(16))),
         elevation: WidgetStateProperty.all<double>(0),
       ),
-      child: Text(caption, style: TextStyle(color: textColor, fontSize: 16)),
       onPressed: onClick,
+      child: Text(caption, style: TextStyle(color: textColor, fontSize: 16)),
     );
   }
 
   // menampilkan + share isi log
   Future<dynamic> showLogContentDialog({@required context}) async {
     String unsendLog = await _getUnsendLog(days: 1);
-    String title = "PROJECT LOG: " + projectName.toString().toUpperCase();
+    String title = "PROJECT LOG: ${projectName.toString().toUpperCase()}";
     if ((unsendLog ?? "") == "") {
       unsendLog = 'No Data';
     }
@@ -534,9 +520,9 @@ class XenoLog {
       builder: (context) => AlertDialog(
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        contentPadding: EdgeInsets.all(12),
-        insetPadding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 24.0),
-        title: Stack(children: [
+        contentPadding: const EdgeInsets.all(12),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 24.0),
+        title: const Stack(children: [
           Align(
               alignment: Alignment.center,
               child: Text("Log File",
@@ -550,12 +536,12 @@ class XenoLog {
           //         child: Icon(Icons.share))),
         ]),
         content: Padding(
-          padding: EdgeInsets.all(8),
+          padding: const EdgeInsets.all(8),
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [Text(title), SizedBox(height: 8), Text(unsendLog)],
+              children: [Text(title), const SizedBox(height: 8), Text(unsendLog)],
             ),
           ),
         ),
