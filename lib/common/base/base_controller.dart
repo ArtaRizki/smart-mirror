@@ -10,7 +10,6 @@ import 'package:smart_mirror/common/helper/constant.dart';
 import 'package:smart_mirror/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:provider/provider.dart';
 import '../../utils/utils.dart';
 import '../helper/xenolog.dart';
 import 'base_state.dart';

@@ -1,18 +1,14 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:camera/camera.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:smart_mirror/common/helper/constant.dart';
+import 'package:smart_mirror/generated/assets.dart';
 import 'package:smart_mirror/utils/utils.dart';
-
-import 'image_processor.dart';
 
 const xHEdgeInsets12 = EdgeInsets.symmetric(horizontal: 12);
 
@@ -556,10 +552,17 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Container(
-                              decoration: BoxDecoration(color: Colors.black12, borderRadius: 20),
-                              child: Column(children: [
-                                Image.asset(Assets)
-                              ],),
+                              decoration: BoxDecoration(
+                                  color: Colors.black12,
+                                  borderRadius: BorderRadius.circular(20)),
+                              child: Column(
+                                children: [
+                                  Image.asset(
+                                    Assets.iconsIcCamera,
+                                    color: Colors.white,
+                                  ),
+                                ],
+                              ),
                             ),
                             Align(
                               alignment: Alignment.bottomRight,
