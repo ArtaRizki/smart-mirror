@@ -37,11 +37,11 @@ class CustomTextField {
       decoration: InputDecoration(
         hintText: hintText ?? "",
         hintStyle: TextStyle(
-          color: color ?? null,
+          color: color,
         ),
         suffixIconColor: Constant.primaryColor,
         suffixIcon: suffixIcon,
-        suffixText: suffixText ?? null,
+        suffixText: suffixText,
         fillColor: Colors.white10,
         hoverColor: Constant.primaryColor,
         focusColor: Constant.primaryColor,
@@ -77,7 +77,7 @@ class CustomTextField {
       enableInteractiveSelection: enableInteractiveSelection ?? true,
       onTap: onTap,
       // will disable paste operation
-      focusNode: focusNode ?? null,
+      focusNode: focusNode,
 
       inputFormatters: [
         if (isDecimalFormatter ?? false) ThousandsSeparatorInputFormatter(),
@@ -147,7 +147,7 @@ class CustomTextField {
     BorderRadius? borderRadius,
   }) {
     return Padding(
-      padding: padding ?? EdgeInsets.symmetric(horizontal: 20),
+      padding: padding ?? const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -173,7 +173,7 @@ class CustomTextField {
                             color: Colors.red,
                           ),
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
                 ],
               ),
             ),
@@ -186,9 +186,9 @@ class CustomTextField {
               contentPadding: EdgeInsets.zero,
               hintText: hintText ?? "",
               suffixIcon: suffixIcon,
-              suffixText: suffixText ?? null,
-              prefixText: prefixText ?? null,
-              errorText: errorText ?? null,
+              suffixText: suffixText,
+              prefixText: prefixText,
+              errorText: errorText,
               filled: true,
               fillColor: fillColor ?? Colors.grey.shade200,
               suffixIconColor: suffixIconColor ?? Constant.primaryColor,
@@ -196,7 +196,7 @@ class CustomTextField {
               focusColor: Constant.primaryColor,
               errorStyle: TextStyle(color: validatorTextColor ?? Colors.red),
               prefixIcon: prefix,
-              prefix: prefix == null ? SizedBox(width: 12) : null,
+              prefix: prefix == null ? const SizedBox(width: 12) : null,
               border: OutlineInputBorder(
                 borderSide: BorderSide.none,
                 borderRadius: borderRadius ?? BorderRadius.circular(10),
@@ -222,7 +222,7 @@ class CustomTextField {
             enabled: enabled ?? true,
             enableInteractiveSelection: enableInteractiveSelection ?? true,
             // will disable paste operation
-            focusNode: focusNode ?? null,
+            focusNode: focusNode,
             inputFormatters: [
               if (isDecimalFormatter ?? false)
                 ThousandsSeparatorInputFormatter(),
@@ -293,7 +293,7 @@ class CustomTextField {
     BorderRadius? borderRadius,
   }) {
     return Padding(
-      padding: padding ?? EdgeInsets.symmetric(horizontal: 0),
+      padding: padding ?? const EdgeInsets.symmetric(horizontal: 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -319,7 +319,7 @@ class CustomTextField {
                             color: Colors.red,
                           ),
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
                 ],
               ),
             ),
@@ -331,7 +331,7 @@ class CustomTextField {
               contentPadding: EdgeInsets.zero,
               hintText: hintText ?? "",
               suffixIcon: suffixIcon,
-              suffixText: suffixText ?? null,
+              suffixText: suffixText,
               filled: true,
               fillColor: fillColor ??
                   ((enabled ?? false) ? Colors.white : Constant.textHintColor),
@@ -342,7 +342,7 @@ class CustomTextField {
                   color: hintColor ?? Constant.textHintColor2,
                   fontWeight: hintFontWeight),
               prefixIcon: prefixIcon,
-              prefix: prefix == null ? SizedBox(width: 12) : null,
+              prefix: prefix == null ? const SizedBox(width: 12) : null,
               border: OutlineInputBorder(
                 borderRadius: borderRadius ?? BorderRadius.circular(10),
                 borderSide: BorderSide(
@@ -376,7 +376,7 @@ class CustomTextField {
             enabled: enabled ?? true,
             enableInteractiveSelection: enableInteractiveSelection ?? true,
             // will disable paste operation
-            focusNode: focusNode ?? null,
+            focusNode: focusNode,
             inputFormatters: [
               if (isDecimalFormatter ?? false)
                 ThousandsSeparatorInputFormatter(),
@@ -448,7 +448,7 @@ class CustomTextField {
       decoration: InputDecoration(
         contentPadding: EdgeInsets.zero,
         suffixIcon: suffixIcon,
-        suffixText: suffixText ?? null,
+        suffixText: suffixText,
         hintText: hintText,
         filled: true,
         isDense: isDense,
@@ -460,7 +460,7 @@ class CustomTextField {
         hintStyle: TextStyle(
             color: hintColor ?? Constant.textHintColor2, fontSize: 12),
         prefixIcon: prefix,
-        prefix: prefix == null ? SizedBox(width: 12) : null,
+        prefix: prefix == null ? const SizedBox(width: 12) : null,
         border: noBorder
             ? InputBorder.none
             : OutlineInputBorder(
@@ -491,7 +491,7 @@ class CustomTextField {
       enabled: enabled,
       enableInteractiveSelection: enableInteractiveSelection ?? true,
       // will disable paste operation
-      focusNode: focusNode ?? null,
+      focusNode: focusNode,
       inputFormatters: [
         if (isDecimalFormatter ?? false) ThousandsSeparatorInputFormatter(),
         if (inputFormatters != null) ...[
@@ -552,7 +552,7 @@ class CustomTextField {
     BorderRadius? borderRadius,
   }) {
     return Padding(
-      padding: padding ?? EdgeInsets.symmetric(horizontal: 20),
+      padding: padding ?? const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -578,7 +578,7 @@ class CustomTextField {
                             color: Colors.red,
                           ),
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
                 ],
               ),
             ),
@@ -590,9 +590,9 @@ class CustomTextField {
                 width: borderWidth ?? 0.5,
                 style: BorderStyle.solid,
               ),
-              borderRadius: BorderRadius.all(Radius.circular(10)),
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
             ),
-            padding: EdgeInsets.all(Constant.paddingSize),
+            padding: const EdgeInsets.all(Constant.paddingSize),
             child: TextField(
               readOnly: readOnly,
               onTap: onTap,
@@ -605,7 +605,7 @@ class CustomTextField {
               enabled: enabled ?? true,
               enableInteractiveSelection: enableInteractiveSelection ?? true,
               decoration: InputDecoration.collapsed(
-                hintText: hintText ?? null,
+                hintText: hintText,
                 focusColor: Colors.grey,
                 filled: true,
                 fillColor: fillColor ??
@@ -638,28 +638,28 @@ class CustomTextField {
   }
 
   static Widget normalTextArea(
-    FocusNode _focusNode, {
+    FocusNode focusNode, {
     required TextEditingController controller,
     String? hint,
     bool required = true,
   }) {
     return Container(
       child: TextFormField(
-        focusNode: _focusNode,
+        focusNode: focusNode,
         maxLines: 8,
         controller: controller,
         autofocus: false,
         decoration: InputDecoration(
-          hintText: hint ?? null,
+          hintText: hint,
           fillColor: Colors.white10,
           hoverColor: Constant.primaryColor,
           focusColor: Constant.primaryColor,
-          enabledBorder: UnderlineInputBorder(
+          enabledBorder: const UnderlineInputBorder(
             borderSide: BorderSide(
               color: Colors.black45,
             ),
           ),
-          border: UnderlineInputBorder(
+          border: const UnderlineInputBorder(
             borderSide: BorderSide(
               color: Colors.black45,
             ),

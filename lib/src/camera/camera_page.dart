@@ -5,8 +5,8 @@ import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:smart-mirror/common/helper/constant.dart';
-import 'package:smart-mirror/utils/utils.dart';
+import 'package:smart_mirror/common/helper/constant.dart';
+import 'package:smart_mirror/utils/utils.dart';
 
 class CameraPage extends StatefulWidget {
   late List<CameraDescription> cameras;
@@ -14,8 +14,7 @@ class CameraPage extends StatefulWidget {
   final Future Function(String) onResult;
   final bool isUseFaceDetection;
   CameraPage(
-      {Key? key, required this.onResult, required this.isUseFaceDetection})
-      : super(key: key);
+      {super.key, required this.onResult, required this.isUseFaceDetection});
 
   @override
   State<StatefulWidget> createState() {
@@ -38,18 +37,18 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
 
   Completer isReadyToCapture = Completer<bool>();
   final Future<bool> captureDelay =
-      Future.delayed(Duration(seconds: 1), () => true);
+      Future.delayed(const Duration(seconds: 1), () => true);
   bool isCapturing = false;
 
   Toast(String message) {
-    return Utils.showToast(message, duration: Duration(milliseconds: 400));
+    return Utils.showToast(message, duration: const Duration(milliseconds: 400));
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
 
     Future.microtask(() async {
       CameraDescription? camera = await findCamera(CameraLensDirection.front);
@@ -136,7 +135,7 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
         child: Align(
           alignment: Alignment.center,
           child: Container(
-            constraints: BoxConstraints(maxWidth: 300),
+            constraints: const BoxConstraints(maxWidth: 300),
             child: Row(
               children: [
                 Expanded(
@@ -177,7 +176,7 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
           }
 
           progress() {
-            return Padding(
+            return const Padding(
               padding: EdgeInsets.all(4),
               child: CircularProgressIndicator(
                   color: Colors.white, strokeWidth: 1),
@@ -189,7 +188,7 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
             child: Container(
               width: double.infinity,
               height: 50,
-              margin: EdgeInsets.symmetric(horizontal: 18)
+              margin: const EdgeInsets.symmetric(horizontal: 18)
                   .add(EdgeInsets.only(bottom: 32)),
               child: ElevatedButton(
                 onPressed: () async {
@@ -209,7 +208,7 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
                     }
                     dynamic result;
                     try {
-                      await Future.delayed(Duration(milliseconds: 500));
+                      await Future.delayed(const Duration(milliseconds: 500));
                       result = await value.takePicture();
                     } catch (e) {
                       result = await value.takePicture();
@@ -218,12 +217,12 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
                   });
                   setState(() => isCapturing = false);
                 },
-                child: isCapturing ? progress() : captureText(),
                 style: ElevatedButton.styleFrom(
                     backgroundColor:
                         !isFaceDetected && widget.isUseFaceDetection
                             ? Colors.red
                             : Constant.primaryColor),
+                child: isCapturing ? progress() : captureText(),
               ),
             ),
           );
@@ -235,7 +234,7 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
       future: cController.future,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         }
@@ -269,12 +268,12 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
             wButtonCapture(),
             Container(
               alignment: Alignment.topRight,
-              margin: EdgeInsets.only(top: 32, right: 8),
+              margin: const EdgeInsets.only(top: 32, right: 8),
               child: IconButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                icon: Icon(Icons.close),
+                icon: const Icon(Icons.close),
                 color: Colors.white,
               ),
             ),
@@ -286,7 +285,7 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     if (controllerAssigned) {
       cController.future.then((value) => value.dispose());
     }

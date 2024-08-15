@@ -23,7 +23,7 @@ class CustomDatePicker {
           data: ThemeData.light().copyWith(
             primaryColor: Constant.primaryColor,
             colorScheme: ColorScheme.light(primary: Constant.primaryColor),
-            buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
+            buttonTheme: const ButtonThemeData(textTheme: ButtonTextTheme.primary),
           ),
           child: child!,
         );
@@ -86,7 +86,7 @@ class CustomDatePicker {
             colorScheme: ColorScheme.light(
               primary: Constant.primaryColor,
             ),
-            buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
+            buttonTheme: const ButtonThemeData(textTheme: ButtonTextTheme.primary),
           ),
           child: child!,
         );
@@ -104,9 +104,7 @@ class CustomDatePicker {
     final minute = now.minute;
     return showTimePicker(
       context: context,
-      initialTime: initialDate != null
-          ? initialDate
-          : TimeOfDay(hour: hour, minute: minute),
+      initialTime: initialDate ?? TimeOfDay(hour: hour, minute: minute),
       builder: (BuildContext context, Widget? child) {
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
