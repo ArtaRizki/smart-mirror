@@ -14,7 +14,12 @@ class Assets {
   static const String iconsIcCamera = 'assets/icons/ic-camera.png';
   static const String iconsIcChoose = 'assets/icons/ic-choose.png';
   static const String iconsIcCompare = 'assets/icons/ic-compare.png';
+  static const String iconsIcEyes = 'assets/icons/ic-eyes.png';
+  static const String iconsIcFace = 'assets/icons/ic-face.png';
   static const String iconsIcFlipCamera = 'assets/icons/ic-flip-camera.png';
+  static const String iconsIcHair = 'assets/icons/ic-hair.png';
+  static const String iconsIcLips = 'assets/icons/ic-lips.png';
+  static const String iconsIcNails = 'assets/icons/ic-nails.png';
   static const String iconsIcReset = 'assets/icons/ic-reset.png';
   static const String iconsIcScale = 'assets/icons/ic-scale.png';
   static const String iconsIcShare = 'assets/icons/ic-share.png';

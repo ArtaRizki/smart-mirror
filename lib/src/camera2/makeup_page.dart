@@ -9,21 +9,19 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:smart_mirror/common/component/custom_navigator.dart';
 import 'package:smart_mirror/common/helper/constant.dart';
 import 'package:smart_mirror/generated/assets.dart';
-import 'package:smart_mirror/src/camera/camera_page.dart';
 import 'package:smart_mirror/src/camera2/camera_video_page.dart';
-import 'package:smart_mirror/src/camera2/makeup_page.dart';
 import 'package:smart_mirror/utils/utils.dart';
 
 const xHEdgeInsets12 = EdgeInsets.symmetric(horizontal: 12);
 
-class OcrCameraPage2 extends StatefulWidget {
-  const OcrCameraPage2({super.key});
+class MakeupPage extends StatefulWidget {
+  const MakeupPage({super.key});
 
   @override
-  State<OcrCameraPage2> createState() => _OcrCameraPage2State();
+  State<MakeupPage> createState() => _MakeupPageState();
 }
 
-class _OcrCameraPage2State extends State<OcrCameraPage2> {
+class _MakeupPageState extends State<MakeupPage> {
   late CameraController controller;
   Completer<String?> cameraSetupCompleter = Completer();
   Completer? isFlippingCamera;
@@ -73,28 +71,6 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
       });
     } else {
       _initCamera();
-      // permissions = [
-      //   Permission.camera,
-      //   Permission.microphone,
-      //   Permission.storage
-      // ];
-      // checkPermissionStatuses().then((allclear) {
-      //   if (allclear) {
-      //     _initCamera();
-      //   } else {
-      //     permissions.request().then((value) {
-      //       checkPermissionStatuses().then((allclear) {
-      //         if (allclear) {
-      //           _initCamera();
-      //         } else {
-      //           Utils.showToast(
-      //               'Mohon izinkan Janissari untuk mengakses Kamera dan Mikrofon');
-      //           Navigator.of(context).pop();
-      //         }
-      //       });
-      //     });
-      //   }
-      // });
     }
   }
 
@@ -144,64 +120,6 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
     }
   }
 
-  Widget pictureTaken() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        children: [
-          Expanded(
-            child: InkWell(
-              onTap: () {},
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.black54,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  'Edit',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Constant.xSizedBox24,
-          Expanded(
-            child: InkWell(
-              onTap: () {},
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Color(0xffCA9C43),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Share',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                      ),
-                    ),
-                    Constant.xSizedBox16,
-                    Icon(Icons.share_outlined, color: Colors.white),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget makeupOrAccessoriesChoice() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -209,9 +127,7 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
         children: [
           Expanded(
             child: InkWell(
-              onTap: () {
-                CusNav.nPush(context, MakeupPage());
-              },
+              onTap: () {},
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                 child: Text(
@@ -247,230 +163,21 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
     );
   }
 
-  Widget noPictureTaken() {
-    return SizedBox(
-      width: double.infinity,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 6,
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: InkWell(
-                onTap: () {
-                  controller.takePicture().then((imageFile) async {
-                    // File tmp = await compressImage(
-                    //     File(imageFile.path));
-                    file = File(imageFile.path);
-                    // if (controller
-                    //     .value.isPreviewPaused)
-                    //   await controller.resumePreview();
-                    // else
-                    await controller.pausePreview();
-                  });
-                },
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 2),
-                      ),
-                      width: 60,
-                      height: 60,
-                    ),
-                    Icon(
-                      Icons.circle,
-                      color: Colors.white,
-                      size: 60,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 4,
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Visibility(
-                visible: isFlipCameraSupported,
-                child: InkWell(
-                  onTap: () async {
-                    ///[Flip Camera]
-                    if (isFlippingCamera == null ||
-                        isFlippingCamera!.isCompleted) {
-                      isFlippingCamera = Completer();
-                      isFlippingCamera!.complete(
-                          await availableCameras().then((value) async {
-                        for (var camera in value) {
-                          if (camera.lensDirection ==
-                              (controller.description.lensDirection ==
-                                      CameraLensDirection.front
-                                  ? CameraLensDirection.back
-                                  : CameraLensDirection.front)) {
-                            await controller.dispose();
-                            cameraSetupCompleter = Completer();
-
-                            await _initCamera(camera: camera);
-                            setState(() {});
-                            break;
-                          }
-                        }
-
-                        await Future.delayed(
-                            const Duration(seconds: 1, milliseconds: 500));
-                      }));
-                    } else {
-                      print('Not completed!');
-                    }
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.only(right: 16),
-                    width: 35,
-                    height: 35,
-                    decoration: const BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.black26),
-                    child: Icon(Icons.autorenew_rounded, color: Colors.white),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget colorChip() {
-    return Container(
-      height: 30,
-      child: ListView.separated(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: 7,
-        separatorBuilder: (_, __) => Constant.xSizedBox8,
-        itemBuilder: (context, index) {
-          return Container(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                  color: index == 0 ? Colors.white : Colors.transparent),
-            ),
-            child: Row(
-              children: [
-                CircleAvatar(radius: 8, backgroundColor: Colors.pink),
-                Constant.xSizedBox4,
-                Text(
-                  'Pink',
-                  style: TextStyle(color: Colors.white, fontSize: 10),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget colorChoice() {
-    return Container(
-      height: 30,
-      child: ListView.separated(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: 17,
-        separatorBuilder: (_, __) => Constant.xSizedBox12,
-        itemBuilder: (context, index) {
-          if (index == 0)
-            return InkWell(
-              onTap: () async {},
-              child: Icon(Icons.do_not_disturb_alt_sharp,
-                  color: Colors.white, size: 25),
-            );
-          return InkWell(
-              onTap: () async {},
-              child: CircleAvatar(radius: 12, backgroundColor: Colors.pink));
-        },
-      ),
-    );
-  }
-
   Widget separator() {
     return Divider(thickness: 1, color: Colors.white);
   }
 
-  Widget typeChip() {
-    return Container(
-      height: 30,
-      child: ListView.separated(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: 7,
-        separatorBuilder: (_, __) => Constant.xSizedBox8,
-        itemBuilder: (context, index) {
-          return Container(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.white),
-            ),
-            child: Center(
-              child: Text(
-                'Sheer',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white, fontSize: 10),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget typeText() {
-    return Container(
-      height: 30,
-      child: ListView.separated(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: 7,
-        separatorBuilder: (_, __) => Constant.xSizedBox8,
-        itemBuilder: (context, index) {
-          return Center(
-            child: Text(
-              'Ombre',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-                shadows: index != 0
-                    ? null
-                    : [
-                        BoxShadow(
-                          offset: Offset(0, 0),
-                          color: Colors.white,
-                          spreadRadius: 0,
-                          blurRadius: 10,
-                        ),
-                      ],
-              ),
-            ),
-          );
-          ;
-        },
-      ),
+  Widget itemMakeup(String path, GestureTapCallback? onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Image.asset(path, width: 42, height: 56),
     );
   }
 
   Widget sheet() {
     return Container(
       // height: 100,
-      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+      padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
       decoration: BoxDecoration(
         color: Colors.black54,
         borderRadius: BorderRadius.only(
@@ -480,17 +187,25 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
       ),
       child: Column(
         children: [
-          Constant.xSizedBox8,
-          colorChip(),
-          Constant.xSizedBox8,
-          colorChoice(),
-          Constant.xSizedBox8,
-          separator(),
-          Constant.xSizedBox4,
-          typeChip(),
-          Constant.xSizedBox4,
-          separator(),
-          typeText(),
+          Container(
+            width: 55,
+            height: 3,
+            decoration: BoxDecoration(
+              color: Colors.grey,
+              borderRadius: BorderRadius.circular(22),
+            ),
+          ),
+          Constant.xSizedBox24,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              itemMakeup(Assets.iconsIcLips, () {}),
+              itemMakeup(Assets.iconsIcEyes, () {}),
+              itemMakeup(Assets.iconsIcFace, () {}),
+              itemMakeup(Assets.iconsIcNails, () {}),
+              itemMakeup(Assets.iconsIcHair, () {}),
+            ],
+          ),
           Constant.xSizedBox8,
         ],
       ),
@@ -654,9 +369,7 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
                               ),
                             ),
                             Constant.xSizedBox16,
-                            makeupOrAccessories
-                                ? makeupOrAccessoriesChoice()
-                                : sheet(),
+                            sheet(),
                             // file != null ? pictureTaken() : noPictureTaken(),
                             // pictureTaken(),
                           ],
