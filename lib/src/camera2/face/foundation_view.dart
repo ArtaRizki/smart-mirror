@@ -30,7 +30,7 @@ class _FoundationViewState extends State<FoundationView> {
   late List<Permission> permissions;
   bool isRearCamera = true;
   bool isFlipCameraSupported = false;
-  File? file;
+  File? file; 
   bool makeupOrAccessories = false;
 
   @override
