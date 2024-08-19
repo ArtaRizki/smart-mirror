@@ -32,6 +32,8 @@ class _LipPlumberViewState extends State<LipPlumberView> {
   bool isFlipCameraSupported = false;
   File? file;
   bool makeupOrAccessories = false;
+  int? colorSelected = 0;
+  bool onOffVisibel = false;
 
   @override
   void initState() {
@@ -418,15 +420,117 @@ class _LipPlumberViewState extends State<LipPlumberView> {
         itemBuilder: (context, index) {
           if (index == 0)
             return InkWell(
-              onTap: () async {},
+              onTap: () async {
+                setState(() {
+                  colorSelected = 0;
+                  onOffVisibel = true;
+                });
+              },
               child: Icon(Icons.do_not_disturb_alt_sharp,
                   color: Colors.white, size: 25),
             );
           return InkWell(
-              onTap: () async {},
+            onTap: () async {
+              setState(() {
+                colorSelected = index;
+                onOffVisibel = false;
+              });
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                    color: index == colorSelected && onOffVisibel == false
+                        ? Colors.white
+                        : Colors.transparent),
+              ),
               child: CircleAvatar(
-                  radius: 12, backgroundColor: colorChoiceList[index]));
+                  radius: 12, backgroundColor: colorChoiceList[index]),
+            ),
+          );
         },
+      ),
+    );
+  }
+
+  Widget lipstickChoice() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        height: 150,
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: 5,
+          separatorBuilder: (_, __) => Constant.xSizedBox12,
+          itemBuilder: (context, index) {
+            // if (index == 0)
+            //   return InkWell(
+            //     onTap: () async {},
+            //     child: Icon(Icons.do_not_disturb_alt_sharp,
+            //         color: Colors.white, size: 25),
+            //   );
+            return InkWell(
+                onTap: () async {},
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.fromLTRB(20, 5, 15, 10),
+                      color: Colors.white,
+                      width: 120,
+                      height: 80,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                              flex: 9,
+                              child: Image.asset(Assets.imagesImgLipstick)),
+                          Expanded(
+                              flex: 1,
+                              child: Icon(
+                                Icons.favorite_border,
+                                color: Colors.black,
+                                size: 18,
+                              )),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      "Item name Tom Ford",
+                      style: Constant.whiteBold16.copyWith(fontSize: 12),
+                    ),
+                    Text(
+                      "Brand name",
+                      style: Constant.whiteRegular12
+                          .copyWith(fontWeight: FontWeight.w300),
+                    ),
+                    Row(
+                      children: [
+                        Text("\$15", style: Constant.whiteRegular12),
+                        SizedBox(
+                          width: 30,
+                        ),
+                        Container(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          color: Color(0xFFC89A44),
+                          child: Center(
+                              child: Text(
+                            "Add to cart",
+                            style: TextStyle(color: Colors.white, fontSize: 10),
+                          )),
+                        )
+                      ],
+                    )
+                  ],
+                ));
+          },
+        ),
       ),
     );
   }
@@ -482,7 +586,14 @@ class _LipPlumberViewState extends State<LipPlumberView> {
           Constant.xSizedBox8,
           colorChoice(),
           separator(),
+          Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                "View All",
+                style: TextStyle(color: Colors.white, fontSize: 12),
+              )),
           Constant.xSizedBox8,
+          lipstickChoice(),
           // typeChip(),
           // Constant.xSizedBox4,
           // separator(),

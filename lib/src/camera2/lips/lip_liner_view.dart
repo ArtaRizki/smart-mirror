@@ -32,6 +32,11 @@ class _LipLinerViewState extends State<LipLinerView> {
   bool isFlipCameraSupported = false;
   File? file;
   bool makeupOrAccessories = false;
+  bool onOffVisibel = false;
+  int? mainColorSelected = 0;
+  int? colorSelected = 0;
+  int? typeColorSelected = 0;
+  int? typeColor2Selected = 0;
 
   @override
   void initState() {
@@ -126,14 +131,14 @@ class _LipLinerViewState extends State<LipLinerView> {
 
   List<String> lipLinerPath = [
     Assets.imagesImgLipliner,
-    Assets.imagesImgLipliner,
-    Assets.imagesImgLipliner,
-    Assets.imagesImgLipliner,
-    Assets.imagesImgLipliner,
-    Assets.imagesImgLipliner,
-    Assets.imagesImgLipliner,
-    Assets.imagesImgLipliner,
-    Assets.imagesImgLipliner,
+    Assets.imagesImgLipliner2,
+    Assets.imagesImgLipliner3,
+    Assets.imagesImgLipliner4,
+    Assets.imagesImgLipliner5,
+    Assets.imagesImgLipliner5,
+    Assets.imagesImgLipliner4,
+    Assets.imagesImgLipliner3,
+    Assets.imagesImgLipliner2,
   ];
 
   List<String> chipList = ['Gloss', 'Matt', 'Shimmer'];
@@ -394,24 +399,33 @@ class _LipLinerViewState extends State<LipLinerView> {
         itemCount: lipLinerList.length,
         separatorBuilder: (_, __) => Constant.xSizedBox8,
         itemBuilder: (context, index) {
-          return Container(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                  color: index == 0 ? Colors.white : Colors.transparent),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                CircleAvatar(
-                    radius: 8, backgroundColor: lipLinerColorList[index]),
-                Constant.xSizedBox4,
-                Text(
-                  lipLinerList[index],
-                  style: TextStyle(color: Colors.white, fontSize: 10),
-                ),
-              ],
+          return InkWell(
+            onTap: () {
+              setState(() {
+                mainColorSelected = index;
+              });
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                    color: mainColorSelected == index
+                        ? Colors.white
+                        : Colors.transparent),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                      radius: 8, backgroundColor: lipLinerColorList[index]),
+                  Constant.xSizedBox4,
+                  Text(
+                    lipLinerList[index],
+                    style: TextStyle(color: Colors.white, fontSize: 10),
+                  ),
+                ],
+              ),
             ),
           );
         },
@@ -430,14 +444,35 @@ class _LipLinerViewState extends State<LipLinerView> {
         itemBuilder: (context, index) {
           if (index == 0)
             return InkWell(
-              onTap: () async {},
+              onTap: () async {
+                setState(() {
+                  colorSelected = 0;
+                  onOffVisibel = true;
+                });
+              },
               child: Icon(Icons.do_not_disturb_alt_sharp,
                   color: Colors.white, size: 25),
             );
           return InkWell(
-              onTap: () async {},
+            onTap: () async {
+              setState(() {
+                colorSelected = index;
+                onOffVisibel = false;
+              });
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                    color: index == colorSelected && onOffVisibel == false
+                        ? Colors.white
+                        : Colors.transparent),
+              ),
               child: CircleAvatar(
-                  radius: 12, backgroundColor: colorChoiceList[index]));
+                  radius: 12, backgroundColor: colorChoiceList[index]),
+            ),
+          );
         },
       ),
     );
@@ -452,16 +487,26 @@ class _LipLinerViewState extends State<LipLinerView> {
         itemCount: chipList.length,
         separatorBuilder: (_, __) => Constant.xSizedBox12,
         itemBuilder: (context, index) {
-          return Container(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                  color: index == 0 ? Colors.white : Colors.transparent),
-            ),
-            child: Text(
-              lipLinerList[index],
-              style: TextStyle(color: Colors.white, fontSize: 10),
+          return InkWell(
+            onTap: () {
+              setState(() {
+                typeColorSelected = index;
+              });
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+              decoration: BoxDecoration(
+                color: typeColorSelected == index ? Color(0xffCA9C43) : null,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                    color: typeColorSelected == index
+                        ? Colors.white
+                        : Colors.transparent),
+              ),
+              child: Text(
+                chipList[index],
+                style: TextStyle(color: Colors.white, fontSize: 10),
+              ),
             ),
           );
         },
@@ -488,13 +533,94 @@ class _LipLinerViewState extends State<LipLinerView> {
     );
   }
 
+  Widget lipstickChoice() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        height: 150,
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: 5,
+          separatorBuilder: (_, __) => Constant.xSizedBox12,
+          itemBuilder: (context, index) {
+            // if (index == 0)
+            //   return InkWell(
+            //     onTap: () async {},
+            //     child: Icon(Icons.do_not_disturb_alt_sharp,
+            //         color: Colors.white, size: 25),
+            //   );
+            return InkWell(
+                onTap: () async {},
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.fromLTRB(20, 5, 15, 10),
+                      color: Colors.white,
+                      width: 120,
+                      height: 80,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                              flex: 9,
+                              child: Image.asset(Assets.imagesImgLipstick)),
+                          Expanded(
+                              flex: 1,
+                              child: Icon(
+                                Icons.favorite_border,
+                                color: Colors.black,
+                                size: 18,
+                              )),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      "Item name Tom Ford",
+                      style: Constant.whiteBold16.copyWith(fontSize: 12),
+                    ),
+                    Text(
+                      "Brand name",
+                      style: Constant.whiteRegular12
+                          .copyWith(fontWeight: FontWeight.w300),
+                    ),
+                    Row(
+                      children: [
+                        Text("\$15", style: Constant.whiteRegular12),
+                        SizedBox(
+                          width: 30,
+                        ),
+                        Container(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          color: Color(0xFFC89A44),
+                          child: Center(
+                              child: Text(
+                            "Add to cart",
+                            style: TextStyle(color: Colors.white, fontSize: 10),
+                          )),
+                        )
+                      ],
+                    )
+                  ],
+                ));
+          },
+        ),
+      ),
+    );
+  }
+
   Widget separator() {
     return Divider(thickness: 1, color: Colors.white);
   }
 
   Widget sheet() {
     return Container(
-      // height: 100,
+      height: 300,
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       decoration: BoxDecoration(
         color: Colors.black54,
@@ -503,28 +629,34 @@ class _LipLinerViewState extends State<LipLinerView> {
           topRight: Radius.circular(16),
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Constant.xSizedBox8,
-          colorChip(),
-          Constant.xSizedBox8,
-          colorChoice(),
-          Constant.xSizedBox8,
-          separator(),
-          Constant.xSizedBox4,
-          chipChoice(),
-          Constant.xSizedBox4,
-          separator(),
-          Constant.xSizedBox8,
-          itemChoice(),
-          Constant.xSizedBox8,
-          // typeChip(),
-          // Constant.xSizedBox4,
-          // separator(),
-          // typeText(),
-          // Constant.xSizedBox8,
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Constant.xSizedBox8,
+            colorChip(),
+            Constant.xSizedBox8,
+            colorChoice(),
+            Constant.xSizedBox8,
+            separator(),
+            itemChoice(),
+            Constant.xSizedBox8,
+            separator(),
+            Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  "View All",
+                  style: TextStyle(color: Colors.white, fontSize: 12),
+                )),
+            Constant.xSizedBox8,
+            lipstickChoice(),
+            // typeChip(),
+            // Constant.xSizedBox4,
+            // separator(),
+            // typeText(),
+            // Constant.xSizedBox8,
+          ],
+        ),
       ),
     );
   }
