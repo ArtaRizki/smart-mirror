@@ -11,6 +11,7 @@ import 'package:smart_mirror/common/helper/constant.dart';
 import 'package:smart_mirror/generated/assets.dart';
 import 'package:smart_mirror/src/camera/camera_page.dart';
 import 'package:smart_mirror/src/camera2/camera_video_page.dart';
+import 'package:smart_mirror/src/camera2/face/contour_view.dart';
 import 'package:smart_mirror/src/camera2/makeup_page.dart';
 import 'package:smart_mirror/utils/utils.dart';
 
@@ -457,11 +458,6 @@ class _BronzerViewState extends State<BronzerView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        color: Color(0xFF88756B),
-                        borderRadius: BorderRadius.circular(5)
-                      ),
                       width: 50,
                       height: 50,
                       child: Image.asset(bronzerList[index]),
@@ -792,7 +788,9 @@ class _BronzerViewState extends State<BronzerView> {
                                             () async {}, Assets.iconsIcChoose),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                            () async {}, Assets.iconsIcShare),
+                                            () async {
+                                              CusNav.nPush(context, ContourView());
+                                            }, Assets.iconsIcShare),
                                   ],
                                 ),
                               ),

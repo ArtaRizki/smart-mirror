@@ -6,27 +6,25 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:smart_mirror/common/component/custom_button.dart';
-import 'package:smart_mirror/common/component/custom_dialog.dart';
 import 'package:smart_mirror/common/component/custom_navigator.dart';
-import 'package:smart_mirror/common/component/custom_textfield.dart';
 import 'package:smart_mirror/common/helper/constant.dart';
 import 'package:smart_mirror/generated/assets.dart';
 import 'package:smart_mirror/src/camera/camera_page.dart';
 import 'package:smart_mirror/src/camera2/camera_video_page.dart';
+import 'package:smart_mirror/src/camera2/face/highlighter_view.dart';
 import 'package:smart_mirror/src/camera2/makeup_page.dart';
 import 'package:smart_mirror/utils/utils.dart';
 
 const xHEdgeInsets12 = EdgeInsets.symmetric(horizontal: 12);
 
-class OcrCameraPage2 extends StatefulWidget {
-  const OcrCameraPage2({super.key});
+class ContourView extends StatefulWidget {
+  const ContourView({super.key});
 
   @override
-  State<OcrCameraPage2> createState() => _OcrCameraPage2State();
+  State<ContourView> createState() => _ContourViewState();
 }
 
-class _OcrCameraPage2State extends State<OcrCameraPage2> {
+class _ContourViewState extends State<ContourView> {
   late CameraController controller;
   Completer<String?> cameraSetupCompleter = Completer();
   Completer? isFlippingCamera;
@@ -35,6 +33,7 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
   bool isFlipCameraSupported = false;
   File? file;
   bool makeupOrAccessories = false;
+  bool oneOrDual = false;
 
   @override
   void initState() {
@@ -101,6 +100,35 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
     }
   }
 
+  List<String> skinList = [
+    "Light skin",
+    "Medium skin",
+    "Dark skin",
+  ];
+  List<Color> skinColorList = [
+    Color(0xFFFDD8B7),
+    Color(0xFFD08A59),
+    Color(0xFF45260D),
+  ];
+  List<Color> colorChoiceList = [
+    Color(0xFF3D2B1F),
+    Color(0xFF5C4033),
+    Color(0xFF694B3A),
+    Color(0xFF8A4513),
+    Color(0xFF7A3F00),
+    Color(0xFF4F300D),
+    Color(0xFF483C32),
+    Color(0xFF342112),
+    Color(0xFF4A2912),
+  ];
+  List<String> bronzerList = [
+    Assets.imagesImgBronzer,
+    Assets.imagesImgBronzer1,
+    Assets.imagesImgBronzer2,
+    Assets.imagesImgBronzer3,
+    Assets.imagesImgBronzer4,
+  ];
+
   @override
   void dispose() {
     super.dispose();
@@ -108,54 +136,6 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
       controller.dispose();
     }
   }
-
-  List<String> textColorList = [
-    "Pink",
-    "Brown",
-    "Orange",
-    "Blue",
-    "Node",
-    "Red",
-  ];
-  List<String> typeList = [
-    "Sheer",
-    "Matt",
-    "Gloss",
-    "Shimmer",
-    "Stain",
-    "Stain",
-  ];
-  List<String> modeTextList = [
-    "One",
-    "Dual",
-    "Ombre",
-  ];
-  List<Color> choiceColorList = [
-    Color(0xFFFC3698),
-    Color(0xFF3D0B0B),
-    Color(0xFFFD5100),
-    Color(0xFF1400FD),
-    Color(0xFFDEBBA8),
-    Color(0xFFFD0000),
-  ];
-  List<Color> colorChoiceList = [
-    Color(0xFF730039),
-    Color(0xFF8C0046),
-    Color(0xFFB10058),
-    Color(0xFFB41F69),
-    Color(0xFFDE1050),
-    Color(0xFFE21B7A),
-    Color(0xFFFC3698),
-    Color(0xFFE761A3),
-    Color(0xFFDF467B),
-  ];
-  List<String> highlighterList = [
-    Assets.imagesImgHighlighter1,
-    Assets.imagesImgHighlighter2,
-    Assets.imagesImgHighlighter3,
-    Assets.imagesImgHighlighter4,
-  ];
-
 
   Future<bool> checkPermissionStatuses() async {
     for (var permission in permissions) {
@@ -179,7 +159,7 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
     } else {
       await availableCameras().then((value) async {
         isFlipCameraSupported = value.indexWhere((element) =>
-                element.lensDirection == CameraLensDirection.front) !=
+        element.lensDirection == CameraLensDirection.front) !=
             -1;
 
         for (var camera in value) {
@@ -251,42 +231,6 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
         ],
       ),
     );
-  }
-
-  void changeModel(
-      BuildContext context) {
-    CustomDialog.newDialog(
-        context: context,
-        title: Row(
-          children: [
-            IconButton(
-              icon: Icon(
-                Icons.close,
-                color: Colors.white,
-                size: 24,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            Text("How would you like to try on the makeup?", style: Constant.whiteRegular12,),
-          ],
-        ),
-        titlePadding: EdgeInsets.zero,
-        contentPadding: EdgeInsets.zero,
-        content: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Image.asset(Assets.imagesImgUpPhoto, scale: 3,),
-                Image.asset(Assets.imagesImgUpVideo, scale: 3,),
-                Image.asset(Assets.imagesImgModel, scale: 3,),
-              ],
-            ),
-          ),
-        ));
   }
 
   Widget makeupOrAccessoriesChoice() {
@@ -393,24 +337,24 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
                       isFlippingCamera = Completer();
                       isFlippingCamera!.complete(
                           await availableCameras().then((value) async {
-                        for (var camera in value) {
-                          if (camera.lensDirection ==
-                              (controller.description.lensDirection ==
+                            for (var camera in value) {
+                              if (camera.lensDirection ==
+                                  (controller.description.lensDirection ==
                                       CameraLensDirection.front
-                                  ? CameraLensDirection.back
-                                  : CameraLensDirection.front)) {
-                            await controller.dispose();
-                            cameraSetupCompleter = Completer();
+                                      ? CameraLensDirection.back
+                                      : CameraLensDirection.front)) {
+                                await controller.dispose();
+                                cameraSetupCompleter = Completer();
 
-                            await _initCamera(camera: camera);
-                            setState(() {});
-                            break;
-                          }
-                        }
+                                await _initCamera(camera: camera);
+                                setState(() {});
+                                break;
+                              }
+                            }
 
-                        await Future.delayed(
-                            const Duration(seconds: 1, milliseconds: 500));
-                      }));
+                            await Future.delayed(
+                                const Duration(seconds: 1, milliseconds: 500));
+                          }));
                     } else {
                       print('Not completed!');
                     }
@@ -433,36 +377,34 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
   }
 
   Widget colorChip() {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        height: 30,
-        child: ListView.separated(
-          shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          itemCount: textColorList.length,
-          separatorBuilder: (_, __) => Constant.xSizedBox8,
-          itemBuilder: (context, index) {
-            return Container(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                    color: index == 0 ? Colors.white : Colors.transparent),
-              ),
-              child: Row(
-                children: [
-                  CircleAvatar(radius: 8, backgroundColor: choiceColorList[index]),
-                  Constant.xSizedBox4,
-                  Text(
-                    textColorList[index],
-                    style: TextStyle(color: Colors.white, fontSize: 10),
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
+    return Container(
+      height: 30,
+      child: ListView.separated(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: skinList.length,
+        separatorBuilder: (_, __) => Constant.xSizedBox8,
+        itemBuilder: (context, index) {
+          return Container(
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                  color: index == 0 ? Colors.white : Colors.transparent),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                CircleAvatar(radius: 8, backgroundColor: skinColorList[index]),
+                Constant.xSizedBox4,
+                Text(
+                  skinList[index],
+                  style: TextStyle(color: Colors.white, fontSize: 10),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -486,112 +428,232 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
               );
             return InkWell(
                 onTap: () async {},
-                child: CircleAvatar(radius: 12, backgroundColor: colorChoiceList[index]));
+                child: CircleAvatar(
+                    radius: 12, backgroundColor: colorChoiceList[index]));
           },
         ),
       ),
     );
   }
+
+  Widget bronzerChoice() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        height: 50,
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: oneOrDual == false ? bronzerList.length : 1,
+          separatorBuilder: (_, __) => Constant.xSizedBox12,
+          itemBuilder: (context, index) {
+            // if (index == 0)
+            //   return InkWell(
+            //     onTap: () async {},
+            //     child: Icon(Icons.do_not_disturb_alt_sharp,
+            //         color: Colors.white, size: 25),
+            //   );
+            return InkWell(
+                onTap: () async {},
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 50,
+                      height: 50,
+                      child: Image.asset(bronzerList[index]),
+                    ),
+                  ],
+                ));
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget lipstickChoice() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        height: 150,
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: 5,
+          separatorBuilder: (_, __) => Constant.xSizedBox12,
+          itemBuilder: (context, index) {
+            // if (index == 0)
+            //   return InkWell(
+            //     onTap: () async {},
+            //     child: Icon(Icons.do_not_disturb_alt_sharp,
+            //         color: Colors.white, size: 25),
+            //   );
+            return InkWell(
+                onTap: () async {},
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.fromLTRB(20, 5, 15, 10),
+                      color: Colors.white,
+                      width: 120,
+                      height: 80,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                              flex: 9, child: Image.asset(Assets.imagesImgLipstick)),
+                          Expanded(
+                              flex: 1,
+                              child: Icon(
+                                Icons.favorite_border,
+                                color: Colors.black,
+                                size: 18,
+                              )),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 5,),
+                    Text("Item name Tom Ford", style: Constant.whiteBold16.copyWith(fontSize: 12),),
+                    Text("Brand name", style: Constant.whiteRegular12.copyWith(fontWeight: FontWeight.w300),),
+                    Row(
+                      children: [
+                        Text("\$15", style: Constant.whiteRegular12),
+                        SizedBox(width: 30,),
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          color: Color(0xFFC89A44),
+                          child: Center(child: Text("Add to cart", style: TextStyle(color: Colors.white, fontSize: 10),)),
+                        )
+
+                      ],
+                    )
+                  ],
+                ));
+          },
+        ),
+      ),
+    );
+  }
+
 
   Widget separator() {
     return Divider(thickness: 1, color: Colors.white);
   }
 
   Widget typeChip() {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        height: 30,
-        child: ListView.separated(
-          shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          itemCount: typeList.length,
-          separatorBuilder: (_, __) => Constant.xSizedBox8,
-          itemBuilder: (context, index) {
-            return Container(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.white),
+    return Container(
+      height: 30,
+      child: ListView.separated(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: 7,
+        separatorBuilder: (_, __) => Constant.xSizedBox8,
+        itemBuilder: (context, index) {
+          return Container(
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Colors.white),
+            ),
+            child: Center(
+              child: Text(
+                'Sheer',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white, fontSize: 10),
               ),
-              child: Center(
-                child: Text(
-                  typeList[index],
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white, fontSize: 10),
-                ),
-              ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }
 
   Widget typeText() {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        height: 30,
-        child: ListView.separated(
-          shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          itemCount: modeTextList.length,
-          separatorBuilder: (_, __) => Constant.xSizedBox8,
-          itemBuilder: (context, index) {
-            return Center(
-              child: Text(
-                modeTextList[index],
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  shadows: index != 0
-                      ? null
-                      : [
-                          BoxShadow(
-                            offset: Offset(0, 0),
-                            color: Colors.white,
-                            spreadRadius: 0,
-                            blurRadius: 10,
-                          ),
-                        ],
-                ),
+    return Container(
+      height: 30,
+      child: ListView.separated(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: 7,
+        separatorBuilder: (_, __) => Constant.xSizedBox8,
+        itemBuilder: (context, index) {
+          return Center(
+            child: Text(
+              'Ombre',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                shadows: index != 0
+                    ? null
+                    : [
+                  BoxShadow(
+                    offset: Offset(0, 0),
+                    color: Colors.white,
+                    spreadRadius: 0,
+                    blurRadius: 10,
+                  ),
+                ],
               ),
-            );
-            ;
-          },
-        ),
+            ),
+          );
+          ;
+        },
       ),
     );
   }
 
   Widget sheet() {
     return Container(
-      // height: 100,
-      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+      height: 300,
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 16),
       decoration: BoxDecoration(
-        color: Colors.transparent,
+        color: Colors.black54,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(16),
           topRight: Radius.circular(16),
         ),
       ),
-      child: Column(
-        children: [
-          Constant.xSizedBox8,
-          colorChip(),
-          Constant.xSizedBox8,
-          colorChoice(),
-          Constant.xSizedBox8,
-          separator(),
-          Constant.xSizedBox4,
-          typeChip(),
-          Constant.xSizedBox4,
-          separator(),
-          typeText(),
-          Constant.xSizedBox8,
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Constant.xSizedBox8,
+            // colorChip(),
+            colorChoice(),
+            Constant.xSizedBox8,
+            separator(),
+            Row(
+              children: [
+                InkWell(
+                  onTap: (){
+                    setState(() {
+                      oneOrDual = true;
+                    });
+                  },
+                    child: Text("One", style: oneOrDual == true ? Constant.whiteBold16.copyWith(fontSize: 12) : Constant.whiteRegular12,)),
+                SizedBox(width: 10,),
+                InkWell(
+                  onTap: (){
+                    setState(() {
+                      oneOrDual = false;
+                    });
+                  },
+                    child: Text("Two", style: oneOrDual == false ? Constant.whiteBold16.copyWith(fontSize: 12) : Constant.whiteRegular12,)),
+              ],
+            ),
+            separator(),
+            bronzerChoice(),
+            Constant.xSizedBox4,
+            separator(),
+            Align(
+                alignment: Alignment.centerRight,
+                child: Text("View All",style: TextStyle(color: Colors.white, fontSize: 12),)),
+            Constant.xSizedBox4,
+            lipstickChoice(),
+            // Constant.xSizedBox8,
+          ],
+        ),
       ),
     );
   }
@@ -658,7 +720,7 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
         systemOverlayStyle:
-            const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+        const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
       ),
       extendBodyBehindAppBar: true,
       body: FutureBuilder<String?>(
@@ -671,17 +733,17 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
           } else if (snapshot.data != null) {
             return Center(
                 child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text('Setup Camera Failed'),
-                Text(
-                  snapshot.data!,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
-              ],
-            ));
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text('Setup Camera Failed'),
+                    Text(
+                      snapshot.data!,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  ],
+                ));
           } else {
             return LayoutBuilder(
               builder: (p0, p1) {
@@ -710,7 +772,7 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
                         // margin: xHEdgeInsets12
                         //     .add(const EdgeInsets.only(bottom: 12)),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Align(
                               alignment: Alignment.bottomRight,
@@ -729,27 +791,27 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
                                     }, Assets.iconsIcCamera),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                        () async {}, Assets.iconsIcFlipCamera),
+                                            () async {}, Assets.iconsIcFlipCamera),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                        () async {}, Assets.iconsIcScale),
+                                            () async {}, Assets.iconsIcScale),
                                     Constant.xSizedBox12,
                                     iconSidebar(() async {
                                       setState(() {
                                         makeupOrAccessories = true;
                                       });
-                                    }, Assets.iconsIcCompare),
+                                    }, Assets.iconsIcCompareOff),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                        () async {}, Assets.iconsIcReset),
+                                            () async {}, Assets.iconsIcResetOff),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                        () async {
-                                          changeModel(context);
-                                        }, Assets.iconsIcChoose),
+                                            () async {}, Assets.iconsIcChoose),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                        () async {}, Assets.iconsIcShare),
+                                            () async {
+                                              CusNav.nPush(context, HighlighterView());
+                                            }, Assets.iconsIcShare),
                                   ],
                                 ),
                               ),
