@@ -388,10 +388,8 @@ class _MakeupPageState extends State<MakeupPage> {
           separatorBuilder: (_, __) => Constant.xSizedBox8,
           itemBuilder: (context, index) {
             return nailsItem(nailsType[index], () {
-              if (index == 0) CusNav.nPush(context, NailPolishView(
-              ));
+              if (index == 0) CusNav.nPush(context, NailPolishView());
               if (index == 1) CusNav.nPush(context, PresOnNailsView());
-
             });
           },
         ),
