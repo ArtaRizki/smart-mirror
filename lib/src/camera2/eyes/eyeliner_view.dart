@@ -32,6 +32,10 @@ class _EyelinerViewState extends State<EyelinerView> {
   bool isFlipCameraSupported = false;
   File? file;
   double sliderValue = 0;
+  bool onOffVisible = false;
+  int? eyebrowSelected = 0;
+  int? colorSelected = 0;
+  int? colorTextSelected = 0;
 
   List<Color> colorMainList = [
     Color(0xffFE3699),
@@ -261,22 +265,32 @@ class _EyelinerViewState extends State<EyelinerView> {
         itemCount: colorMainList.length,
         separatorBuilder: (_, __) => Constant.xSizedBox8,
         itemBuilder: (context, index) {
-          return Container(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                  color: index == 0 ? Colors.white : Colors.transparent),
-            ),
-            child: Row(
-              children: [
-                CircleAvatar(radius: 8, backgroundColor: colorMainList[index]),
-                Constant.xSizedBox4,
-                Text(
-                  colorMainListString[index],
-                  style: TextStyle(color: Colors.white, fontSize: 10),
-                ),
-              ],
+          return InkWell(
+            onTap: () {
+              setState(() {
+                colorTextSelected = index;
+              });
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                    color: index == colorTextSelected
+                        ? Colors.white
+                        : Colors.transparent),
+              ),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                      radius: 8, backgroundColor: colorMainList[index]),
+                  Constant.xSizedBox4,
+                  Text(
+                    colorMainListString[index],
+                    style: TextStyle(color: Colors.white, fontSize: 10),
+                  ),
+                ],
+              ),
             ),
           );
         },
@@ -295,14 +309,32 @@ class _EyelinerViewState extends State<EyelinerView> {
         itemBuilder: (context, index) {
           if (index == 0)
             return InkWell(
-              onTap: () async {},
+              onTap: () async {
+                setState(() {
+                  onOffVisible = true;
+                });
+              },
               child: Icon(Icons.do_not_disturb_alt_sharp,
                   color: Colors.white, size: 25),
             );
           return InkWell(
-              onTap: () async {},
-              child:
-                  CircleAvatar(radius: 12, backgroundColor: colorList[index]));
+              onTap: () async {
+                setState(() {
+                  colorSelected = index;
+                  onOffVisible = false;
+                });
+              },
+              child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                        color: index == colorSelected && onOffVisible == false
+                            ? Colors.white
+                            : Colors.transparent),
+                  ),
+                  child: CircleAvatar(
+                      radius: 12, backgroundColor: colorList[index])));
         },
       ),
     );
@@ -314,22 +346,110 @@ class _EyelinerViewState extends State<EyelinerView> {
 
   Widget typeEyeLinerChip() {
     return Container(
-      height: 30,
+      height: 50,
       child: ListView.separated(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         itemCount: typeEyeLiner.length,
         separatorBuilder: (_, __) => Constant.xSizedBox8,
         itemBuilder: (context, index) {
-          return Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(
-                  color: index == 0 ? Colors.white : Colors.transparent),
+          return InkWell(
+            onTap: () async {
+              setState(() {
+                eyebrowSelected = index;
+              });
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(
+                    color: index == eyebrowSelected ? Colors.white : Colors.transparent),
+              ),
+              child: typeEyeLiner[index],
             ),
-            child: typeEyeLiner[index],
           );
         },
+      ),
+    );
+  }
+
+  Widget lipstickChoice() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        height: 150,
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: 5,
+          separatorBuilder: (_, __) => Constant.xSizedBox12,
+          itemBuilder: (context, index) {
+            // if (index == 0)
+            //   return InkWell(
+            //     onTap: () async {},
+            //     child: Icon(Icons.do_not_disturb_alt_sharp,
+            //         color: Colors.white, size: 25),
+            //   );
+            return InkWell(
+                onTap: () async {},
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.fromLTRB(20, 5, 15, 10),
+                      color: Colors.white,
+                      width: 120,
+                      height: 80,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                              flex: 9,
+                              child: Image.asset(Assets.imagesImgLipstick)),
+                          Expanded(
+                              flex: 1,
+                              child: Icon(
+                                Icons.favorite_border,
+                                color: Colors.black,
+                                size: 18,
+                              )),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      "Item name Tom Ford",
+                      style: Constant.whiteBold16.copyWith(fontSize: 12),
+                    ),
+                    Text(
+                      "Brand name",
+                      style: Constant.whiteRegular12
+                          .copyWith(fontWeight: FontWeight.w300),
+                    ),
+                    Row(
+                      children: [
+                        Text("\$15", style: Constant.whiteRegular12),
+                        SizedBox(
+                          width: 30,
+                        ),
+                        Container(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          color: Color(0xFFC89A44),
+                          child: Center(
+                              child: Text(
+                            "Add to cart",
+                            style: TextStyle(color: Colors.white, fontSize: 10),
+                          )),
+                        )
+                      ],
+                    )
+                  ],
+                ));
+          },
+        ),
       ),
     );
   }
@@ -370,7 +490,7 @@ class _EyelinerViewState extends State<EyelinerView> {
 
   Widget sheet() {
     return Container(
-      // height: 100,
+      height: 300,
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       decoration: BoxDecoration(
         color: Colors.black54,
@@ -379,19 +499,24 @@ class _EyelinerViewState extends State<EyelinerView> {
           topRight: Radius.circular(16),
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Constant.xSizedBox8,
-          colorChip(),
-          Constant.xSizedBox8,
-          colorChoice(),
-          Constant.xSizedBox8,
-          separator(),
-          Constant.xSizedBox4,
-          typeEyeLinerChip(),
-          Constant.xSizedBox32,
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Constant.xSizedBox8,
+            colorChip(),
+            Constant.xSizedBox8,
+            colorChoice(),
+            Constant.xSizedBox8,
+            separator(),
+            Constant.xSizedBox4,
+            typeEyeLinerChip(),
+            Constant.xSizedBox8,
+            separator(),
+            Constant.xSizedBox4,
+            lipstickChoice(),
+          ],
+        ),
       ),
     );
   }

@@ -612,7 +612,6 @@ class _FoundationViewState extends State<FoundationView> {
               ),
             ),
           );
-          ;
         },
       ),
     );

@@ -34,6 +34,10 @@ class _LashesMascaraViewState extends State<LashesMascaraView> {
   File? file;
   double sliderValue = 0;
   bool lashes = true;
+  bool onOffVisible = false;
+  int? colorSelected = 0;
+  int? colorTextSelected = 0;
+  int? eyelashSelected = 0;
 
   List<Color> colorMainList = [
     Color(0xffFE3699),
@@ -265,22 +269,29 @@ class _LashesMascaraViewState extends State<LashesMascaraView> {
         itemCount: colorMainList.length,
         separatorBuilder: (_, __) => Constant.xSizedBox8,
         itemBuilder: (context, index) {
-          return Container(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                  color: index == 0 ? Colors.white : Colors.transparent),
-            ),
-            child: Row(
-              children: [
-                CircleAvatar(radius: 8, backgroundColor: colorMainList[index]),
-                Constant.xSizedBox4,
-                Text(
-                  colorMainListString[index],
-                  style: TextStyle(color: Colors.white, fontSize: 10),
-                ),
-              ],
+          return InkWell(
+            onTap: () {
+              setState(() {
+                colorTextSelected = index;
+              });
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                    color: index == colorTextSelected ? Colors.white : Colors.transparent),
+              ),
+              child: Row(
+                children: [
+                  CircleAvatar(radius: 8, backgroundColor: colorMainList[index]),
+                  Constant.xSizedBox4,
+                  Text(
+                    colorMainListString[index],
+                    style: TextStyle(color: Colors.white, fontSize: 10),
+                  ),
+                ],
+              ),
             ),
           );
         },
@@ -299,14 +310,30 @@ class _LashesMascaraViewState extends State<LashesMascaraView> {
         itemBuilder: (context, index) {
           if (index == 0)
             return InkWell(
-              onTap: () async {},
+              onTap: () async {
+                setState(() {
+                  onOffVisible = true;
+                });
+              },
               child: Icon(Icons.do_not_disturb_alt_sharp,
                   color: Colors.white, size: 25),
             );
           return InkWell(
-              onTap: () async {},
+              onTap: () async {
+                setState(() {
+                  colorSelected = index;
+                  onOffVisible = false;
+                });
+              },
               child:
-                  CircleAvatar(radius: 12, backgroundColor: colorList[index]));
+                  Container(
+                      padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                            color: index == colorSelected && onOffVisible == false ? Colors.white : Colors.transparent),
+                      ),
+                      child: CircleAvatar(radius: 12, backgroundColor: colorList[index])));
         },
       ),
     );
@@ -325,13 +352,21 @@ class _LashesMascaraViewState extends State<LashesMascaraView> {
         itemCount: typeLashes.length,
         separatorBuilder: (_, __) => Constant.xSizedBox8,
         itemBuilder: (context, index) {
-          return Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(
-                  color: index == 0 ? Colors.white : Colors.transparent),
+          return InkWell(
+            onTap: () async {
+              setState(() {
+                eyelashSelected = index;
+                onOffVisible = false;
+              });
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(
+                    color: index == eyelashSelected ? Colors.white : Colors.transparent),
+              ),
+              child: typeLashes[index],
             ),
-            child: typeLashes[index],
           );
         },
       ),

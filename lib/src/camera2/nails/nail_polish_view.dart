@@ -11,20 +11,19 @@ import 'package:smart_mirror/common/helper/constant.dart';
 import 'package:smart_mirror/generated/assets.dart';
 import 'package:smart_mirror/src/camera/camera_page.dart';
 import 'package:smart_mirror/src/camera2/camera_video_page.dart';
-import 'package:smart_mirror/src/camera2/face/highlighter_view.dart';
 import 'package:smart_mirror/src/camera2/makeup_page.dart';
 import 'package:smart_mirror/utils/utils.dart';
 
 const xHEdgeInsets12 = EdgeInsets.symmetric(horizontal: 12);
 
-class ContourView extends StatefulWidget {
-  const ContourView({super.key});
+class NailPolishView extends StatefulWidget {
+  const NailPolishView({super.key});
 
   @override
-  State<ContourView> createState() => _ContourViewState();
+  State<NailPolishView> createState() => _NailPolishViewState();
 }
 
-class _ContourViewState extends State<ContourView> {
+class _NailPolishViewState extends State<NailPolishView> {
   late CameraController controller;
   Completer<String?> cameraSetupCompleter = Completer();
   Completer? isFlippingCamera;
@@ -33,11 +32,10 @@ class _ContourViewState extends State<ContourView> {
   bool isFlipCameraSupported = false;
   File? file;
   bool makeupOrAccessories = false;
-  bool oneOrDual = false;
-  bool onOffVisibel = false;
-  bool onOffVisibel1 = false;
-  int? skinSelected = 0;
+  bool onOffVisible = false;
+  int? typeSelected = 0;
   int? colorSelected = 0;
+  int? colorTextSelected = 0;
 
   @override
   void initState() {
@@ -104,34 +102,39 @@ class _ContourViewState extends State<ContourView> {
     }
   }
 
-  List<String> skinList = [
-    "Light skin",
-    "Medium skin",
-    "Dark skin",
+  List<String> nailsList = [
+    "Yellow",
+    "Black",
+    "Silver",
+    "Gold",
+    "Rose Gold",
   ];
-  List<Color> skinColorList = [
-    Color(0xFFFDD8B7),
-    Color(0xFFD08A59),
-    Color(0xFF45260D),
+  List<Color> nailsColorList = [
+    Color(0xFFFFFF00),
+    Colors.black,
+    Color(0xFFC0C0C0),
+    Color(0xFFCA9C43),
+    Color(0xFFB76E79),
   ];
   List<Color> colorChoiceList = [
-    Color(0xFF3D2B1F),
-    Color(0xFF5C4033),
-    Color(0xFF694B3A),
-    Color(0xFF8A4513),
-    Color(0xFF7A3F00),
-    Color(0xFF4F300D),
-    Color(0xFF483C32),
-    Color(0xFF342112),
-    Color(0xFF4A2912),
+    Color(0xFF740039),
+    Color(0xFF8D0046),
+    Color(0xFFB20058),
+    Color(0xFFB51F69),
+    Color(0xFFDF1050),
+    Color(0xFFE31B7B),
+    Color(0xFFFE3699),
+    Color(0xFFE861A4),
+    Color(0xFFE0467C),
   ];
-  List<String> bronzerList = [
-    Assets.imagesImgBronzer,
-    Assets.imagesImgBronzer1,
-    Assets.imagesImgBronzer2,
-    Assets.imagesImgBronzer3,
-    Assets.imagesImgBronzer4,
+
+  List<String> nailsPath = [
+    Assets.imagesImgNails1,
+    Assets.imagesImgNails2,
+    Assets.imagesImgNails3,
   ];
+
+  List<String> chipList = ['Gloss', 'Matt', 'Shimmer'];
 
   @override
   void dispose() {
@@ -163,7 +166,7 @@ class _ContourViewState extends State<ContourView> {
     } else {
       await availableCameras().then((value) async {
         isFlipCameraSupported = value.indexWhere((element) =>
-                element.lensDirection == CameraLensDirection.front) !=
+        element.lensDirection == CameraLensDirection.front) !=
             -1;
 
         for (var camera in value) {
@@ -341,24 +344,24 @@ class _ContourViewState extends State<ContourView> {
                       isFlippingCamera = Completer();
                       isFlippingCamera!.complete(
                           await availableCameras().then((value) async {
-                        for (var camera in value) {
-                          if (camera.lensDirection ==
-                              (controller.description.lensDirection ==
+                            for (var camera in value) {
+                              if (camera.lensDirection ==
+                                  (controller.description.lensDirection ==
                                       CameraLensDirection.front
-                                  ? CameraLensDirection.back
-                                  : CameraLensDirection.front)) {
-                            await controller.dispose();
-                            cameraSetupCompleter = Completer();
+                                      ? CameraLensDirection.back
+                                      : CameraLensDirection.front)) {
+                                await controller.dispose();
+                                cameraSetupCompleter = Completer();
 
-                            await _initCamera(camera: camera);
-                            setState(() {});
-                            break;
-                          }
-                        }
+                                await _initCamera(camera: camera);
+                                setState(() {});
+                                break;
+                              }
+                            }
 
-                        await Future.delayed(
-                            const Duration(seconds: 1, milliseconds: 500));
-                      }));
+                            await Future.delayed(
+                                const Duration(seconds: 1, milliseconds: 500));
+                          }));
                     } else {
                       print('Not completed!');
                     }
@@ -376,136 +379,6 @@ class _ContourViewState extends State<ContourView> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget colorChip() {
-    return Container(
-      height: 30,
-      child: ListView.separated(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: skinList.length,
-        separatorBuilder: (_, __) => Constant.xSizedBox8,
-        itemBuilder: (context, index) {
-          return Container(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                  color: index == 0 ? Colors.white : Colors.transparent),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                CircleAvatar(radius: 8, backgroundColor: skinColorList[index]),
-                Constant.xSizedBox4,
-                Text(
-                  skinList[index],
-                  style: TextStyle(color: Colors.white, fontSize: 10),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget colorChoice() {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        height: 30,
-        child: ListView.separated(
-          shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          itemCount: colorChoiceList.length,
-          separatorBuilder: (_, __) => Constant.xSizedBox12,
-          itemBuilder: (context, index) {
-            if (index == 0)
-              return InkWell(
-                onTap: () async {
-                  setState(() {
-                    colorSelected = 0;
-                    onOffVisibel = true;
-                  });
-                },
-                child: Icon(Icons.do_not_disturb_alt_sharp,
-                    color: Colors.white, size: 25),
-              );
-            return InkWell(
-                onTap: () async {
-                  setState(() {
-                    colorSelected = index;
-                    onOffVisibel = false;
-                  });
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                        color: index == colorSelected && onOffVisibel == false
-                            ? Colors.white
-                            : Colors.transparent),
-                  ),
-                  child: CircleAvatar(
-                      radius: 12, backgroundColor: colorChoiceList[index]),
-                ));
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget bronzerChoice() {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        height: 55,
-        child: ListView.separated(
-          shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          itemCount: oneOrDual == false ? bronzerList.length : 1,
-          separatorBuilder: (_, __) => Constant.xSizedBox12,
-          itemBuilder: (context, index) {
-            // if (index == 0)
-            //   return InkWell(
-            //     onTap: () async {},
-            //     child: Icon(Icons.do_not_disturb_alt_sharp,
-            //         color: Colors.white, size: 25),
-            //   );
-            return Container(
-              padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
-              decoration: BoxDecoration(
-                // borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                    color: index == skinSelected && onOffVisibel1 == false
-                        ? Colors.white
-                        : Colors.transparent),
-              ),
-              child: InkWell(
-                  onTap: () async {
-                    setState(() {
-                      skinSelected = index;
-                      onOffVisibel1 = false;
-                    });
-                  },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 50,
-                        height: 50,
-                        child: Image.asset(bronzerList[index]),
-                      ),
-                    ],
-                  )),
-            );
-          },
-        ),
       ),
     );
   }
@@ -573,13 +446,13 @@ class _ContourViewState extends State<ContourView> {
                         ),
                         Container(
                           padding:
-                              EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                           color: Color(0xFFC89A44),
                           child: Center(
                               child: Text(
-                            "Add to cart",
-                            style: TextStyle(color: Colors.white, fontSize: 10),
-                          )),
+                                "Add to cart",
+                                style: TextStyle(color: Colors.white, fontSize: 10),
+                              )),
                         )
                       ],
                     )
@@ -591,29 +464,111 @@ class _ContourViewState extends State<ContourView> {
     );
   }
 
-  Widget separator() {
-    return Divider(thickness: 1, color: Colors.white);
-  }
-
-  Widget typeChip() {
+  Widget colorChip() {
     return Container(
       height: 30,
       child: ListView.separated(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
-        itemCount: 7,
+        itemCount: nailsList.length,
         separatorBuilder: (_, __) => Constant.xSizedBox8,
         itemBuilder: (context, index) {
-          return Container(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.white),
+          return InkWell(
+            onTap: (){
+              setState(() {
+                colorTextSelected = index;
+              });
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                    color: index == colorTextSelected ? Colors.white : Colors.transparent),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  CircleAvatar(radius: 8, backgroundColor: nailsColorList[index]),
+                  Constant.xSizedBox4,
+                  Text(
+                    nailsList[index],
+                    style: TextStyle(color: Colors.white, fontSize: 10),
+                  ),
+                ],
+              ),
             ),
-            child: Center(
+          );
+        },
+      ),
+    );
+  }
+
+  Widget colorChoice() {
+    return Container(
+      height: 30,
+      child: ListView.separated(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: colorChoiceList.length,
+        separatorBuilder: (_, __) => Constant.xSizedBox12,
+        itemBuilder: (context, index) {
+          if (index == 0)
+            return InkWell(
+              onTap: () async {
+                setState(() {
+                  onOffVisible = true;
+                });
+              },
+              child: Icon(Icons.do_not_disturb_alt_sharp,
+                  color: Colors.white, size: 25),
+            );
+          return InkWell(
+              onTap: () async {
+                setState(() {
+                  colorSelected = index;
+                  onOffVisible = false;
+                });
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                      color: index == colorSelected && onOffVisible == false ? Colors.white : Colors.transparent),
+                ),
+                child: CircleAvatar(
+                    radius: 12, backgroundColor: colorChoiceList[index]),
+              ));
+        },
+      ),
+    );
+  }
+
+  Widget chipChoice() {
+    return Container(
+      height: 18,
+      child: ListView.separated(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: chipList.length,
+        separatorBuilder: (_, __) => Constant.xSizedBox12,
+        itemBuilder: (context, index) {
+          return InkWell(
+            onTap: () {
+              setState(() {
+                typeSelected = index;
+              });
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                    color: index == typeSelected ? Colors.white : Colors.transparent),
+              ),
               child: Text(
-                'Sheer',
-                textAlign: TextAlign.center,
+                chipList[index],
                 style: TextStyle(color: Colors.white, fontSize: 10),
               ),
             ),
@@ -623,44 +578,14 @@ class _ContourViewState extends State<ContourView> {
     );
   }
 
-  Widget typeText() {
-    return Container(
-      height: 30,
-      child: ListView.separated(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: 7,
-        separatorBuilder: (_, __) => Constant.xSizedBox8,
-        itemBuilder: (context, index) {
-          return Center(
-            child: Text(
-              'Ombre',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-                shadows: index != 0
-                    ? null
-                    : [
-                        BoxShadow(
-                          offset: Offset(0, 0),
-                          color: Colors.white,
-                          spreadRadius: 0,
-                          blurRadius: 10,
-                        ),
-                      ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
+  Widget separator() {
+    return Divider(thickness: 1, color: Colors.white);
   }
 
   Widget sheet() {
     return Container(
       height: 300,
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 16),
+      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       decoration: BoxDecoration(
         color: Colors.black54,
         borderRadius: BorderRadius.only(
@@ -670,55 +595,24 @@ class _ContourViewState extends State<ContourView> {
       ),
       child: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Constant.xSizedBox8,
-            // colorChip(),
-            colorChoice(),
             Constant.xSizedBox8,
-            separator(),
-            Row(
-              children: [
-                InkWell(
-                    onTap: () {
-                      setState(() {
-                        oneOrDual = true;
-                      });
-                    },
-                    child: Text(
-                      "One",
-                      style: oneOrDual == true
-                          ? Constant.whiteBold16.copyWith(fontSize: 12)
-                          : Constant.whiteRegular12,
-                    )),
-                SizedBox(
-                  width: 10,
-                ),
-                InkWell(
-                    onTap: () {
-                      setState(() {
-                        oneOrDual = false;
-                      });
-                    },
-                    child: Text(
-                      "Two",
-                      style: oneOrDual == false
-                          ? Constant.whiteBold16.copyWith(fontSize: 12)
-                          : Constant.whiteRegular12,
-                    )),
-              ],
-            ),
-            separator(),
-            bronzerChoice(),
+            colorChip(),
+            Constant.xSizedBox8,
+            colorChoice(),
             Constant.xSizedBox4,
             separator(),
-            Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  "View All",
-                  style: TextStyle(color: Colors.white, fontSize: 12),
-                )),
             Constant.xSizedBox4,
+            chipChoice(),
+            separator(),
+            Constant.xSizedBox8,
             lipstickChoice(),
+            Constant.xSizedBox8,
+            // typeChip(),
+            // Constant.xSizedBox4,
+            // separator(),
+            // typeText(),
             // Constant.xSizedBox8,
           ],
         ),
@@ -788,7 +682,7 @@ class _ContourViewState extends State<ContourView> {
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
         systemOverlayStyle:
-            const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+        const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
       ),
       extendBodyBehindAppBar: true,
       body: FutureBuilder<String?>(
@@ -801,17 +695,17 @@ class _ContourViewState extends State<ContourView> {
           } else if (snapshot.data != null) {
             return Center(
                 child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text('Setup Camera Failed'),
-                Text(
-                  snapshot.data!,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
-              ],
-            ));
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text('Setup Camera Failed'),
+                    Text(
+                      snapshot.data!,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  ],
+                ));
           } else {
             return LayoutBuilder(
               builder: (p0, p1) {
@@ -858,43 +752,11 @@ class _ContourViewState extends State<ContourView> {
                                       CusNav.nPush(context, CameraVideoPage());
                                     }, Assets.iconsIcCamera),
                                     Constant.xSizedBox12,
-                                    iconSidebar(() async {
-                                      ///[Flip Camera]
-                                      if (isFlippingCamera == null ||
-                                          isFlippingCamera!.isCompleted) {
-                                        isFlippingCamera = Completer();
-                                        isFlippingCamera!.complete(
-                                            await availableCameras()
-                                                .then((value) async {
-                                          for (var camera in value) {
-                                            if (camera.lensDirection ==
-                                                (controller.description
-                                                            .lensDirection ==
-                                                        CameraLensDirection
-                                                            .front
-                                                    ? CameraLensDirection.back
-                                                    : CameraLensDirection
-                                                        .front)) {
-                                              await controller.dispose();
-                                              cameraSetupCompleter =
-                                                  Completer();
-
-                                              await _initCamera(camera: camera);
-                                              setState(() {});
-                                              break;
-                                            }
-                                          }
-
-                                          await Future.delayed(const Duration(
-                                              seconds: 1, milliseconds: 500));
-                                        }));
-                                      } else {
-                                        print('Not completed!');
-                                      }
-                                    }, Assets.iconsIcFlipCamera),
+                                    iconSidebar(
+                                            () async {}, Assets.iconsIcFlipCamera),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                        () async {}, Assets.iconsIcScale),
+                                            () async {}, Assets.iconsIcScale),
                                     Constant.xSizedBox12,
                                     iconSidebar(() async {
                                       setState(() {
@@ -903,14 +765,13 @@ class _ContourViewState extends State<ContourView> {
                                     }, Assets.iconsIcCompareOff),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                        () async {}, Assets.iconsIcResetOff),
+                                            () async {}, Assets.iconsIcResetOff),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                        () async {}, Assets.iconsIcChoose),
+                                            () async {}, Assets.iconsIcChoose),
                                     Constant.xSizedBox12,
-                                    iconSidebar(() async {
-                                      CusNav.nPush(context, HighlighterView());
-                                    }, Assets.iconsIcShare),
+                                    iconSidebar(
+                                            () async {}, Assets.iconsIcShare),
                                   ],
                                 ),
                               ),

@@ -32,6 +32,8 @@ class _HairViewState extends State<HairView> {
   bool isFlipCameraSupported = false;
   File? file;
   bool makeupOrAccessories = false;
+  int? colorSelected = 0;
+  int? hairSelected = 0;
 
   @override
   void initState() {
@@ -98,7 +100,7 @@ class _HairViewState extends State<HairView> {
     }
   }
 
-  List<String> nailsList = [
+  List<String> colorList = [
     "Yellow",
     "Black",
     "Silver",
@@ -114,7 +116,7 @@ class _HairViewState extends State<HairView> {
     Assets.imagesImgHair6,
     Assets.imagesImgHair7,
   ];
-  List<Color> nailsColorList = [
+  List<Color> hairColorList = [
     Color(0xFFFFFF00),
     Colors.black,
     Color(0xFFC0C0C0),
@@ -284,6 +286,88 @@ class _HairViewState extends State<HairView> {
     );
   }
 
+  Widget lipstickChoice() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        height: 150,
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: 5,
+          separatorBuilder: (_, __) => Constant.xSizedBox12,
+          itemBuilder: (context, index) {
+            // if (index == 0)
+            //   return InkWell(
+            //     onTap: () async {},
+            //     child: Icon(Icons.do_not_disturb_alt_sharp,
+            //         color: Colors.white, size: 25),
+            //   );
+            return InkWell(
+                onTap: () async {},
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.fromLTRB(20, 5, 15, 10),
+                      color: Colors.white,
+                      width: 120,
+                      height: 80,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                              flex: 9,
+                              child: Image.asset(Assets.imagesImgLipstick)),
+                          Expanded(
+                              flex: 1,
+                              child: Icon(
+                                Icons.favorite_border,
+                                color: Colors.black,
+                                size: 18,
+                              )),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      "Item name Tom Ford",
+                      style: Constant.whiteBold16.copyWith(fontSize: 12),
+                    ),
+                    Text(
+                      "Brand name",
+                      style: Constant.whiteRegular12
+                          .copyWith(fontWeight: FontWeight.w300),
+                    ),
+                    Row(
+                      children: [
+                        Text("\$15", style: Constant.whiteRegular12),
+                        SizedBox(
+                          width: 30,
+                        ),
+                        Container(
+                          padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          color: Color(0xFFC89A44),
+                          child: Center(
+                              child: Text(
+                                "Add to cart",
+                                style: TextStyle(color: Colors.white, fontSize: 10),
+                              )),
+                        )
+                      ],
+                    )
+                  ],
+                ));
+          },
+        ),
+      ),
+    );
+  }
+
+
   Widget noPictureTaken() {
     return SizedBox(
       width: double.infinity,
@@ -388,26 +472,33 @@ class _HairViewState extends State<HairView> {
       child: ListView.separated(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
-        itemCount: nailsList.length,
+        itemCount: colorList.length,
         separatorBuilder: (_, __) => Constant.xSizedBox8,
         itemBuilder: (context, index) {
-          return Container(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                  color: index == 0 ? Colors.white : Colors.transparent),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                CircleAvatar(radius: 8, backgroundColor: nailsColorList[index]),
-                Constant.xSizedBox4,
-                Text(
-                  nailsList[index],
-                  style: TextStyle(color: Colors.white, fontSize: 10),
-                ),
-              ],
+          return InkWell(
+            onTap: () {
+              setState(() {
+                colorSelected = index;
+              });
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                    color: index == colorSelected ? Colors.white : Colors.transparent),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  CircleAvatar(radius: 8, backgroundColor: hairColorList[index]),
+                  Constant.xSizedBox4,
+                  Text(
+                    colorList[index],
+                    style: TextStyle(color: Colors.white, fontSize: 10),
+                  ),
+                ],
+              ),
             ),
           );
         },
@@ -415,17 +506,49 @@ class _HairViewState extends State<HairView> {
     );
   }
 
-  Widget colorChoice() {
-    return Container(
-      height: 30,
-      child: ListView.separated(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: hairList.length,
-        separatorBuilder: (_, __) => Constant.xSizedBox12,
-        itemBuilder: (context, index) {
-          return Image.asset(hairList[index]);
-        },
+  Widget hairChoice() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        height: 55,
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: hairList.length,
+          separatorBuilder: (_, __) => Constant.xSizedBox12,
+          itemBuilder: (context, index) {
+            // if (index == 0)
+            //   return InkWell(
+            //     onTap: () async {},
+            //     child: Icon(Icons.do_not_disturb_alt_sharp,
+            //         color: Colors.white, size: 25),
+            //   );
+            return Container(
+              padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+              decoration: BoxDecoration(
+                // borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                    color: index == hairSelected ? Colors.white : Colors.transparent),
+              ),
+              child: InkWell(
+                  onTap: () async {
+                    setState(() {
+                      hairSelected = index;
+                    });
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 50,
+                        height: 50,
+                        child: Image.asset(hairList[index]),
+                      ),
+                    ],
+                  )),
+            );
+          },
+        ),
       ),
     );
   }
@@ -447,7 +570,7 @@ class _HairViewState extends State<HairView> {
                   color: index == 0 ? Colors.white : Colors.transparent),
             ),
             child: Text(
-              nailsList[index],
+              colorList[index],
               style: TextStyle(color: Colors.white, fontSize: 10),
             ),
           );
@@ -462,7 +585,7 @@ class _HairViewState extends State<HairView> {
 
   Widget sheet() {
     return Container(
-      // height: 100,
+      height: 300,
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       decoration: BoxDecoration(
         color: Colors.black54,
@@ -471,24 +594,26 @@ class _HairViewState extends State<HairView> {
           topRight: Radius.circular(16),
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Constant.xSizedBox8,
-          colorChip(),
-          Constant.xSizedBox8,
-          colorChoice(),
-          Constant.xSizedBox8,
-          separator(),
-          Constant.xSizedBox4,
-          chipChoice(),
-          Constant.xSizedBox4,
-          // typeChip(),
-          // Constant.xSizedBox4,
-          // separator(),
-          // typeText(),
-          // Constant.xSizedBox8,
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Constant.xSizedBox8,
+            colorChip(),
+            Constant.xSizedBox8,
+            hairChoice(),
+            Constant.xSizedBox8,
+            separator(),
+            Constant.xSizedBox4,
+            lipstickChoice(),
+
+            // typeChip(),
+            // Constant.xSizedBox4,
+            // separator(),
+            // typeText(),
+            // Constant.xSizedBox8,
+          ],
+        ),
       ),
     );
   }

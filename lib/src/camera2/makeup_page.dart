@@ -25,7 +25,8 @@ import 'package:smart_mirror/src/camera2/hair/hair_view.dart';
 import 'package:smart_mirror/src/camera2/lips/lip_color_view.dart';
 import 'package:smart_mirror/src/camera2/lips/lip_liner_view.dart';
 import 'package:smart_mirror/src/camera2/lips/lip_plumber_view.dart';
-import 'package:smart_mirror/src/camera2/nails/nails_view.dart';
+import 'package:smart_mirror/src/camera2/nails/nail_polish_view.dart';
+import 'package:smart_mirror/src/camera2/nails/presonnails_view.dart';
 import 'package:smart_mirror/utils/utils.dart';
 
 const xHEdgeInsets12 = EdgeInsets.symmetric(horizontal: 12);
@@ -57,8 +58,7 @@ class _MakeupPageState extends State<MakeupPage> {
     'Eye Shadow',
     'Eye Liner',
     'Lenses',
-    'Lashes',
-    'Mascara'
+    'EyeLashes'
   ];
 
   List<String> faceType = [
@@ -304,8 +304,7 @@ class _MakeupPageState extends State<MakeupPage> {
               if (index == 1) CusNav.nPush(context, EyeshadowView());
               if (index == 2) CusNav.nPush(context, EyelinerView());
               if (index == 3) CusNav.nPush(context, LensesView());
-              if (index == 4) CusNav.nPush(context, LashesMascaraView());
-              if (index == 5)
+              if (index == 4)
                 CusNav.nPush(context, LashesMascaraView(lashes: false));
             });
           },
@@ -389,8 +388,8 @@ class _MakeupPageState extends State<MakeupPage> {
           separatorBuilder: (_, __) => Constant.xSizedBox8,
           itemBuilder: (context, index) {
             return nailsItem(nailsType[index], () {
-              if (index == 0) CusNav.nPush(context, NailsView());
-              if (index == 1) CusNav.nPush(context, NailsView());
+              if (index == 0) CusNav.nPush(context, NailPolishView());
+              if (index == 1) CusNav.nPush(context, PresOnNailsView());
             });
           },
         ),

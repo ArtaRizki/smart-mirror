@@ -32,6 +32,9 @@ class _LensesViewState extends State<LensesView> {
   bool isFlipCameraSupported = false;
   File? file;
   double sliderValue = 0;
+  bool onOffVisible = false;
+  int? colorSelected = 0;
+  int? lensesSelected = 0;
 
   List<Color> colorMainList = [
     Color(0xffFE3699),
@@ -260,22 +263,29 @@ class _LensesViewState extends State<LensesView> {
         itemCount: colorMainList.length,
         separatorBuilder: (_, __) => Constant.xSizedBox8,
         itemBuilder: (context, index) {
-          return Container(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                  color: index == 0 ? Colors.white : Colors.transparent),
-            ),
-            child: Row(
-              children: [
-                CircleAvatar(radius: 8, backgroundColor: colorMainList[index]),
-                Constant.xSizedBox4,
-                Text(
-                  colorMainListString[index],
-                  style: TextStyle(color: Colors.white, fontSize: 10),
-                ),
-              ],
+          return InkWell(
+            onTap: () {
+              setState(() {
+                colorSelected = index;
+              });
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                    color: index == colorSelected ? Colors.white : Colors.transparent),
+              ),
+              child: Row(
+                children: [
+                  CircleAvatar(radius: 8, backgroundColor: colorMainList[index]),
+                  Constant.xSizedBox4,
+                  Text(
+                    colorMainListString[index],
+                    style: TextStyle(color: Colors.white, fontSize: 10),
+                  ),
+                ],
+              ),
             ),
           );
         },
@@ -320,13 +330,31 @@ class _LensesViewState extends State<LensesView> {
         itemCount: typeLenses.length,
         separatorBuilder: (_, __) => Constant.xSizedBox8,
         itemBuilder: (context, index) {
-          return Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(
-                  color: index == 0 ? Colors.white : Colors.transparent),
+          if (index == 0)
+            return InkWell(
+              onTap: () async {
+                setState(() {
+                  onOffVisible = true;
+                });
+              },
+              child: Icon(Icons.do_not_disturb_alt_sharp,
+                  color: Colors.white, size: 25),
+            );
+          return InkWell(
+            onTap: () async {
+              setState(() {
+                lensesSelected = index;
+                onOffVisible = false;
+              });
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(
+                    color: index == lensesSelected && onOffVisible == false? Colors.white : Colors.transparent),
+              ),
+              child: typeLenses[index],
             ),
-            child: typeLenses[index],
           );
         },
       ),
