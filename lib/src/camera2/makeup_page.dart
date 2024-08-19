@@ -53,6 +53,15 @@ class _MakeupPageState extends State<MakeupPage> {
     'Mascara'
   ];
 
+  List<String> faceType = [
+    'Foundation',
+    'Concealar',
+    'Contour',
+    'Blusher',
+    'Bronzer',
+    'Highlighter'
+  ];
+
   @override
   void initState() {
     // TODO: implement initState
@@ -268,6 +277,43 @@ class _MakeupPageState extends State<MakeupPage> {
             if (index == 4) CusNav.nPush(context, LashesMascaraView());
             if (index == 5)
               CusNav.nPush(context, LashesMascaraView(lashes: false));
+          });
+        },
+      ),
+    );
+  }
+
+  Widget faceItem(String type, GestureTapCallback? onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: Colors.white),
+        ),
+        child: Text(
+          type,
+          style: TextStyle(color: Colors.white, fontSize: 10),
+        ),
+      ),
+    );
+  }
+
+  Widget faceList() {
+    return Container(
+      height: 30,
+      child: ListView.separated(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: lipsType.length,
+        separatorBuilder: (_, __) => Constant.xSizedBox8,
+        itemBuilder: (context, index) {
+          return lipsItem(lipsType[index], () {
+            if (index == 0) CusNav.nPush(context, LipColorView());
+            if (index == 1) CusNav.nPush(context, LipLinerView());
+            if (index == 2) CusNav.nPush(context, LipPlumberView());
           });
         },
       ),
