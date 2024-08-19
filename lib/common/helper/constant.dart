@@ -28,7 +28,7 @@ class Constant {
   static Color primaryColor = const Color(0xFF084B83);
   static Color secondaryColor = const Color(0xFF10345A);
   static Color thirdColor = const Color(0xFFFBBB00);
-  static Color sampleColor = const Color(0xFF45260D);
+  static Color sampleColor = const Color(0xFFC89A44);
   static Color tertiaryColor = const Color(0xFF8CC6FF);
   static Color quarteryColor = const Color(0xFFC5E2FF);
   static Color tableBlueColor = const Color(0xFFE9F0FF);

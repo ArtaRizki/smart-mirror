@@ -11,20 +11,20 @@ import 'package:smart_mirror/common/helper/constant.dart';
 import 'package:smart_mirror/generated/assets.dart';
 import 'package:smart_mirror/src/camera/camera_page.dart';
 import 'package:smart_mirror/src/camera2/camera_video_page.dart';
-import 'package:smart_mirror/src/camera2/face/concealer_view.dart';
+import 'package:smart_mirror/src/camera2/face/bronzer_view.dart';
 import 'package:smart_mirror/src/camera2/makeup_page.dart';
 import 'package:smart_mirror/utils/utils.dart';
 
 const xHEdgeInsets12 = EdgeInsets.symmetric(horizontal: 12);
 
-class FoundationView extends StatefulWidget {
-  const FoundationView({super.key});
+class ConcealerView extends StatefulWidget {
+  const ConcealerView({super.key});
 
   @override
-  State<FoundationView> createState() => _FoundationViewState();
+  State<ConcealerView> createState() => _ConcealerViewState();
 }
 
-class _FoundationViewState extends State<FoundationView> {
+class _ConcealerViewState extends State<ConcealerView> {
   late CameraController controller;
   Completer<String?> cameraSetupCompleter = Completer();
   Completer? isFlippingCamera;
@@ -64,7 +64,7 @@ class _FoundationViewState extends State<FoundationView> {
                   _initCamera();
                 } else {
                   Utils.showToast(
-                      'Mohon izinkan Smart-Mirror untuk mengakses Kamera dan Mikrofon');
+                      'Mohon izinkan Janissari untuk mengakses Kamera dan Mikrofon');
                   Navigator.of(context).pop();
                 }
               });
@@ -151,7 +151,7 @@ class _FoundationViewState extends State<FoundationView> {
     } else {
       await availableCameras().then((value) async {
         isFlipCameraSupported = value.indexWhere((element) =>
-                element.lensDirection == CameraLensDirection.front) !=
+        element.lensDirection == CameraLensDirection.front) !=
             -1;
 
         for (var camera in value) {
@@ -329,24 +329,24 @@ class _FoundationViewState extends State<FoundationView> {
                       isFlippingCamera = Completer();
                       isFlippingCamera!.complete(
                           await availableCameras().then((value) async {
-                        for (var camera in value) {
-                          if (camera.lensDirection ==
-                              (controller.description.lensDirection ==
+                            for (var camera in value) {
+                              if (camera.lensDirection ==
+                                  (controller.description.lensDirection ==
                                       CameraLensDirection.front
-                                  ? CameraLensDirection.back
-                                  : CameraLensDirection.front)) {
-                            await controller.dispose();
-                            cameraSetupCompleter = Completer();
+                                      ? CameraLensDirection.back
+                                      : CameraLensDirection.front)) {
+                                await controller.dispose();
+                                cameraSetupCompleter = Completer();
 
-                            await _initCamera(camera: camera);
-                            setState(() {});
-                            break;
-                          }
-                        }
+                                await _initCamera(camera: camera);
+                                setState(() {});
+                                break;
+                              }
+                            }
 
-                        await Future.delayed(
-                            const Duration(seconds: 1, milliseconds: 500));
-                      }));
+                            await Future.delayed(
+                                const Duration(seconds: 1, milliseconds: 500));
+                          }));
                     } else {
                       print('Not completed!');
                     }
@@ -464,12 +464,12 @@ class _FoundationViewState extends State<FoundationView> {
                           Expanded(
                               flex: 9, child: Image.asset(Assets.imagesImgLipstick)),
                           Expanded(
-                            flex: 1,
+                              flex: 1,
                               child: Icon(
-                            Icons.favorite_border,
-                            color: Colors.black,
+                                Icons.favorite_border,
+                                color: Colors.black,
                                 size: 18,
-                          )),
+                              )),
                         ],
                       ),
                     ),
@@ -547,13 +547,13 @@ class _FoundationViewState extends State<FoundationView> {
                 shadows: index != 0
                     ? null
                     : [
-                        BoxShadow(
-                          offset: Offset(0, 0),
-                          color: Colors.white,
-                          spreadRadius: 0,
-                          blurRadius: 10,
-                        ),
-                      ],
+                  BoxShadow(
+                    offset: Offset(0, 0),
+                    color: Colors.white,
+                    spreadRadius: 0,
+                    blurRadius: 10,
+                  ),
+                ],
               ),
             ),
           );
@@ -659,7 +659,7 @@ class _FoundationViewState extends State<FoundationView> {
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
         systemOverlayStyle:
-            const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+        const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
       ),
       extendBodyBehindAppBar: true,
       body: FutureBuilder<String?>(
@@ -672,17 +672,17 @@ class _FoundationViewState extends State<FoundationView> {
           } else if (snapshot.data != null) {
             return Center(
                 child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text('Setup Camera Failed'),
-                Text(
-                  snapshot.data!,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
-              ],
-            ));
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text('Setup Camera Failed'),
+                    Text(
+                      snapshot.data!,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  ],
+                ));
           } else {
             return LayoutBuilder(
               builder: (p0, p1) {
@@ -730,10 +730,10 @@ class _FoundationViewState extends State<FoundationView> {
                                     }, Assets.iconsIcCamera),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                        () async {}, Assets.iconsIcFlipCamera),
+                                            () async {}, Assets.iconsIcFlipCamera),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                        () async {}, Assets.iconsIcScale),
+                                            () async {}, Assets.iconsIcScale),
                                     Constant.xSizedBox12,
                                     iconSidebar(() async {
                                       setState(() {
@@ -742,15 +742,15 @@ class _FoundationViewState extends State<FoundationView> {
                                     }, Assets.iconsIcCompareOff),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                        () async {}, Assets.iconsIcResetOff),
+                                            () async {}, Assets.iconsIcResetOff),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                        () async {}, Assets.iconsIcChoose),
+                                            () async {}, Assets.iconsIcChoose),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                        () async {
-                                          CusNav.nPush(context, ConcealerView());
-                                        }, Assets.iconsIcShare),
+                                            () async {
+                                              CusNav.nPush(context, BronzerView());
+                                            }, Assets.iconsIcShare),
                                   ],
                                 ),
                               ),
