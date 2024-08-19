@@ -25,6 +25,12 @@ class Assets {
   static const String iconsIcResetOff = 'assets/icons/ic-reset-off.png';
   static const String iconsIcScale = 'assets/icons/ic-scale.png';
   static const String iconsIcShare = 'assets/icons/ic-share.png';
+  static const String imagesImgBronzer = 'assets/images/img-bronzer.png';
+  static const String imagesImgBronzer1 = 'assets/images/img-bronzer1.png';
+  static const String imagesImgBronzer2 = 'assets/images/img-bronzer2.png';
+  static const String imagesImgBronzer3 = 'assets/images/img-bronzer3.png';
+  static const String imagesImgBronzer4 = 'assets/images/img-bronzer4.png';
+  static const String imagesImgLipstick = 'assets/images/img-lipstick.png';
   static const String imagesImgEyebrow1 = 'assets/images/img-eyebrow1.png';
   static const String imagesImgEyebrow2 = 'assets/images/img-eyebrow2.png';
   static const String imagesImgEyebrow3 = 'assets/images/img-eyebrow3.png';

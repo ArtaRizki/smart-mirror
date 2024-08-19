@@ -11,6 +11,7 @@ import 'package:smart_mirror/common/helper/constant.dart';
 import 'package:smart_mirror/generated/assets.dart';
 import 'package:smart_mirror/src/camera/camera_page.dart';
 import 'package:smart_mirror/src/camera2/camera_video_page.dart';
+import 'package:smart_mirror/src/camera2/face/concealer_view.dart';
 import 'package:smart_mirror/src/camera2/makeup_page.dart';
 import 'package:smart_mirror/utils/utils.dart';
 
@@ -63,7 +64,7 @@ class _FoundationViewState extends State<FoundationView> {
                   _initCamera();
                 } else {
                   Utils.showToast(
-                      'Mohon izinkan Janissari untuk mengakses Kamera dan Mikrofon');
+                      'Mohon izinkan Smart-Mirror untuk mengakses Kamera dan Mikrofon');
                   Navigator.of(context).pop();
                 }
               });
@@ -102,7 +103,6 @@ class _FoundationViewState extends State<FoundationView> {
     "Light skin",
     "Medium skin",
     "Dark skin",
-
   ];
   List<Color> skinColorList = [
     Color(0xFFFDD8B7),
@@ -151,7 +151,7 @@ class _FoundationViewState extends State<FoundationView> {
     } else {
       await availableCameras().then((value) async {
         isFlipCameraSupported = value.indexWhere((element) =>
-        element.lensDirection == CameraLensDirection.front) !=
+                element.lensDirection == CameraLensDirection.front) !=
             -1;
 
         for (var camera in value) {
@@ -329,24 +329,24 @@ class _FoundationViewState extends State<FoundationView> {
                       isFlippingCamera = Completer();
                       isFlippingCamera!.complete(
                           await availableCameras().then((value) async {
-                            for (var camera in value) {
-                              if (camera.lensDirection ==
-                                  (controller.description.lensDirection ==
+                        for (var camera in value) {
+                          if (camera.lensDirection ==
+                              (controller.description.lensDirection ==
                                       CameraLensDirection.front
-                                      ? CameraLensDirection.back
-                                      : CameraLensDirection.front)) {
-                                await controller.dispose();
-                                cameraSetupCompleter = Completer();
+                                  ? CameraLensDirection.back
+                                  : CameraLensDirection.front)) {
+                            await controller.dispose();
+                            cameraSetupCompleter = Completer();
 
-                                await _initCamera(camera: camera);
-                                setState(() {});
-                                break;
-                              }
-                            }
+                            await _initCamera(camera: camera);
+                            setState(() {});
+                            break;
+                          }
+                        }
 
-                            await Future.delayed(
-                                const Duration(seconds: 1, milliseconds: 500));
-                          }));
+                        await Future.delayed(
+                            const Duration(seconds: 1, milliseconds: 500));
+                      }));
                     } else {
                       print('Not completed!');
                     }
@@ -369,57 +369,129 @@ class _FoundationViewState extends State<FoundationView> {
   }
 
   Widget colorChip() {
-    return Container(
-      height: 30,
-      child: ListView.separated(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: skinList.length,
-        separatorBuilder: (_, __) => Constant.xSizedBox8,
-        itemBuilder: (context, index) {
-          return Container(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                  color: index == 0 ? Colors.white : Colors.transparent),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                CircleAvatar(radius: 8, backgroundColor: skinColorList[index]),
-                Constant.xSizedBox4,
-                Text(
-                  skinList[index],
-                  style: TextStyle(color: Colors.white, fontSize: 10),
-                ),
-              ],
-            ),
-          );
-        },
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        height: 30,
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: skinList.length,
+          separatorBuilder: (_, __) => Constant.xSizedBox8,
+          itemBuilder: (context, index) {
+            return Container(
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                    color: index == 0 ? Colors.white : Colors.transparent),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  CircleAvatar(radius: 8, backgroundColor: skinColorList[index]),
+                  Constant.xSizedBox4,
+                  Text(
+                    skinList[index],
+                    style: TextStyle(color: Colors.white, fontSize: 10),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
 
   Widget colorChoice() {
-    return Container(
-      height: 30,
-      child: ListView.separated(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: colorChoiceList.length,
-        separatorBuilder: (_, __) => Constant.xSizedBox12,
-        itemBuilder: (context, index) {
-          if (index == 0)
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        height: 30,
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: colorChoiceList.length,
+          separatorBuilder: (_, __) => Constant.xSizedBox12,
+          itemBuilder: (context, index) {
+            if (index == 0)
+              return InkWell(
+                onTap: () async {},
+                child: Icon(Icons.do_not_disturb_alt_sharp,
+                    color: Colors.white, size: 25),
+              );
             return InkWell(
-              onTap: () async {},
-              child: Icon(Icons.do_not_disturb_alt_sharp,
-                  color: Colors.white, size: 25),
-            );
-          return InkWell(
-              onTap: () async {},
-              child: CircleAvatar(radius: 12, backgroundColor: colorChoiceList[index]));
-        },
+                onTap: () async {},
+                child: CircleAvatar(
+                    radius: 12, backgroundColor: colorChoiceList[index]));
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget lipstickChoice() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        height: 150,
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: 5,
+          separatorBuilder: (_, __) => Constant.xSizedBox12,
+          itemBuilder: (context, index) {
+            // if (index == 0)
+            //   return InkWell(
+            //     onTap: () async {},
+            //     child: Icon(Icons.do_not_disturb_alt_sharp,
+            //         color: Colors.white, size: 25),
+            //   );
+            return InkWell(
+                onTap: () async {},
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.fromLTRB(20, 5, 15, 10),
+                      color: Colors.white,
+                      width: 120,
+                      height: 80,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                              flex: 9, child: Image.asset(Assets.imagesImgLipstick)),
+                          Expanded(
+                            flex: 1,
+                              child: Icon(
+                            Icons.favorite_border,
+                            color: Colors.black,
+                                size: 18,
+                          )),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 5,),
+                    Text("Item name Tom Ford", style: Constant.whiteBold16.copyWith(fontSize: 12),),
+                    Text("Brand name", style: Constant.whiteRegular12.copyWith(fontWeight: FontWeight.w300),),
+                    Row(
+                      children: [
+                        Text("\$15", style: Constant.whiteRegular12),
+                        SizedBox(width: 30,),
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          color: Color(0xFFC89A44),
+                          child: Center(child: Text("Add to cart", style: TextStyle(color: Colors.white, fontSize: 10),)),
+                        )
+
+                      ],
+                    )
+                  ],
+                ));
+          },
+        ),
       ),
     );
   }
@@ -475,13 +547,13 @@ class _FoundationViewState extends State<FoundationView> {
                 shadows: index != 0
                     ? null
                     : [
-                  BoxShadow(
-                    offset: Offset(0, 0),
-                    color: Colors.white,
-                    spreadRadius: 0,
-                    blurRadius: 10,
-                  ),
-                ],
+                        BoxShadow(
+                          offset: Offset(0, 0),
+                          color: Colors.white,
+                          spreadRadius: 0,
+                          blurRadius: 10,
+                        ),
+                      ],
               ),
             ),
           );
@@ -494,7 +566,7 @@ class _FoundationViewState extends State<FoundationView> {
   Widget sheet() {
     return Container(
       // height: 100,
-      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 16),
       decoration: BoxDecoration(
         color: Colors.black54,
         borderRadius: BorderRadius.only(
@@ -509,9 +581,13 @@ class _FoundationViewState extends State<FoundationView> {
           Constant.xSizedBox8,
           colorChoice(),
           Constant.xSizedBox8,
-          // separator(),
-          // Constant.xSizedBox4,
-          // typeChip(),
+          separator(),
+          Constant.xSizedBox4,
+          Align(
+              alignment: Alignment.centerRight,
+              child: Text("View All",style: TextStyle(color: Colors.white, fontSize: 12),)),
+          Constant.xSizedBox8,
+          lipstickChoice(),
           // Constant.xSizedBox4,
           // separator(),
           // typeText(),
@@ -583,7 +659,7 @@ class _FoundationViewState extends State<FoundationView> {
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
         systemOverlayStyle:
-        const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+            const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
       ),
       extendBodyBehindAppBar: true,
       body: FutureBuilder<String?>(
@@ -596,17 +672,17 @@ class _FoundationViewState extends State<FoundationView> {
           } else if (snapshot.data != null) {
             return Center(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Text('Setup Camera Failed'),
-                    Text(
-                      snapshot.data!,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )
-                  ],
-                ));
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text('Setup Camera Failed'),
+                Text(
+                  snapshot.data!,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+              ],
+            ));
           } else {
             return LayoutBuilder(
               builder: (p0, p1) {
@@ -654,10 +730,10 @@ class _FoundationViewState extends State<FoundationView> {
                                     }, Assets.iconsIcCamera),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                            () async {}, Assets.iconsIcFlipCamera),
+                                        () async {}, Assets.iconsIcFlipCamera),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                            () async {}, Assets.iconsIcScale),
+                                        () async {}, Assets.iconsIcScale),
                                     Constant.xSizedBox12,
                                     iconSidebar(() async {
                                       setState(() {
@@ -666,13 +742,15 @@ class _FoundationViewState extends State<FoundationView> {
                                     }, Assets.iconsIcCompareOff),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                            () async {}, Assets.iconsIcResetOff),
+                                        () async {}, Assets.iconsIcResetOff),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                            () async {}, Assets.iconsIcChoose),
+                                        () async {}, Assets.iconsIcChoose),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                            () async {}, Assets.iconsIcShare),
+                                        () async {
+                                          CusNav.nPush(context, ConcealerView());
+                                        }, Assets.iconsIcShare),
                                   ],
                                 ),
                               ),
