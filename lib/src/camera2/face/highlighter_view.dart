@@ -161,7 +161,7 @@ class _HighlighterViewState extends State<HighlighterView> {
     } else {
       await availableCameras().then((value) async {
         isFlipCameraSupported = value.indexWhere((element) =>
-        element.lensDirection == CameraLensDirection.front) !=
+                element.lensDirection == CameraLensDirection.front) !=
             -1;
 
         for (var camera in value) {
@@ -339,24 +339,24 @@ class _HighlighterViewState extends State<HighlighterView> {
                       isFlippingCamera = Completer();
                       isFlippingCamera!.complete(
                           await availableCameras().then((value) async {
-                            for (var camera in value) {
-                              if (camera.lensDirection ==
-                                  (controller.description.lensDirection ==
+                        for (var camera in value) {
+                          if (camera.lensDirection ==
+                              (controller.description.lensDirection ==
                                       CameraLensDirection.front
-                                      ? CameraLensDirection.back
-                                      : CameraLensDirection.front)) {
-                                await controller.dispose();
-                                cameraSetupCompleter = Completer();
+                                  ? CameraLensDirection.back
+                                  : CameraLensDirection.front)) {
+                            await controller.dispose();
+                            cameraSetupCompleter = Completer();
 
-                                await _initCamera(camera: camera);
-                                setState(() {});
-                                break;
-                              }
-                            }
+                            await _initCamera(camera: camera);
+                            setState(() {});
+                            break;
+                          }
+                        }
 
-                            await Future.delayed(
-                                const Duration(seconds: 1, milliseconds: 500));
-                          }));
+                        await Future.delayed(
+                            const Duration(seconds: 1, milliseconds: 500));
+                      }));
                     } else {
                       print('Not completed!');
                     }
@@ -400,7 +400,9 @@ class _HighlighterViewState extends State<HighlighterView> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                      color: index == typeSelected ? Colors.white : Colors.transparent),
+                      color: index == typeSelected
+                          ? Colors.white
+                          : Colors.transparent),
                 ),
                 child: Center(
                   child: Text(
@@ -485,7 +487,9 @@ class _HighlighterViewState extends State<HighlighterView> {
               decoration: BoxDecoration(
                 // borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                    color: index == skinSelected ? Colors.white : Colors.transparent),
+                    color: index == skinSelected
+                        ? Colors.white
+                        : Colors.transparent),
               ),
               child: InkWell(
                   onTap: () async {
@@ -573,13 +577,13 @@ class _HighlighterViewState extends State<HighlighterView> {
                         ),
                         Container(
                           padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                           color: Color(0xFFC89A44),
                           child: Center(
                               child: Text(
-                                "Add to cart",
-                                style: TextStyle(color: Colors.white, fontSize: 10),
-                              )),
+                            "Add to cart",
+                            style: TextStyle(color: Colors.white, fontSize: 10),
+                          )),
                         )
                       ],
                     )
@@ -696,7 +700,7 @@ class _HighlighterViewState extends State<HighlighterView> {
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
         systemOverlayStyle:
-        const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+            const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
       ),
       extendBodyBehindAppBar: true,
       body: FutureBuilder<String?>(
@@ -709,17 +713,17 @@ class _HighlighterViewState extends State<HighlighterView> {
           } else if (snapshot.data != null) {
             return Center(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Text('Setup Camera Failed'),
-                    Text(
-                      snapshot.data!,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )
-                  ],
-                ));
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text('Setup Camera Failed'),
+                Text(
+                  snapshot.data!,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+              ],
+            ));
           } else {
             return LayoutBuilder(
               builder: (p0, p1) {
@@ -766,11 +770,43 @@ class _HighlighterViewState extends State<HighlighterView> {
                                       CusNav.nPush(context, CameraVideoPage());
                                     }, Assets.iconsIcCamera),
                                     Constant.xSizedBox12,
-                                    iconSidebar(
-                                            () async {}, Assets.iconsIcFlipCamera),
+                                    iconSidebar(() async {
+                                      ///[Flip Camera]
+                                      if (isFlippingCamera == null ||
+                                          isFlippingCamera!.isCompleted) {
+                                        isFlippingCamera = Completer();
+                                        isFlippingCamera!.complete(
+                                            await availableCameras()
+                                                .then((value) async {
+                                          for (var camera in value) {
+                                            if (camera.lensDirection ==
+                                                (controller.description
+                                                            .lensDirection ==
+                                                        CameraLensDirection
+                                                            .front
+                                                    ? CameraLensDirection.back
+                                                    : CameraLensDirection
+                                                        .front)) {
+                                              await controller.dispose();
+                                              cameraSetupCompleter =
+                                                  Completer();
+
+                                              await _initCamera(camera: camera);
+                                              setState(() {});
+                                              break;
+                                            }
+                                          }
+
+                                          await Future.delayed(const Duration(
+                                              seconds: 1, milliseconds: 500));
+                                        }));
+                                      } else {
+                                        print('Not completed!');
+                                      }
+                                    }, Assets.iconsIcFlipCamera),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                            () async {}, Assets.iconsIcScale),
+                                        () async {}, Assets.iconsIcScale),
                                     Constant.xSizedBox12,
                                     iconSidebar(() async {
                                       setState(() {
@@ -779,13 +815,13 @@ class _HighlighterViewState extends State<HighlighterView> {
                                     }, Assets.iconsIcCompareOff),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                            () async {}, Assets.iconsIcResetOff),
+                                        () async {}, Assets.iconsIcResetOff),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                            () async {}, Assets.iconsIcChoose),
+                                        () async {}, Assets.iconsIcChoose),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                            () async {}, Assets.iconsIcShare),
+                                        () async {}, Assets.iconsIcShare),
                                   ],
                                 ),
                               ),

@@ -40,13 +40,15 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
   bool isCapturing = false;
 
   Toast(String message) {
-    return Utils.showToast(message, duration: const Duration(milliseconds: 400));
+    return Utils.showToast(message,
+        duration: const Duration(milliseconds: 400));
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    cController.complete();
     WidgetsBinding.instance.addObserver(this);
 
     Future.microtask(() async {

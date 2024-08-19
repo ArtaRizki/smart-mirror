@@ -390,17 +390,19 @@ class _BlusherViewState extends State<BlusherView> {
           separatorBuilder: (_, __) => Constant.xSizedBox8,
           itemBuilder: (context, index) {
             return InkWell(
-                onTap: () {
-                  setState(() {
-                    typeSelected = index;
-                  });
-                },
+              onTap: () {
+                setState(() {
+                  typeSelected = index;
+                });
+              },
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                      color: index == typeSelected ? Colors.white : Colors.transparent),
+                      color: index == typeSelected
+                          ? Colors.white
+                          : Colors.transparent),
                 ),
                 child: Center(
                   child: Text(
@@ -485,7 +487,9 @@ class _BlusherViewState extends State<BlusherView> {
               decoration: BoxDecoration(
                 // borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                    color: index == skinSelected ? Colors.white : Colors.transparent),
+                    color: index == skinSelected
+                        ? Colors.white
+                        : Colors.transparent),
               ),
               child: InkWell(
                   onTap: () async {
@@ -766,8 +770,40 @@ class _BlusherViewState extends State<BlusherView> {
                                       CusNav.nPush(context, CameraVideoPage());
                                     }, Assets.iconsIcCamera),
                                     Constant.xSizedBox12,
-                                    iconSidebar(
-                                        () async {}, Assets.iconsIcFlipCamera),
+                                    iconSidebar(() async {
+                                      ///[Flip Camera]
+                                      if (isFlippingCamera == null ||
+                                          isFlippingCamera!.isCompleted) {
+                                        isFlippingCamera = Completer();
+                                        isFlippingCamera!.complete(
+                                            await availableCameras()
+                                                .then((value) async {
+                                          for (var camera in value) {
+                                            if (camera.lensDirection ==
+                                                (controller.description
+                                                            .lensDirection ==
+                                                        CameraLensDirection
+                                                            .front
+                                                    ? CameraLensDirection.back
+                                                    : CameraLensDirection
+                                                        .front)) {
+                                              await controller.dispose();
+                                              cameraSetupCompleter =
+                                                  Completer();
+
+                                              await _initCamera(camera: camera);
+                                              setState(() {});
+                                              break;
+                                            }
+                                          }
+
+                                          await Future.delayed(const Duration(
+                                              seconds: 1, milliseconds: 500));
+                                        }));
+                                      } else {
+                                        print('Not completed!');
+                                      }
+                                    }, Assets.iconsIcFlipCamera),
                                     Constant.xSizedBox12,
                                     iconSidebar(
                                         () async {}, Assets.iconsIcScale),

@@ -384,7 +384,7 @@ class _FoundationViewState extends State<FoundationView> {
           separatorBuilder: (_, __) => Constant.xSizedBox8,
           itemBuilder: (context, index) {
             return InkWell(
-              onTap: (){
+              onTap: () {
                 setState(() {
                   skinSelected = index;
                 });
@@ -394,12 +394,15 @@ class _FoundationViewState extends State<FoundationView> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                      color: index == skinSelected ? Colors.white : Colors.transparent),
+                      color: index == skinSelected
+                          ? Colors.white
+                          : Colors.transparent),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    CircleAvatar(radius: 8, backgroundColor: skinColorList[index]),
+                    CircleAvatar(
+                        radius: 8, backgroundColor: skinColorList[index]),
                     Constant.xSizedBox4,
                     Text(
                       skinList[index],
@@ -451,7 +454,10 @@ class _FoundationViewState extends State<FoundationView> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                            color: index == colorSelected && onOffVisibel == false ? Colors.white : Colors.transparent),
+                            color:
+                                index == colorSelected && onOffVisibel == false
+                                    ? Colors.white
+                                    : Colors.transparent),
                       ),
                       child: CircleAvatar(
                           radius: 12, backgroundColor: colorChoiceList[index]),
@@ -495,30 +501,46 @@ class _FoundationViewState extends State<FoundationView> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
-                              flex: 9, child: Image.asset(Assets.imagesImgLipstick)),
+                              flex: 9,
+                              child: Image.asset(Assets.imagesImgLipstick)),
                           Expanded(
-                            flex: 1,
+                              flex: 1,
                               child: Icon(
-                            Icons.favorite_border,
-                            color: Colors.black,
+                                Icons.favorite_border,
+                                color: Colors.black,
                                 size: 18,
-                          )),
+                              )),
                         ],
                       ),
                     ),
-                    SizedBox(height: 5,),
-                    Text("Item name Tom Ford", style: Constant.whiteBold16.copyWith(fontSize: 12),),
-                    Text("Brand name", style: Constant.whiteRegular12.copyWith(fontWeight: FontWeight.w300),),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      "Item name Tom Ford",
+                      style: Constant.whiteBold16.copyWith(fontSize: 12),
+                    ),
+                    Text(
+                      "Brand name",
+                      style: Constant.whiteRegular12
+                          .copyWith(fontWeight: FontWeight.w300),
+                    ),
                     Row(
                       children: [
                         Text("\$15", style: Constant.whiteRegular12),
-                        SizedBox(width: 30,),
+                        SizedBox(
+                          width: 30,
+                        ),
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                           color: Color(0xFFC89A44),
-                          child: Center(child: Text("Add to cart", style: TextStyle(color: Colors.white, fontSize: 10),)),
+                          child: Center(
+                              child: Text(
+                            "Add to cart",
+                            style: TextStyle(color: Colors.white, fontSize: 10),
+                          )),
                         )
-
                       ],
                     )
                   ],
@@ -618,7 +640,10 @@ class _FoundationViewState extends State<FoundationView> {
           Constant.xSizedBox4,
           Align(
               alignment: Alignment.centerRight,
-              child: Text("View All",style: TextStyle(color: Colors.white, fontSize: 12),)),
+              child: Text(
+                "View All",
+                style: TextStyle(color: Colors.white, fontSize: 12),
+              )),
           Constant.xSizedBox8,
           lipstickChoice(),
           // Constant.xSizedBox4,
@@ -762,8 +787,40 @@ class _FoundationViewState extends State<FoundationView> {
                                       CusNav.nPush(context, CameraVideoPage());
                                     }, Assets.iconsIcCamera),
                                     Constant.xSizedBox12,
-                                    iconSidebar(
-                                        () async {}, Assets.iconsIcFlipCamera),
+                                    iconSidebar(() async {
+                                      ///[Flip Camera]
+                                      if (isFlippingCamera == null ||
+                                          isFlippingCamera!.isCompleted) {
+                                        isFlippingCamera = Completer();
+                                        isFlippingCamera!.complete(
+                                            await availableCameras()
+                                                .then((value) async {
+                                          for (var camera in value) {
+                                            if (camera.lensDirection ==
+                                                (controller.description
+                                                            .lensDirection ==
+                                                        CameraLensDirection
+                                                            .front
+                                                    ? CameraLensDirection.back
+                                                    : CameraLensDirection
+                                                        .front)) {
+                                              await controller.dispose();
+                                              cameraSetupCompleter =
+                                                  Completer();
+
+                                              await _initCamera(camera: camera);
+                                              setState(() {});
+                                              break;
+                                            }
+                                          }
+
+                                          await Future.delayed(const Duration(
+                                              seconds: 1, milliseconds: 500));
+                                        }));
+                                      } else {
+                                        print('Not completed!');
+                                      }
+                                    }, Assets.iconsIcFlipCamera),
                                     Constant.xSizedBox12,
                                     iconSidebar(
                                         () async {}, Assets.iconsIcScale),
@@ -780,10 +837,9 @@ class _FoundationViewState extends State<FoundationView> {
                                     iconSidebar(
                                         () async {}, Assets.iconsIcChoose),
                                     Constant.xSizedBox12,
-                                    iconSidebar(
-                                        () async {
-                                          CusNav.nPush(context, ConcealerView());
-                                        }, Assets.iconsIcShare),
+                                    iconSidebar(() async {
+                                      CusNav.nPush(context, ConcealerView());
+                                    }, Assets.iconsIcShare),
                                   ],
                                 ),
                               ),

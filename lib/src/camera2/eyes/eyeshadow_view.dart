@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; 
+import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:smart_mirror/common/component/custom_navigator.dart';
 import 'package:smart_mirror/common/helper/constant.dart';
@@ -596,8 +596,40 @@ class _EyeshadowViewState extends State<EyeshadowView> {
                                       CusNav.nPush(context, CameraVideoPage());
                                     }, Assets.iconsIcCamera),
                                     Constant.xSizedBox12,
-                                    iconSidebar(
-                                        () async {}, Assets.iconsIcFlipCamera),
+                                    iconSidebar(() async {
+                                      ///[Flip Camera]
+                                      if (isFlippingCamera == null ||
+                                          isFlippingCamera!.isCompleted) {
+                                        isFlippingCamera = Completer();
+                                        isFlippingCamera!.complete(
+                                            await availableCameras()
+                                                .then((value) async {
+                                          for (var camera in value) {
+                                            if (camera.lensDirection ==
+                                                (controller.description
+                                                            .lensDirection ==
+                                                        CameraLensDirection
+                                                            .front
+                                                    ? CameraLensDirection.back
+                                                    : CameraLensDirection
+                                                        .front)) {
+                                              await controller.dispose();
+                                              cameraSetupCompleter =
+                                                  Completer();
+
+                                              await _initCamera(camera: camera);
+                                              setState(() {});
+                                              break;
+                                            }
+                                          }
+
+                                          await Future.delayed(const Duration(
+                                              seconds: 1, milliseconds: 500));
+                                        }));
+                                      } else {
+                                        print('Not completed!');
+                                      }
+                                    }, Assets.iconsIcFlipCamera),
                                     Constant.xSizedBox12,
                                     iconSidebar(
                                         () async {}, Assets.iconsIcScale),

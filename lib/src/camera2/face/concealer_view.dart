@@ -154,7 +154,7 @@ class _ConcealerViewState extends State<ConcealerView> {
     } else {
       await availableCameras().then((value) async {
         isFlipCameraSupported = value.indexWhere((element) =>
-        element.lensDirection == CameraLensDirection.front) !=
+                element.lensDirection == CameraLensDirection.front) !=
             -1;
 
         for (var camera in value) {
@@ -332,24 +332,24 @@ class _ConcealerViewState extends State<ConcealerView> {
                       isFlippingCamera = Completer();
                       isFlippingCamera!.complete(
                           await availableCameras().then((value) async {
-                            for (var camera in value) {
-                              if (camera.lensDirection ==
-                                  (controller.description.lensDirection ==
+                        for (var camera in value) {
+                          if (camera.lensDirection ==
+                              (controller.description.lensDirection ==
                                       CameraLensDirection.front
-                                      ? CameraLensDirection.back
-                                      : CameraLensDirection.front)) {
-                                await controller.dispose();
-                                cameraSetupCompleter = Completer();
+                                  ? CameraLensDirection.back
+                                  : CameraLensDirection.front)) {
+                            await controller.dispose();
+                            cameraSetupCompleter = Completer();
 
-                                await _initCamera(camera: camera);
-                                setState(() {});
-                                break;
-                              }
-                            }
+                            await _initCamera(camera: camera);
+                            setState(() {});
+                            break;
+                          }
+                        }
 
-                            await Future.delayed(
-                                const Duration(seconds: 1, milliseconds: 500));
-                          }));
+                        await Future.delayed(
+                            const Duration(seconds: 1, milliseconds: 500));
+                      }));
                     } else {
                       print('Not completed!');
                     }
@@ -393,12 +393,15 @@ class _ConcealerViewState extends State<ConcealerView> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                      color: index == skinSelected ? Colors.white : Colors.transparent),
+                      color: index == skinSelected
+                          ? Colors.white
+                          : Colors.transparent),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    CircleAvatar(radius: 8, backgroundColor: skinColorList[index]),
+                    CircleAvatar(
+                        radius: 8, backgroundColor: skinColorList[index]),
                     Constant.xSizedBox4,
                     Text(
                       skinList[index],
@@ -442,13 +445,14 @@ class _ConcealerViewState extends State<ConcealerView> {
                     onOffVisible = false;
                   });
                 },
-                child:
-                Container(
+                child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                        color: index == colorSelected && onOffVisible == false ? Colors.white : Colors.transparent),
+                        color: index == colorSelected && onOffVisible == false
+                            ? Colors.white
+                            : Colors.transparent),
                   ),
                   child: CircleAvatar(
                       radius: 12, backgroundColor: colorChoiceList[index]),
@@ -490,7 +494,8 @@ class _ConcealerViewState extends State<ConcealerView> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
-                              flex: 9, child: Image.asset(Assets.imagesImgLipstick)),
+                              flex: 9,
+                              child: Image.asset(Assets.imagesImgLipstick)),
                           Expanded(
                               flex: 1,
                               child: Icon(
@@ -501,19 +506,34 @@ class _ConcealerViewState extends State<ConcealerView> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 5,),
-                    Text("Item name Tom Ford", style: Constant.whiteBold16.copyWith(fontSize: 12),),
-                    Text("Brand name", style: Constant.whiteRegular12.copyWith(fontWeight: FontWeight.w300),),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      "Item name Tom Ford",
+                      style: Constant.whiteBold16.copyWith(fontSize: 12),
+                    ),
+                    Text(
+                      "Brand name",
+                      style: Constant.whiteRegular12
+                          .copyWith(fontWeight: FontWeight.w300),
+                    ),
                     Row(
                       children: [
                         Text("\$15", style: Constant.whiteRegular12),
-                        SizedBox(width: 30,),
+                        SizedBox(
+                          width: 30,
+                        ),
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                           color: Color(0xFFC89A44),
-                          child: Center(child: Text("Add to cart", style: TextStyle(color: Colors.white, fontSize: 10),)),
+                          child: Center(
+                              child: Text(
+                            "Add to cart",
+                            style: TextStyle(color: Colors.white, fontSize: 10),
+                          )),
                         )
-
                       ],
                     )
                   ],
@@ -575,13 +595,13 @@ class _ConcealerViewState extends State<ConcealerView> {
                 shadows: index != 0
                     ? null
                     : [
-                  BoxShadow(
-                    offset: Offset(0, 0),
-                    color: Colors.white,
-                    spreadRadius: 0,
-                    blurRadius: 10,
-                  ),
-                ],
+                        BoxShadow(
+                          offset: Offset(0, 0),
+                          color: Colors.white,
+                          spreadRadius: 0,
+                          blurRadius: 10,
+                        ),
+                      ],
               ),
             ),
           );
@@ -613,7 +633,10 @@ class _ConcealerViewState extends State<ConcealerView> {
           Constant.xSizedBox4,
           Align(
               alignment: Alignment.centerRight,
-              child: Text("View All",style: TextStyle(color: Colors.white, fontSize: 12),)),
+              child: Text(
+                "View All",
+                style: TextStyle(color: Colors.white, fontSize: 12),
+              )),
           Constant.xSizedBox8,
           lipstickChoice(),
           // Constant.xSizedBox4,
@@ -687,7 +710,7 @@ class _ConcealerViewState extends State<ConcealerView> {
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
         systemOverlayStyle:
-        const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+            const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
       ),
       extendBodyBehindAppBar: true,
       body: FutureBuilder<String?>(
@@ -700,17 +723,17 @@ class _ConcealerViewState extends State<ConcealerView> {
           } else if (snapshot.data != null) {
             return Center(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Text('Setup Camera Failed'),
-                    Text(
-                      snapshot.data!,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )
-                  ],
-                ));
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text('Setup Camera Failed'),
+                Text(
+                  snapshot.data!,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+              ],
+            ));
           } else {
             return LayoutBuilder(
               builder: (p0, p1) {
@@ -757,11 +780,43 @@ class _ConcealerViewState extends State<ConcealerView> {
                                       CusNav.nPush(context, CameraVideoPage());
                                     }, Assets.iconsIcCamera),
                                     Constant.xSizedBox12,
-                                    iconSidebar(
-                                            () async {}, Assets.iconsIcFlipCamera),
+                                    iconSidebar(() async {
+                                      ///[Flip Camera]
+                                      if (isFlippingCamera == null ||
+                                          isFlippingCamera!.isCompleted) {
+                                        isFlippingCamera = Completer();
+                                        isFlippingCamera!.complete(
+                                            await availableCameras()
+                                                .then((value) async {
+                                          for (var camera in value) {
+                                            if (camera.lensDirection ==
+                                                (controller.description
+                                                            .lensDirection ==
+                                                        CameraLensDirection
+                                                            .front
+                                                    ? CameraLensDirection.back
+                                                    : CameraLensDirection
+                                                        .front)) {
+                                              await controller.dispose();
+                                              cameraSetupCompleter =
+                                                  Completer();
+
+                                              await _initCamera(camera: camera);
+                                              setState(() {});
+                                              break;
+                                            }
+                                          }
+
+                                          await Future.delayed(const Duration(
+                                              seconds: 1, milliseconds: 500));
+                                        }));
+                                      } else {
+                                        print('Not completed!');
+                                      }
+                                    }, Assets.iconsIcFlipCamera),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                            () async {}, Assets.iconsIcScale),
+                                        () async {}, Assets.iconsIcScale),
                                     Constant.xSizedBox12,
                                     iconSidebar(() async {
                                       setState(() {
@@ -770,15 +825,14 @@ class _ConcealerViewState extends State<ConcealerView> {
                                     }, Assets.iconsIcCompareOff),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                            () async {}, Assets.iconsIcResetOff),
+                                        () async {}, Assets.iconsIcResetOff),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                            () async {}, Assets.iconsIcChoose),
+                                        () async {}, Assets.iconsIcChoose),
                                     Constant.xSizedBox12,
-                                    iconSidebar(
-                                            () async {
-                                              CusNav.nPush(context, BronzerView());
-                                            }, Assets.iconsIcShare),
+                                    iconSidebar(() async {
+                                      CusNav.nPush(context, BronzerView());
+                                    }, Assets.iconsIcShare),
                                   ],
                                 ),
                               ),

@@ -26,7 +26,8 @@ class OcrCameraPage2 extends StatefulWidget {
   State<OcrCameraPage2> createState() => _OcrCameraPage2State();
 }
 
-class _OcrCameraPage2State extends State<OcrCameraPage2> {
+class _OcrCameraPage2State extends State<OcrCameraPage2>
+    with WidgetsBindingObserver {
   late CameraController controller;
   Completer<String?> cameraSetupCompleter = Completer();
   Completer? isFlippingCamera;
@@ -38,8 +39,8 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     if (Platform.isAndroid) {
       DeviceInfoPlugin().androidInfo.then((value) {
         if (value.version.sdkInt >= 32) {
@@ -103,9 +104,29 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
 
   @override
   void dispose() {
-    super.dispose();
     if (cameraSetupCompleter.isCompleted) {
       controller.dispose();
+    }
+
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final CameraController? cameraController = controller;
+
+    // App state changed before we got the chance to initialize.
+    if (cameraController == null || !cameraController.value.isInitialized) {
+      return;
+    }
+
+    if (state == AppLifecycleState.inactive) {
+      cameraController.dispose();
+      WidgetsBinding.instance.removeObserver(this);
+    } else if (state == AppLifecycleState.resumed) {
+      WidgetsBinding.instance.addObserver(this);
+      _initCamera();
     }
   }
 
@@ -167,6 +188,9 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
 
   Future<void> _initCamera({CameraDescription? camera}) async {
     Future<void> selectCamera(CameraDescription camera) async {
+      if (cameraSetupCompleter.isCompleted) {
+        controller.dispose();
+      }
       controller = CameraController(camera, ResolutionPreset.high,
           imageFormatGroup: ImageFormatGroup.jpeg);
       await controller.initialize();
