@@ -10,7 +10,17 @@ import 'package:smart_mirror/common/component/custom_navigator.dart';
 import 'package:smart_mirror/common/helper/constant.dart';
 import 'package:smart_mirror/generated/assets.dart';
 import 'package:smart_mirror/src/camera2/camera_video_page.dart';
+import 'package:smart_mirror/src/camera2/eyes/eyebrows_view.dart';
+import 'package:smart_mirror/src/camera2/eyes/eyeliner_view.dart';
+import 'package:smart_mirror/src/camera2/eyes/eyeshadow_view.dart';
+import 'package:smart_mirror/src/camera2/eyes/lashes_mascara_view.dart';
+import 'package:smart_mirror/src/camera2/eyes/lenses_view.dart';
 import 'package:smart_mirror/src/camera2/face/foundation_view.dart';
+import 'package:smart_mirror/src/camera2/hair/hair_view.dart';
+import 'package:smart_mirror/src/camera2/lips/lip_color_view.dart';
+import 'package:smart_mirror/src/camera2/lips/lip_liner_view.dart';
+import 'package:smart_mirror/src/camera2/lips/lip_plumber_view.dart';
+import 'package:smart_mirror/src/camera2/nails/nails_view.dart';
 import 'package:smart_mirror/utils/utils.dart';
 
 const xHEdgeInsets12 = EdgeInsets.symmetric(horizontal: 12);
@@ -30,7 +40,18 @@ class _MakeupPageState extends State<MakeupPage> {
   bool isRearCamera = true;
   bool isFlipCameraSupported = false;
   File? file;
-  bool makeupOrAccessories = false;
+  bool lipsClick = false;
+  bool eyesClick = false;
+
+  List<String> lipsType = ['Lip Color', 'Lip Liner', 'Lip Plumper'];
+  List<String> eyesType = [
+    'Eyebrows',
+    'Eye Shadow',
+    'Eye Liner',
+    'Lenses',
+    'Lashes',
+    'Mascara'
+  ];
 
   @override
   void initState() {
@@ -175,10 +196,88 @@ class _MakeupPageState extends State<MakeupPage> {
     );
   }
 
+  Widget lipsItem(String type, GestureTapCallback? onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: Colors.white),
+        ),
+        child: Text(
+          type,
+          style: TextStyle(color: Colors.white, fontSize: 10),
+        ),
+      ),
+    );
+  }
+
+  Widget lipsList() {
+    return Container(
+      height: 30,
+      child: ListView.separated(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: lipsType.length,
+        separatorBuilder: (_, __) => Constant.xSizedBox8,
+        itemBuilder: (context, index) {
+          return lipsItem(lipsType[index], () {
+            if (index == 0) CusNav.nPush(context, LipColorView());
+            if (index == 1) CusNav.nPush(context, LipLinerView());
+            if (index == 2) CusNav.nPush(context, LipPlumberView());
+          });
+        },
+      ),
+    );
+  }
+
+  Widget eyesItem(String type, GestureTapCallback? onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: Colors.white),
+        ),
+        child: Text(
+          type,
+          style: TextStyle(color: Colors.white, fontSize: 10),
+        ),
+      ),
+    );
+  }
+
+  Widget eyesList() {
+    return Container(
+      height: 30,
+      child: ListView.separated(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: eyesType.length,
+        separatorBuilder: (_, __) => Constant.xSizedBox8,
+        itemBuilder: (context, index) {
+          return eyesItem(eyesType[index], () {
+            if (index == 0) CusNav.nPush(context, EyebrowsView());
+            if (index == 1) CusNav.nPush(context, EyeshadowView());
+            if (index == 2) CusNav.nPush(context, EyelinerView());
+            if (index == 3) CusNav.nPush(context, LensesView());
+            if (index == 4) CusNav.nPush(context, LashesMascaraView());
+            if (index == 5)
+              CusNav.nPush(context, LashesMascaraView(lashes: false));
+          });
+        },
+      ),
+    );
+  }
+
   Widget sheet() {
     return Container(
       // height: 100,
-      padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
+      padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
       decoration: BoxDecoration(
         color: Colors.black54,
         borderRadius: BorderRadius.only(
@@ -200,13 +299,27 @@ class _MakeupPageState extends State<MakeupPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              itemMakeup(Assets.iconsIcLips, () {}),
-              itemMakeup(Assets.iconsIcEyes, () {}),
+              itemMakeup(Assets.iconsIcLips, () {
+                setState(() {
+                  eyesClick = false;
+                  lipsClick = !lipsClick;
+                });
+              }),
+              itemMakeup(Assets.iconsIcEyes, () {
+                setState(() {
+                  lipsClick = false;
+                  eyesClick = !eyesClick;
+                });
+              }),
               itemMakeup(Assets.iconsIcFace, () {
                 CusNav.nPush(context, FoundationView());
               }),
-              itemMakeup(Assets.iconsIcNails, () {}),
-              itemMakeup(Assets.iconsIcHair, () {}),
+              itemMakeup(Assets.iconsIcNails, () {
+                CusNav.nPush(context, NailsView());
+              }),
+              itemMakeup(Assets.iconsIcHair, () {
+                CusNav.nPush(context, HairView());
+              }),
             ],
           ),
           Constant.xSizedBox8,
@@ -355,7 +468,7 @@ class _MakeupPageState extends State<MakeupPage> {
                                     Constant.xSizedBox12,
                                     iconSidebar(() async {
                                       setState(() {
-                                        makeupOrAccessories = true;
+                                        // makeupOrAccessories = true;
                                       });
                                     }, Assets.iconsIcCompare),
                                     Constant.xSizedBox12,
@@ -373,8 +486,10 @@ class _MakeupPageState extends State<MakeupPage> {
                             ),
                             Constant.xSizedBox16,
                             sheet(),
-                            // file != null ? pictureTaken() : noPictureTaken(),
-                            // pictureTaken(),
+                            Constant.xSizedBox8,
+                            if (lipsClick) lipsList(),
+                            if (eyesClick) eyesList(),
+                            Constant.xSizedBox24,
                           ],
                         ),
                       ),

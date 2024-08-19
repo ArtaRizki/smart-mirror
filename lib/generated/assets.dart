@@ -5,7 +5,8 @@ class Assets {
   static const String fontsInterBlack = 'assets/fonts/Inter-Black.ttf';
   static const String fontsInterBold = 'assets/fonts/Inter-Bold.ttf';
   static const String fontsInterExtraBold = 'assets/fonts/Inter-ExtraBold.ttf';
-  static const String fontsInterExtraLight = 'assets/fonts/Inter-ExtraLight.ttf';
+  static const String fontsInterExtraLight =
+      'assets/fonts/Inter-ExtraLight.ttf';
   static const String fontsInterLight = 'assets/fonts/Inter-Light.ttf';
   static const String fontsInterMedium = 'assets/fonts/Inter-Medium.ttf';
   static const String fontsInterRegular = 'assets/fonts/Inter-Regular.ttf';
@@ -35,14 +36,55 @@ class Assets {
   static const String imagesImgBronzer2 = 'assets/images/img-bronzer2.png';
   static const String imagesImgBronzer3 = 'assets/images/img-bronzer3.png';
   static const String imagesImgBronzer4 = 'assets/images/img-bronzer4.png';
-  static const String imagesImgHighlighter1 = 'assets/images/img-highlighter1.png';
-  static const String imagesImgHighlighter2 = 'assets/images/img-highlighter2.png';
-  static const String imagesImgHighlighter3 = 'assets/images/img-highlighter3.png';
-  static const String imagesImgHighlighter4 = 'assets/images/img-highlighter4.png';
+  static const String imagesImgHighlighter1 =
+      'assets/images/img-highlighter1.png';
+  static const String imagesImgHighlighter2 =
+      'assets/images/img-highlighter2.png';
+  static const String imagesImgHighlighter3 =
+      'assets/images/img-highlighter3.png';
+  static const String imagesImgHighlighter4 =
+      'assets/images/img-highlighter4.png';
   static const String imagesImgLipstick = 'assets/images/img-lipstick.png';
   static const String imagesImgModel = 'assets/images/img-model.png';
   static const String imagesImgUpPhoto = 'assets/images/img-up-photo.png';
   static const String imagesImgUpVideo = 'assets/images/img-up-video.png';
+  static const String imagesImgEyebrow1 = 'assets/images/img-eyebrow1.png';
+  static const String imagesImgEyebrow2 = 'assets/images/img-eyebrow2.png';
+  static const String imagesImgEyebrow3 = 'assets/images/img-eyebrow3.png';
+  static const String imagesImgEyebrow4 = 'assets/images/img-eyebrow4.png';
+  static const String imagesImgEyebrow5 = 'assets/images/img-eyebrow5.png';
+  static const String imagesImgEyebrow6 = 'assets/images/img-eyebrow6.png';
+  static const String imagesImgEyelashes1 = 'assets/images/img-eyelashes1.png';
+  static const String imagesImgEyelashes2 = 'assets/images/img-eyelashes2.png';
+  static const String imagesImgEyelashes3 = 'assets/images/img-eyelashes3.png';
+  static const String imagesImgEyelashes4 = 'assets/images/img-eyelashes4.png';
+  static const String imagesImgEyelashes5 = 'assets/images/img-eyelashes5.png';
+  static const String imagesImgEyelashes6 = 'assets/images/img-eyelashes6.png';
+  static const String imagesImgEyelashes7 = 'assets/images/img-eyelashes7.png';
+  static const String imagesImgEyeliner1 = 'assets/images/img-eyeliner1.png';
+  static const String imagesImgEyeliner2 = 'assets/images/img-eyeliner2.png';
+  static const String imagesImgEyeliner3 = 'assets/images/img-eyeliner3.png';
+  static const String imagesImgEyeliner4 = 'assets/images/img-eyeliner4.png';
+  static const String imagesImgEyeliner5 = 'assets/images/img-eyeliner5.png';
+  static const String imagesImgEyeliner6 = 'assets/images/img-eyeliner6.png';
+  static const String imagesImgEyeshadow = 'assets/images/img-eyeshadow.png';
+  static const String imagesImgHair1 = 'assets/images/img-hair1.png';
+  static const String imagesImgHair2 = 'assets/images/img-hair2.png';
+  static const String imagesImgHair3 = 'assets/images/img-hair3.png';
+  static const String imagesImgHair4 = 'assets/images/img-hair4.png';
+  static const String imagesImgHair5 = 'assets/images/img-hair5.png';
+  static const String imagesImgHair6 = 'assets/images/img-hair6.png';
+  static const String imagesImgHair7 = 'assets/images/img-hair7.png';
+  static const String imagesImgLenses1 = 'assets/images/img-lenses1.png';
+  static const String imagesImgLenses2 = 'assets/images/img-lenses2.png';
+  static const String imagesImgLenses3 = 'assets/images/img-lenses3.png';
+  static const String imagesImgLenses4 = 'assets/images/img-lenses4.png';
+  static const String imagesImgLenses5 = 'assets/images/img-lenses5.png';
+  static const String imagesImgLipliner = 'assets/images/img-lipliner.png';
+  static const String imagesImgNails1 = 'assets/images/img-nails1.png';
+  static const String imagesImgNails2 = 'assets/images/img-nails2.png';
+  static const String imagesImgNails3 = 'assets/images/img-nails3.png';
+  static const String imagesImgNailsItem = 'assets/images/img-nails-item.png';
   static const String lottieDownloading = 'assets/lottie/downloading.json';
   static const String lottieFailed = 'assets/lottie/failed.json';
   static const String lottieLive = 'assets/lottie/live.json';
@@ -50,5 +92,4 @@ class Assets {
   static const String lottieSuccess2 = 'assets/lottie/success2.json';
   static const String translationsEn = 'assets/translations/en.json';
   static const String translationsIdID = 'assets/translations/id-ID.json';
-
 }
