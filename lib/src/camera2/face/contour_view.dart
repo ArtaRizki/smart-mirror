@@ -634,7 +634,6 @@ class _ContourViewState extends State<ContourView> {
               ),
             ),
           );
-          ;
         },
       ),
     );

@@ -625,7 +625,6 @@ class _BronzerViewState extends State<BronzerView> {
               ),
             ),
           );
-          ;
         },
       ),
     );

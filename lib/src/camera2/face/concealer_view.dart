@@ -585,7 +585,6 @@ class _ConcealerViewState extends State<ConcealerView> {
               ),
             ),
           );
-          ;
         },
       ),
     );

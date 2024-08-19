@@ -32,6 +32,12 @@ class _EyeshadowViewState extends State<EyeshadowView> {
   bool isFlipCameraSupported = false;
   File? file;
   double sliderValue = 0;
+  bool onOffVisibel = false;
+  int? eyebrowSelected = 0;
+  int? colorSelected = 0;
+  int? colorTextSelected = 0;
+  int? typeSelected = 0;
+  int? typeComboSelected = 0;
 
   List<Color> colorMainList = [
     Color(0xffFE3699),
@@ -66,7 +72,7 @@ class _EyeshadowViewState extends State<EyeshadowView> {
     'Gloss',
   ];
 
-  List<String> type2List = [
+  List<String> typeComboList = [
     'One',
     'Dual',
     'Tri',
@@ -251,33 +257,43 @@ class _EyeshadowViewState extends State<EyeshadowView> {
   }
 
   Widget colorChip() {
-    return Container(
-      height: 30,
-      child: ListView.separated(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: colorMainList.length,
-        separatorBuilder: (_, __) => Constant.xSizedBox8,
-        itemBuilder: (context, index) {
-          return Container(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                  color: index == 0 ? Colors.white : Colors.transparent),
-            ),
-            child: Row(
-              children: [
-                CircleAvatar(radius: 8, backgroundColor: colorMainList[index]),
-                Constant.xSizedBox4,
-                Text(
-                  colorMainListString[index],
-                  style: TextStyle(color: Colors.white, fontSize: 10),
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        height: 30,
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: colorMainList.length,
+          separatorBuilder: (_, __) => Constant.xSizedBox8,
+          itemBuilder: (context, index) {
+            return InkWell(
+              onTap: () {
+                setState(() {
+                  colorTextSelected = index;
+                });
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                      color: index == colorTextSelected ? Colors.white : Colors.transparent),
                 ),
-              ],
-            ),
-          );
-        },
+                child: Row(
+                  children: [
+                    CircleAvatar(radius: 8, backgroundColor: colorMainList[index]),
+                    Constant.xSizedBox4,
+                    Text(
+                      colorMainListString[index],
+                      style: TextStyle(color: Colors.white, fontSize: 10),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -293,14 +309,32 @@ class _EyeshadowViewState extends State<EyeshadowView> {
         itemBuilder: (context, index) {
           if (index == 0)
             return InkWell(
-              onTap: () async {},
+              onTap: () async {
+                setState(() {
+                  onOffVisibel = true;
+                });
+              },
               child: Icon(Icons.do_not_disturb_alt_sharp,
                   color: Colors.white, size: 25),
             );
           return InkWell(
-              onTap: () async {},
+              onTap: () async {
+                setState(() {
+                  colorSelected = index;
+                  onOffVisibel = false;
+                });
+              },
               child:
-                  CircleAvatar(radius: 12, backgroundColor: colorList[index]));
+                  Container(
+                      padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                            color: index == colorSelected && onOffVisibel == false
+                                ? Colors.white
+                                : Colors.transparent),
+                      ),
+                      child: CircleAvatar(radius: 12, backgroundColor: colorList[index])));
         },
       ),
     );
@@ -311,59 +345,79 @@ class _EyeshadowViewState extends State<EyeshadowView> {
   }
 
   Widget typeChip() {
-    return Container(
-      height: 30,
-      child: ListView.separated(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: type1List.length,
-        separatorBuilder: (_, __) => Constant.xSizedBox8,
-        itemBuilder: (context, index) {
-          return Container(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.white),
-            ),
-            child: Center(
-              child: Text(
-                type1List[index],
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white, fontSize: 10),
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        height: 30,
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: type1List.length,
+          separatorBuilder: (_, __) => Constant.xSizedBox8,
+          itemBuilder: (context, index) {
+            return InkWell(
+              onTap: () async {
+                setState(() {
+                  typeSelected = index;
+                });
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                      color: index == typeSelected
+                          ? Colors.white
+                          : Colors.transparent),
+                ),
+                child: Center(
+                  child: Text(
+                    type1List[index],
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.white, fontSize: 10),
+                  ),
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
 
-  Widget type2Chip() {
+  Widget typeComboChip() {
     return Container(
       height: 20,
       child: ListView.separated(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
-        itemCount: type2List.length,
+        itemCount: typeComboList.length,
         separatorBuilder: (_, __) => Constant.xSizedBox8,
         itemBuilder: (context, index) {
-          return Center(
-            child: Text(
-              type2List[index],
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-                shadows: index != 0
-                    ? null
-                    : [
-                        BoxShadow(
-                          offset: Offset(0, 0),
-                          color: Colors.white,
-                          spreadRadius: 0,
-                          blurRadius: 10,
-                        ),
-                      ],
+          return InkWell(
+            onTap: () {
+              setState(() {
+                typeComboSelected = index;
+              });
+            },
+            child: Center(
+              child: Text(
+                typeComboList[index],
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  shadows: index == typeComboSelected
+                      ?  [
+                  BoxShadow(
+                    offset: Offset(0, 0),
+                    color: Colors.white,
+                    spreadRadius: 0,
+                    blurRadius: 10,
+                  ),
+                    ]
+                      : null
+                ),
               ),
             ),
           );
@@ -374,22 +428,110 @@ class _EyeshadowViewState extends State<EyeshadowView> {
 
   Widget typeEyeShadowChip() {
     return Container(
-      height: 30,
+      height: 40,
       child: ListView.separated(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         itemCount: typeEyeShadow.length,
         separatorBuilder: (_, __) => Constant.xSizedBox8,
         itemBuilder: (context, index) {
-          return Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(
-                  color: index == 0 ? Colors.white : Colors.transparent),
+          return InkWell(
+            onTap: () {
+              setState(() {
+                eyebrowSelected = index;
+              });
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(
+                    color: index == eyebrowSelected ? Colors.white : Colors.transparent),
+              ),
+              child: typeEyeShadow[index],
             ),
-            child: typeEyeShadow[index],
           );
         },
+      ),
+    );
+  }
+
+  Widget lipstickChoice() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        height: 150,
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: 5,
+          separatorBuilder: (_, __) => Constant.xSizedBox12,
+          itemBuilder: (context, index) {
+            // if (index == 0)
+            //   return InkWell(
+            //     onTap: () async {},
+            //     child: Icon(Icons.do_not_disturb_alt_sharp,
+            //         color: Colors.white, size: 25),
+            //   );
+            return InkWell(
+                onTap: () async {},
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.fromLTRB(20, 5, 15, 10),
+                      color: Colors.white,
+                      width: 120,
+                      height: 80,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                              flex: 9,
+                              child: Image.asset(Assets.imagesImgLipstick)),
+                          Expanded(
+                              flex: 1,
+                              child: Icon(
+                                Icons.favorite_border,
+                                color: Colors.black,
+                                size: 18,
+                              )),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      "Item name Tom Ford",
+                      style: Constant.whiteBold16.copyWith(fontSize: 12),
+                    ),
+                    Text(
+                      "Brand name",
+                      style: Constant.whiteRegular12
+                          .copyWith(fontWeight: FontWeight.w300),
+                    ),
+                    Row(
+                      children: [
+                        Text("\$15", style: Constant.whiteRegular12),
+                        SizedBox(
+                          width: 30,
+                        ),
+                        Container(
+                          padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          color: Color(0xFFC89A44),
+                          child: Center(
+                              child: Text(
+                                "Add to cart",
+                                style: TextStyle(color: Colors.white, fontSize: 10),
+                              )),
+                        )
+                      ],
+                    )
+                  ],
+                ));
+          },
+        ),
       ),
     );
   }
@@ -430,7 +572,7 @@ class _EyeshadowViewState extends State<EyeshadowView> {
 
   Widget sheet() {
     return Container(
-      // height: 100,
+      height: 300,
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       decoration: BoxDecoration(
         color: Colors.black54,
@@ -439,27 +581,31 @@ class _EyeshadowViewState extends State<EyeshadowView> {
           topRight: Radius.circular(16),
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Constant.xSizedBox8,
-          colorChip(),
-          Constant.xSizedBox8,
-          colorChoice(),
-          Constant.xSizedBox8,
-          separator(),
-          Constant.xSizedBox4,
-          typeChip(),
-          Constant.xSizedBox4,
-          separator(),
-          Constant.xSizedBox4,
-          type2Chip(),
-          Constant.xSizedBox4,
-          separator(),
-          Constant.xSizedBox4,
-          typeEyeShadowChip(),
-          Constant.xSizedBox32,
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Constant.xSizedBox8,
+            colorChip(),
+            Constant.xSizedBox8,
+            colorChoice(),
+            Constant.xSizedBox8,
+            separator(),
+            Constant.xSizedBox4,
+            typeChip(),
+            Constant.xSizedBox4,
+            separator(),
+            Constant.xSizedBox4,
+            typeComboChip(),
+            Constant.xSizedBox4,
+            separator(),
+            Constant.xSizedBox4,
+            typeEyeShadowChip(),
+            separator(),
+            Constant.xSizedBox4,
+            lipstickChoice(),
+          ],
+        ),
       ),
     );
   }

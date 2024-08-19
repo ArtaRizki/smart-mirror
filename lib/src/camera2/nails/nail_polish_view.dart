@@ -16,14 +16,14 @@ import 'package:smart_mirror/utils/utils.dart';
 
 const xHEdgeInsets12 = EdgeInsets.symmetric(horizontal: 12);
 
-class HairView extends StatefulWidget {
-  const HairView({super.key});
+class NailPolishView extends StatefulWidget {
+  const NailPolishView({super.key});
 
   @override
-  State<HairView> createState() => _HairViewState();
+  State<NailPolishView> createState() => _NailPolishViewState();
 }
 
-class _HairViewState extends State<HairView> {
+class _NailPolishViewState extends State<NailPolishView> {
   late CameraController controller;
   Completer<String?> cameraSetupCompleter = Completer();
   Completer? isFlippingCamera;
@@ -32,8 +32,10 @@ class _HairViewState extends State<HairView> {
   bool isFlipCameraSupported = false;
   File? file;
   bool makeupOrAccessories = false;
+  bool onOffVisible = false;
+  int? typeSelected = 0;
   int? colorSelected = 0;
-  int? hairSelected = 0;
+  int? colorTextSelected = 0;
 
   @override
   void initState() {
@@ -100,23 +102,14 @@ class _HairViewState extends State<HairView> {
     }
   }
 
-  List<String> colorList = [
+  List<String> nailsList = [
     "Yellow",
     "Black",
     "Silver",
     "Gold",
     "Rose Gold",
   ];
-  List<String> hairList = [
-    Assets.imagesImgHair1,
-    Assets.imagesImgHair2,
-    Assets.imagesImgHair3,
-    Assets.imagesImgHair4,
-    Assets.imagesImgHair5,
-    Assets.imagesImgHair6,
-    Assets.imagesImgHair7,
-  ];
-  List<Color> hairColorList = [
+  List<Color> nailsColorList = [
     Color(0xFFFFFF00),
     Colors.black,
     Color(0xFFC0C0C0),
@@ -133,6 +126,12 @@ class _HairViewState extends State<HairView> {
     Color(0xFFFE3699),
     Color(0xFFE861A4),
     Color(0xFFE0467C),
+  ];
+
+  List<String> nailsPath = [
+    Assets.imagesImgNails1,
+    Assets.imagesImgNails2,
+    Assets.imagesImgNails3,
   ];
 
   List<String> chipList = ['Gloss', 'Matt', 'Shimmer'];
@@ -167,7 +166,7 @@ class _HairViewState extends State<HairView> {
     } else {
       await availableCameras().then((value) async {
         isFlipCameraSupported = value.indexWhere((element) =>
-                element.lensDirection == CameraLensDirection.front) !=
+        element.lensDirection == CameraLensDirection.front) !=
             -1;
 
         for (var camera in value) {
@@ -286,6 +285,104 @@ class _HairViewState extends State<HairView> {
     );
   }
 
+  Widget noPictureTaken() {
+    return SizedBox(
+      width: double.infinity,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 6,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: InkWell(
+                onTap: () {
+                  controller.takePicture().then((imageFile) async {
+                    // File tmp = await compressImage(
+                    //     File(imageFile.path));
+                    file = File(imageFile.path);
+                    // if (controller
+                    //     .value.isPreviewPaused)
+                    //   await controller.resumePreview();
+                    // else
+                    await controller.pausePreview();
+                  });
+                },
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 2),
+                      ),
+                      width: 60,
+                      height: 60,
+                    ),
+                    Icon(
+                      Icons.circle,
+                      color: Colors.white,
+                      size: 60,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 4,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Visibility(
+                visible: isFlipCameraSupported,
+                child: InkWell(
+                  onTap: () async {
+                    ///[Flip Camera]
+                    if (isFlippingCamera == null ||
+                        isFlippingCamera!.isCompleted) {
+                      isFlippingCamera = Completer();
+                      isFlippingCamera!.complete(
+                          await availableCameras().then((value) async {
+                            for (var camera in value) {
+                              if (camera.lensDirection ==
+                                  (controller.description.lensDirection ==
+                                      CameraLensDirection.front
+                                      ? CameraLensDirection.back
+                                      : CameraLensDirection.front)) {
+                                await controller.dispose();
+                                cameraSetupCompleter = Completer();
+
+                                await _initCamera(camera: camera);
+                                setState(() {});
+                                break;
+                              }
+                            }
+
+                            await Future.delayed(
+                                const Duration(seconds: 1, milliseconds: 500));
+                          }));
+                    } else {
+                      print('Not completed!');
+                    }
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.only(right: 16),
+                    width: 35,
+                    height: 35,
+                    decoration: const BoxDecoration(
+                        shape: BoxShape.circle, color: Colors.black26),
+                    child: Icon(Icons.autorenew_rounded, color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget lipstickChoice() {
     return Align(
       alignment: Alignment.centerLeft,
@@ -367,118 +464,19 @@ class _HairViewState extends State<HairView> {
     );
   }
 
-
-  Widget noPictureTaken() {
-    return SizedBox(
-      width: double.infinity,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 6,
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: InkWell(
-                onTap: () {
-                  controller.takePicture().then((imageFile) async {
-                    // File tmp = await compressImage(
-                    //     File(imageFile.path));
-                    file = File(imageFile.path);
-                    // if (controller
-                    //     .value.isPreviewPaused)
-                    //   await controller.resumePreview();
-                    // else
-                    await controller.pausePreview();
-                  });
-                },
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 2),
-                      ),
-                      width: 60,
-                      height: 60,
-                    ),
-                    Icon(
-                      Icons.circle,
-                      color: Colors.white,
-                      size: 60,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 4,
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Visibility(
-                visible: isFlipCameraSupported,
-                child: InkWell(
-                  onTap: () async {
-                    ///[Flip Camera]
-                    if (isFlippingCamera == null ||
-                        isFlippingCamera!.isCompleted) {
-                      isFlippingCamera = Completer();
-                      isFlippingCamera!.complete(
-                          await availableCameras().then((value) async {
-                        for (var camera in value) {
-                          if (camera.lensDirection ==
-                              (controller.description.lensDirection ==
-                                      CameraLensDirection.front
-                                  ? CameraLensDirection.back
-                                  : CameraLensDirection.front)) {
-                            await controller.dispose();
-                            cameraSetupCompleter = Completer();
-
-                            await _initCamera(camera: camera);
-                            setState(() {});
-                            break;
-                          }
-                        }
-
-                        await Future.delayed(
-                            const Duration(seconds: 1, milliseconds: 500));
-                      }));
-                    } else {
-                      print('Not completed!');
-                    }
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.only(right: 16),
-                    width: 35,
-                    height: 35,
-                    decoration: const BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.black26),
-                    child: Icon(Icons.autorenew_rounded, color: Colors.white),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget colorChip() {
     return Container(
       height: 30,
       child: ListView.separated(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
-        itemCount: colorList.length,
+        itemCount: nailsList.length,
         separatorBuilder: (_, __) => Constant.xSizedBox8,
         itemBuilder: (context, index) {
           return InkWell(
-            onTap: () {
+            onTap: (){
               setState(() {
-                colorSelected = index;
+                colorTextSelected = index;
               });
             },
             child: Container(
@@ -486,15 +484,15 @@ class _HairViewState extends State<HairView> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                    color: index == colorSelected ? Colors.white : Colors.transparent),
+                    color: index == colorTextSelected ? Colors.white : Colors.transparent),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  CircleAvatar(radius: 8, backgroundColor: hairColorList[index]),
+                  CircleAvatar(radius: 8, backgroundColor: nailsColorList[index]),
                   Constant.xSizedBox4,
                   Text(
-                    colorList[index],
+                    nailsList[index],
                     style: TextStyle(color: Colors.white, fontSize: 10),
                   ),
                 ],
@@ -506,49 +504,43 @@ class _HairViewState extends State<HairView> {
     );
   }
 
-  Widget hairChoice() {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        height: 55,
-        child: ListView.separated(
-          shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          itemCount: hairList.length,
-          separatorBuilder: (_, __) => Constant.xSizedBox12,
-          itemBuilder: (context, index) {
-            // if (index == 0)
-            //   return InkWell(
-            //     onTap: () async {},
-            //     child: Icon(Icons.do_not_disturb_alt_sharp,
-            //         color: Colors.white, size: 25),
-            //   );
-            return Container(
-              padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
-              decoration: BoxDecoration(
-                // borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                    color: index == hairSelected ? Colors.white : Colors.transparent),
-              ),
-              child: InkWell(
-                  onTap: () async {
-                    setState(() {
-                      hairSelected = index;
-                    });
-                  },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 50,
-                        height: 50,
-                        child: Image.asset(hairList[index]),
-                      ),
-                    ],
-                  )),
+  Widget colorChoice() {
+    return Container(
+      height: 30,
+      child: ListView.separated(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: colorChoiceList.length,
+        separatorBuilder: (_, __) => Constant.xSizedBox12,
+        itemBuilder: (context, index) {
+          if (index == 0)
+            return InkWell(
+              onTap: () async {
+                setState(() {
+                  onOffVisible = true;
+                });
+              },
+              child: Icon(Icons.do_not_disturb_alt_sharp,
+                  color: Colors.white, size: 25),
             );
-          },
-        ),
+          return InkWell(
+              onTap: () async {
+                setState(() {
+                  colorSelected = index;
+                  onOffVisible = false;
+                });
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                      color: index == colorSelected && onOffVisible == false ? Colors.white : Colors.transparent),
+                ),
+                child: CircleAvatar(
+                    radius: 12, backgroundColor: colorChoiceList[index]),
+              ));
+        },
       ),
     );
   }
@@ -562,16 +554,23 @@ class _HairViewState extends State<HairView> {
         itemCount: chipList.length,
         separatorBuilder: (_, __) => Constant.xSizedBox12,
         itemBuilder: (context, index) {
-          return Container(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                  color: index == 0 ? Colors.white : Colors.transparent),
-            ),
-            child: Text(
-              colorList[index],
-              style: TextStyle(color: Colors.white, fontSize: 10),
+          return InkWell(
+            onTap: () {
+              setState(() {
+                typeSelected = index;
+              });
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                    color: index == typeSelected ? Colors.white : Colors.transparent),
+              ),
+              child: Text(
+                chipList[index],
+                style: TextStyle(color: Colors.white, fontSize: 10),
+              ),
             ),
           );
         },
@@ -601,12 +600,15 @@ class _HairViewState extends State<HairView> {
             Constant.xSizedBox8,
             colorChip(),
             Constant.xSizedBox8,
-            hairChoice(),
-            Constant.xSizedBox8,
+            colorChoice(),
+            Constant.xSizedBox4,
             separator(),
             Constant.xSizedBox4,
+            chipChoice(),
+            separator(),
+            Constant.xSizedBox8,
             lipstickChoice(),
-
+            Constant.xSizedBox8,
             // typeChip(),
             // Constant.xSizedBox4,
             // separator(),
@@ -680,7 +682,7 @@ class _HairViewState extends State<HairView> {
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
         systemOverlayStyle:
-            const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+        const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
       ),
       extendBodyBehindAppBar: true,
       body: FutureBuilder<String?>(
@@ -693,17 +695,17 @@ class _HairViewState extends State<HairView> {
           } else if (snapshot.data != null) {
             return Center(
                 child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text('Setup Camera Failed'),
-                Text(
-                  snapshot.data!,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
-              ],
-            ));
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text('Setup Camera Failed'),
+                    Text(
+                      snapshot.data!,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  ],
+                ));
           } else {
             return LayoutBuilder(
               builder: (p0, p1) {
@@ -751,10 +753,10 @@ class _HairViewState extends State<HairView> {
                                     }, Assets.iconsIcCamera),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                        () async {}, Assets.iconsIcFlipCamera),
+                                            () async {}, Assets.iconsIcFlipCamera),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                        () async {}, Assets.iconsIcScale),
+                                            () async {}, Assets.iconsIcScale),
                                     Constant.xSizedBox12,
                                     iconSidebar(() async {
                                       setState(() {
@@ -763,19 +765,21 @@ class _HairViewState extends State<HairView> {
                                     }, Assets.iconsIcCompareOff),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                        () async {}, Assets.iconsIcResetOff),
+                                            () async {}, Assets.iconsIcResetOff),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                        () async {}, Assets.iconsIcChoose),
+                                            () async {}, Assets.iconsIcChoose),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                        () async {}, Assets.iconsIcShare),
+                                            () async {}, Assets.iconsIcShare),
                                   ],
                                 ),
                               ),
                             ),
                             Constant.xSizedBox16,
-                            sheet(),
+                            makeupOrAccessories
+                                ? makeupOrAccessoriesChoice()
+                                : sheet(),
                             // file != null ? pictureTaken() : noPictureTaken(),
                             // pictureTaken(),
                           ],

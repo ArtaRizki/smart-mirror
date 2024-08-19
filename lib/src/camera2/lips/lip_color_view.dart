@@ -316,7 +316,6 @@ class _LipColorViewState extends State<LipColorView> {
               ),
             ),
           );
-          ;
         },
       ),
     );

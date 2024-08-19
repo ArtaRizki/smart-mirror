@@ -418,7 +418,6 @@ class _CameraVideoPageState extends State<CameraVideoPage> {
               ),
             ),
           );
-          ;
         },
       ),
     );

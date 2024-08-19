@@ -559,7 +559,6 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
                 ),
               ),
             );
-            ;
           },
         ),
       ),
