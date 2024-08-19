@@ -10,6 +10,7 @@ import 'package:smart_mirror/common/component/custom_navigator.dart';
 import 'package:smart_mirror/common/helper/constant.dart';
 import 'package:smart_mirror/generated/assets.dart';
 import 'package:smart_mirror/src/camera2/camera_video_page.dart';
+import 'package:smart_mirror/src/camera2/face/foundation_view.dart';
 import 'package:smart_mirror/utils/utils.dart';
 
 const xHEdgeInsets12 = EdgeInsets.symmetric(horizontal: 12);
@@ -201,7 +202,9 @@ class _MakeupPageState extends State<MakeupPage> {
             children: [
               itemMakeup(Assets.iconsIcLips, () {}),
               itemMakeup(Assets.iconsIcEyes, () {}),
-              itemMakeup(Assets.iconsIcFace, () {}),
+              itemMakeup(Assets.iconsIcFace, () {
+                CusNav.nPush(context, FoundationView());
+              }),
               itemMakeup(Assets.iconsIcNails, () {}),
               itemMakeup(Assets.iconsIcHair, () {}),
             ],
