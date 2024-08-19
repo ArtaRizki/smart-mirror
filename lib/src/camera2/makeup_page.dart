@@ -15,7 +15,12 @@ import 'package:smart_mirror/src/camera2/eyes/eyeliner_view.dart';
 import 'package:smart_mirror/src/camera2/eyes/eyeshadow_view.dart';
 import 'package:smart_mirror/src/camera2/eyes/lashes_mascara_view.dart';
 import 'package:smart_mirror/src/camera2/eyes/lenses_view.dart';
+import 'package:smart_mirror/src/camera2/face/blusher_view.dart';
+import 'package:smart_mirror/src/camera2/face/bronzer_view.dart';
+import 'package:smart_mirror/src/camera2/face/concealer_view.dart';
+import 'package:smart_mirror/src/camera2/face/contour_view.dart';
 import 'package:smart_mirror/src/camera2/face/foundation_view.dart';
+import 'package:smart_mirror/src/camera2/face/highlighter_view.dart';
 import 'package:smart_mirror/src/camera2/hair/hair_view.dart';
 import 'package:smart_mirror/src/camera2/lips/lip_color_view.dart';
 import 'package:smart_mirror/src/camera2/lips/lip_liner_view.dart';
@@ -42,6 +47,9 @@ class _MakeupPageState extends State<MakeupPage> {
   File? file;
   bool lipsClick = false;
   bool eyesClick = false;
+  bool faceClick = false;
+  bool nailsClick = false;
+  bool hairClick = false;
 
   List<String> lipsType = ['Lip Color', 'Lip Liner', 'Lip Plumper'];
   List<String> eyesType = [
@@ -60,6 +68,14 @@ class _MakeupPageState extends State<MakeupPage> {
     'Blusher',
     'Bronzer',
     'Highlighter'
+  ];
+  List<String> nailsType = [
+    'Nail Polish',
+    'Press-on Nails',
+
+  ];
+  List<String> hairType = [
+    'Hair Color',
   ];
 
   @override
@@ -120,6 +136,14 @@ class _MakeupPageState extends State<MakeupPage> {
       }
     }
     return true;
+  }
+
+  clearAll() {
+    lipsClick = false;
+    eyesClick = false;
+    faceClick = false;
+    nailsClick = false;
+    hairClick = false;
   }
 
   Future<void> _initCamera({CameraDescription? camera}) async {
@@ -194,6 +218,7 @@ class _MakeupPageState extends State<MakeupPage> {
     );
   }
 
+
   Widget separator() {
     return Divider(thickness: 1, color: Colors.white);
   }
@@ -210,7 +235,7 @@ class _MakeupPageState extends State<MakeupPage> {
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-        alignment: Alignment.center,
+        alignment: Alignment.centerLeft,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: Colors.white),
@@ -224,20 +249,24 @@ class _MakeupPageState extends State<MakeupPage> {
   }
 
   Widget lipsList() {
-    return Container(
-      height: 30,
-      child: ListView.separated(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: lipsType.length,
-        separatorBuilder: (_, __) => Constant.xSizedBox8,
-        itemBuilder: (context, index) {
-          return lipsItem(lipsType[index], () {
-            if (index == 0) CusNav.nPush(context, LipColorView());
-            if (index == 1) CusNav.nPush(context, LipLinerView());
-            if (index == 2) CusNav.nPush(context, LipPlumberView());
-          });
-        },
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        height: 30,
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: lipsType.length,
+          separatorBuilder: (_, __) => Constant.xSizedBox8,
+          itemBuilder: (context, index) {
+            return lipsItem(lipsType[index], () {
+              if (index == 0) CusNav.nPush(context, LipColorView());
+              if (index == 1) CusNav.nPush(context, LipLinerView());
+              if (index == 2) CusNav.nPush(context, LipPlumberView());
+            });
+          },
+        ),
       ),
     );
   }
@@ -261,27 +290,32 @@ class _MakeupPageState extends State<MakeupPage> {
   }
 
   Widget eyesList() {
-    return Container(
-      height: 30,
-      child: ListView.separated(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: eyesType.length,
-        separatorBuilder: (_, __) => Constant.xSizedBox8,
-        itemBuilder: (context, index) {
-          return eyesItem(eyesType[index], () {
-            if (index == 0) CusNav.nPush(context, EyebrowsView());
-            if (index == 1) CusNav.nPush(context, EyeshadowView());
-            if (index == 2) CusNav.nPush(context, EyelinerView());
-            if (index == 3) CusNav.nPush(context, LensesView());
-            if (index == 4) CusNav.nPush(context, LashesMascaraView());
-            if (index == 5)
-              CusNav.nPush(context, LashesMascaraView(lashes: false));
-          });
-        },
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        height: 30,
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: eyesType.length,
+          separatorBuilder: (_, __) => Constant.xSizedBox8,
+          itemBuilder: (context, index) {
+            return eyesItem(eyesType[index], () {
+              if (index == 0) CusNav.nPush(context, EyebrowsView());
+              if (index == 1) CusNav.nPush(context, EyeshadowView());
+              if (index == 2) CusNav.nPush(context, EyelinerView());
+              if (index == 3) CusNav.nPush(context, LensesView());
+              if (index == 4) CusNav.nPush(context, LashesMascaraView());
+              if (index == 5)
+                CusNav.nPush(context, LashesMascaraView(lashes: false));
+            });
+          },
+        ),
       ),
     );
   }
+
 
   Widget faceItem(String type, GestureTapCallback? onTap) {
     return GestureDetector(
@@ -302,20 +336,107 @@ class _MakeupPageState extends State<MakeupPage> {
   }
 
   Widget faceList() {
-    return Container(
-      height: 30,
-      child: ListView.separated(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: lipsType.length,
-        separatorBuilder: (_, __) => Constant.xSizedBox8,
-        itemBuilder: (context, index) {
-          return lipsItem(lipsType[index], () {
-            if (index == 0) CusNav.nPush(context, LipColorView());
-            if (index == 1) CusNav.nPush(context, LipLinerView());
-            if (index == 2) CusNav.nPush(context, LipPlumberView());
-          });
-        },
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        height: 30,
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: faceType.length,
+          separatorBuilder: (_, __) => Constant.xSizedBox8,
+          itemBuilder: (context, index) {
+            return faceItem(faceType[index], () {
+              if (index == 0) CusNav.nPush(context, FoundationView());
+              if (index == 1) CusNav.nPush(context, ConcealerView());
+              if (index == 2) CusNav.nPush(context, ContourView());
+              if (index == 3) CusNav.nPush(context, BlusherView());
+              if (index == 4) CusNav.nPush(context, BronzerView());
+              if (index == 5) CusNav.nPush(context, HighlighterView());
+            });
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget nailsItem(String type, GestureTapCallback? onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: Colors.white),
+        ),
+        child: Text(
+          type,
+          style: TextStyle(color: Colors.white, fontSize: 10),
+        ),
+      ),
+    );
+  }
+
+  Widget nailsList() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        height: 30,
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: nailsType.length,
+          separatorBuilder: (_, __) => Constant.xSizedBox8,
+          itemBuilder: (context, index) {
+            return nailsItem(nailsType[index], () {
+              if (index == 0) CusNav.nPush(context, NailsView());
+              if (index == 1) CusNav.nPush(context, NailsView());
+
+            });
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget hairItem(String type, GestureTapCallback? onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: Colors.white),
+        ),
+        child: Text(
+          type,
+          style: TextStyle(color: Colors.white, fontSize: 10),
+        ),
+      ),
+    );
+  }
+
+  Widget hairList() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        height: 30,
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: hairType.length,
+          separatorBuilder: (_, __) => Constant.xSizedBox8,
+          itemBuilder: (context, index) {
+            return hairItem(hairType[index], () {
+              if (index == 0) CusNav.nPush(context, HairView());
+            });
+          },
+        ),
       ),
     );
   }
@@ -345,26 +466,35 @@ class _MakeupPageState extends State<MakeupPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              itemMakeup(Assets.iconsIcLips, () {
+              itemMakeup((lipsClick == false ? Assets.iconsIcLips : Assets.iconsIcLipsOn), () {
                 setState(() {
-                  eyesClick = false;
+                  clearAll();
                   lipsClick = !lipsClick;
                 });
               }),
-              itemMakeup(Assets.iconsIcEyes, () {
+              itemMakeup(eyesClick == false ? Assets.iconsIcEyes : Assets.iconsIcEyesOn, () {
                 setState(() {
-                  lipsClick = false;
+                  clearAll();
                   eyesClick = !eyesClick;
                 });
               }),
-              itemMakeup(Assets.iconsIcFace, () {
-                CusNav.nPush(context, FoundationView());
+              itemMakeup(faceClick == false ? Assets.iconsIcFace : Assets.iconsIcFaceOn, () {
+                setState(() {
+                  clearAll();
+                  faceClick = !faceClick;
+                });
               }),
-              itemMakeup(Assets.iconsIcNails, () {
-                CusNav.nPush(context, NailsView());
+              itemMakeup(nailsClick == false ? Assets.iconsIcNails : Assets.iconsIcNailsOn, () {
+                setState(() {
+                  clearAll();
+                  nailsClick = !nailsClick;
+                });
               }),
-              itemMakeup(Assets.iconsIcHair, () {
-                CusNav.nPush(context, HairView());
+              itemMakeup(hairClick == false ?  Assets.iconsIcHair : Assets.iconsIcHairOn, () {
+                setState(() {
+                  clearAll();
+                  hairClick = !hairClick;
+                });
               }),
             ],
           ),
@@ -535,6 +665,9 @@ class _MakeupPageState extends State<MakeupPage> {
                             Constant.xSizedBox8,
                             if (lipsClick) lipsList(),
                             if (eyesClick) eyesList(),
+                            if (faceClick) faceList(),
+                            if (nailsClick) nailsList(),
+                            if (hairClick) hairList(),
                             Constant.xSizedBox24,
                           ],
                         ),

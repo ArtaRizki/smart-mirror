@@ -33,6 +33,9 @@ class _ConcealerViewState extends State<ConcealerView> {
   bool isFlipCameraSupported = false;
   File? file;
   bool makeupOrAccessories = false;
+  bool onOffVisible = false;
+  int? skinSelected = 0;
+  int? colorSelected = 0;
 
   @override
   void initState() {
@@ -379,23 +382,30 @@ class _ConcealerViewState extends State<ConcealerView> {
           itemCount: skinList.length,
           separatorBuilder: (_, __) => Constant.xSizedBox8,
           itemBuilder: (context, index) {
-            return Container(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                    color: index == 0 ? Colors.white : Colors.transparent),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  CircleAvatar(radius: 8, backgroundColor: skinColorList[index]),
-                  Constant.xSizedBox4,
-                  Text(
-                    skinList[index],
-                    style: TextStyle(color: Colors.white, fontSize: 10),
-                  ),
-                ],
+            return InkWell(
+              onTap: () {
+                setState(() {
+                  skinSelected = index;
+                });
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                      color: index == skinSelected ? Colors.white : Colors.transparent),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    CircleAvatar(radius: 8, backgroundColor: skinColorList[index]),
+                    Constant.xSizedBox4,
+                    Text(
+                      skinList[index],
+                      style: TextStyle(color: Colors.white, fontSize: 10),
+                    ),
+                  ],
+                ),
               ),
             );
           },
@@ -417,14 +427,32 @@ class _ConcealerViewState extends State<ConcealerView> {
           itemBuilder: (context, index) {
             if (index == 0)
               return InkWell(
-                onTap: () async {},
+                onTap: () async {
+                  setState(() {
+                    onOffVisible = true;
+                  });
+                },
                 child: Icon(Icons.do_not_disturb_alt_sharp,
                     color: Colors.white, size: 25),
               );
             return InkWell(
-                onTap: () async {},
-                child: CircleAvatar(
-                    radius: 12, backgroundColor: colorChoiceList[index]));
+                onTap: () async {
+                  setState(() {
+                    colorSelected = index;
+                    onOffVisible = false;
+                  });
+                },
+                child:
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                        color: index == colorSelected && onOffVisible == false ? Colors.white : Colors.transparent),
+                  ),
+                  child: CircleAvatar(
+                      radius: 12, backgroundColor: colorChoiceList[index]),
+                ));
           },
         ),
       ),

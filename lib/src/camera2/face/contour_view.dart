@@ -34,6 +34,11 @@ class _ContourViewState extends State<ContourView> {
   File? file;
   bool makeupOrAccessories = false;
   bool oneOrDual = false;
+  bool onOffVisibel = false;
+  bool onOffVisibel1 = false;
+  int? skinSelected = 0;
+  int? colorSelected = 0;
+
 
   @override
   void initState() {
@@ -422,14 +427,32 @@ class _ContourViewState extends State<ContourView> {
           itemBuilder: (context, index) {
             if (index == 0)
               return InkWell(
-                onTap: () async {},
+                onTap: () async {
+                  setState(() {
+                    colorSelected = 0;
+                    onOffVisibel = true;
+                  });
+                },
                 child: Icon(Icons.do_not_disturb_alt_sharp,
                     color: Colors.white, size: 25),
               );
             return InkWell(
-                onTap: () async {},
-                child: CircleAvatar(
-                    radius: 12, backgroundColor: colorChoiceList[index]));
+                onTap: () async {
+                  setState(() {
+                    colorSelected = index;
+                    onOffVisibel = false;
+                  });
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                        color: index == colorSelected && onOffVisibel == false ? Colors.white : Colors.transparent),
+                  ),
+                  child: CircleAvatar(
+                      radius: 12, backgroundColor: colorChoiceList[index]),
+                ));
           },
         ),
       ),
@@ -440,7 +463,7 @@ class _ContourViewState extends State<ContourView> {
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
-        height: 50,
+        height: 55,
         child: ListView.separated(
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
@@ -453,18 +476,31 @@ class _ContourViewState extends State<ContourView> {
             //     child: Icon(Icons.do_not_disturb_alt_sharp,
             //         color: Colors.white, size: 25),
             //   );
-            return InkWell(
-                onTap: () async {},
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 50,
-                      height: 50,
-                      child: Image.asset(bronzerList[index]),
-                    ),
-                  ],
-                ));
+            return Container(
+              padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+              decoration: BoxDecoration(
+                // borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                    color: index == skinSelected && onOffVisibel1 == false ? Colors.white : Colors.transparent),
+              ),
+              child: InkWell(
+                  onTap: () async {
+                    setState(() {
+                      skinSelected = index;
+                      onOffVisibel1 = false;
+                    });
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 50,
+                        height: 50,
+                        child: Image.asset(bronzerList[index]),
+                      ),
+                    ],
+                  )),
+            );
           },
         ),
       ),
