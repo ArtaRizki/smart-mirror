@@ -1,15 +1,18 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:share_plus/share_plus.dart';
 
 import 'package:camera/camera.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:smart_mirror/common/component/custom_navigator.dart';
 import 'package:smart_mirror/common/helper/constant.dart';
 import 'package:smart_mirror/generated/assets.dart';
 import 'package:smart_mirror/src/camera/camera_page.dart';
+import 'package:smart_mirror/src/camera2/makeup_page.dart';
 import 'package:smart_mirror/utils/utils.dart';
 
 const xHEdgeInsets12 = EdgeInsets.symmetric(horizontal: 12);
@@ -23,12 +26,19 @@ class CameraVideoPage extends StatefulWidget {
 
 class _CameraVideoPageState extends State<CameraVideoPage> {
   late CameraController controller;
+  bool _isVideoCameraSelected = false;
+  bool _isRecordingInProgress = false;
   Completer<String?> cameraSetupCompleter = Completer();
   Completer? isFlippingCamera;
   late List<Permission> permissions;
   bool isRearCamera = true;
   bool isFlipCameraSupported = false;
   File? file;
+
+  Stream<int>? timerStream;
+  StreamSubscription<int>? timerSubscription;
+  String minutesStr = '00';
+  String secondsStr = '00';
 
   @override
   void initState() {
@@ -141,6 +151,103 @@ class _CameraVideoPageState extends State<CameraVideoPage> {
     }
   }
 
+  // Handle timeStream
+
+  Stream<int> stopWatchStream() {
+    StreamController<int>? streamController;
+    Timer? timer;
+    Duration timerInterval = Duration(seconds: 1);
+    int counter = 0;
+
+    void stopTimer() {
+      if (timer != null) {
+        timer!.cancel();
+        timer = null;
+        counter = 0;
+        streamController!.close();
+      }
+    }
+
+    void tick(_) {
+      counter++;
+      streamController!.add(counter);
+    }
+
+    void startTimer() {
+      timer = Timer.periodic(timerInterval, tick);
+    }
+
+    streamController = StreamController<int>(
+      onListen: startTimer,
+      onCancel: stopTimer,
+      onResume: startTimer,
+      onPause: stopTimer,
+    );
+
+    return streamController.stream;
+  }
+
+  Future<void> startVideoRecording() async {
+    final CameraController? cameraController = controller;
+    if (controller!.value.isRecordingVideo) {
+      // A recording has already started, do nothing.
+      return;
+    }
+    try {
+      await cameraController!.startVideoRecording();
+      setState(() {
+        _isRecordingInProgress = true;
+        timerStream = stopWatchStream();
+        timerSubscription = timerStream!.listen((int newTick) {
+          setState(() {
+            minutesStr =
+                ((newTick / 60) % 60).floor().toString().padLeft(2, '0');
+            secondsStr = (newTick % 60).floor().toString().padLeft(2, '0');
+          });
+        });
+        print(_isRecordingInProgress);
+      });
+    } on CameraException catch (e) {
+      print('Error starting to record video: $e');
+    }
+  }
+
+  Future<XFile?> stopVideoRecording() async {
+    if (!controller!.value.isRecordingVideo) {
+      // Recording is already is stopped state
+      return null;
+    }
+    try {
+      XFile file = await controller!.stopVideoRecording();
+      setState(() {
+        _isRecordingInProgress = false; // At Recording Stop :
+
+        timerSubscription!.cancel();
+        timerStream = null;
+        setState(() {
+          minutesStr = '00';
+          secondsStr = '00';
+        });
+        print(_isRecordingInProgress);
+      });
+      return file;
+    } on CameraException catch (e) {
+      print('Error stopping video recording: $e');
+      return null;
+    }
+  }
+
+  Future<void> share() async {
+    if (file != null) {
+      final result =
+          await Share.shareXFiles([XFile(file!.path)], text: 'Great picture');
+
+      if (result.status == ShareResultStatus.success) {
+        print('Thank you for sharing the picture!');
+      }
+    }
+  }
+
   Widget pictureTaken() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -148,7 +255,9 @@ class _CameraVideoPageState extends State<CameraVideoPage> {
         children: [
           Expanded(
             child: InkWell(
-              onTap: () {},
+              onTap: () {
+                CusNav.nPushAndRemoveUntil(context, MakeupPage());
+              },
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                 decoration: BoxDecoration(
@@ -169,7 +278,9 @@ class _CameraVideoPageState extends State<CameraVideoPage> {
           Constant.xSizedBox24,
           Expanded(
             child: InkWell(
-              onTap: () {},
+              onTap: () {
+                share();
+              },
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                 decoration: BoxDecoration(
@@ -205,6 +316,53 @@ class _CameraVideoPageState extends State<CameraVideoPage> {
       child: Column(
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              InkWell(
+                onTap: () {
+                  if (!_isVideoCameraSelected) {
+                    setState(() {
+                      _isVideoCameraSelected = true;
+                    });
+                  }
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    'VIDEO',
+                    style: TextStyle(
+                      color: _isVideoCameraSelected
+                          ? Color(0xffCA9C43)
+                          : Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+              Constant.xSizedBox32,
+              Constant.xSizedBox32,
+              InkWell(
+                onTap: () {
+                  if (_isVideoCameraSelected) {
+                    setState(() {
+                      _isVideoCameraSelected = false;
+                    });
+                  }
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    'FOTO',
+                    style: TextStyle(
+                      color: !_isVideoCameraSelected
+                          ? Color(0xffCA9C43)
+                          : Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -213,17 +371,40 @@ class _CameraVideoPageState extends State<CameraVideoPage> {
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: InkWell(
-                    onTap: () {
-                      controller.takePicture().then((imageFile) async {
-                        // File tmp = await compressImage(
-                        //     File(imageFile.path));
-                        file = File(imageFile.path);
-                        // if (controller
-                        //     .value.isPreviewPaused)
-                        //   await controller.resumePreview();
-                        // else
-                        await controller.pausePreview();
-                      });
+                    onTap: () async {
+                      if (_isVideoCameraSelected) {
+                        if (_isRecordingInProgress) {
+                          XFile? rawVideo = await stopVideoRecording();
+                          // File videoFile = File(rawVideo!.path);
+
+                          // int currentUnix =
+                          //     DateTime.now().millisecondsSinceEpoch;
+
+                          // final directory =
+                          //     await getApplicationDocumentsDirectory();
+                          // String fileFormat = videoFile.path.split('.').last;
+
+                          // _videoFile = await videoFile.copy(
+                          //   '${directory.path}/$currentUnix.$fileFormat',
+                          // );
+
+                          // _startVideoPlayer();
+                        } else {
+                          await startVideoRecording();
+                        }
+                      } else {
+                        controller.takePicture().then((imageFile) async {
+                          // File tmp = await compressImage(
+                          //     File(imageFile.path));
+                          file = File(imageFile.path);
+                          setState(() {});
+                          // if (controller
+                          //     .value.isPreviewPaused)
+                          //   await controller.resumePreview();
+                          // else
+                          await controller.pausePreview();
+                        });
+                      }
                     },
                     child: Stack(
                       alignment: Alignment.center,
@@ -236,11 +417,25 @@ class _CameraVideoPageState extends State<CameraVideoPage> {
                           width: 60,
                           height: 60,
                         ),
-                        Icon(
-                          Icons.circle,
-                          color: Colors.red,
-                          size: 60,
-                        ),
+                        _isVideoCameraSelected
+                            ? _isRecordingInProgress
+                                ? Icon(
+                                    Icons.stop_rounded,
+                                    color: Colors.white,
+                                    size: 32,
+                                  )
+                                : Icon(
+                                    Icons.circle,
+                                    color: Colors.red,
+                                    size: 60,
+                                  )
+                            : Icon(
+                                Icons.circle,
+                                color: _isVideoCameraSelected
+                                    ? Colors.red
+                                    : Colors.white,
+                                size: 60,
+                              ),
                       ],
                     ),
                   ),
@@ -497,6 +692,34 @@ class _CameraVideoPageState extends State<CameraVideoPage> {
             child: Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
           ),
         ),
+        centerTitle: true,
+        title: !_isVideoCameraSelected || !_isRecordingInProgress
+            ? null
+            : Container(
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                    color: Colors.black54,
+                    borderRadius: BorderRadius.circular(14)),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 15,
+                      height: 15,
+                      child: CircleAvatar(
+                        radius: 15,
+                        backgroundColor: Colors.red,
+                      ),
+                    ),
+                    Constant.xSizedBox8,
+                    Text(
+                      '$minutesStr:$secondsStr',
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
         actions: [
           InkWell(
             onTap: () => Navigator.pop(context),

@@ -77,6 +77,10 @@ class Assets {
   static const String imagesImgLenses4 = 'assets/images/img-lenses4.png';
   static const String imagesImgLenses5 = 'assets/images/img-lenses5.png';
   static const String imagesImgLipliner = 'assets/images/img-lipliner.png';
+  static const String imagesImgLipliner2 = 'assets/images/img-lipliner2.png';
+  static const String imagesImgLipliner3 = 'assets/images/img-lipliner3.png';
+  static const String imagesImgLipliner4 = 'assets/images/img-lipliner4.png';
+  static const String imagesImgLipliner5 = 'assets/images/img-lipliner5.png';
   static const String imagesImgLipstick = 'assets/images/img-lipstick.png';
   static const String imagesImgModel = 'assets/images/img-model.png';
   static const String imagesImgNails1 = 'assets/images/img-nails1.png';

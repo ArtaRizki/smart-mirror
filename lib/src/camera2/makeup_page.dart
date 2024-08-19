@@ -72,7 +72,6 @@ class _MakeupPageState extends State<MakeupPage> {
   List<String> nailsType = [
     'Nail Polish',
     'Press-on Nails',
-
   ];
   List<String> hairType = [
     'Hair Color',
@@ -218,7 +217,6 @@ class _MakeupPageState extends State<MakeupPage> {
     );
   }
 
-
   Widget separator() {
     return Divider(thickness: 1, color: Colors.white);
   }
@@ -252,7 +250,7 @@ class _MakeupPageState extends State<MakeupPage> {
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(horizontal: 0),
         height: 30,
         child: ListView.separated(
           shrinkWrap: true,
@@ -294,7 +292,7 @@ class _MakeupPageState extends State<MakeupPage> {
       alignment: Alignment.centerLeft,
       child: Container(
         height: 30,
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(horizontal: 0),
         child: ListView.separated(
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
@@ -314,7 +312,6 @@ class _MakeupPageState extends State<MakeupPage> {
       ),
     );
   }
-
 
   Widget faceItem(String type, GestureTapCallback? onTap) {
     return GestureDetector(
@@ -338,7 +335,7 @@ class _MakeupPageState extends State<MakeupPage> {
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(horizontal: 0),
         height: 30,
         child: ListView.separated(
           shrinkWrap: true,
@@ -382,7 +379,7 @@ class _MakeupPageState extends State<MakeupPage> {
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(horizontal: 0),
         height: 30,
         child: ListView.separated(
           shrinkWrap: true,
@@ -424,7 +421,7 @@ class _MakeupPageState extends State<MakeupPage> {
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(horizontal: 0),
         height: 30,
         child: ListView.separated(
           shrinkWrap: true,
@@ -466,31 +463,46 @@ class _MakeupPageState extends State<MakeupPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              itemMakeup((lipsClick == false ? Assets.iconsIcLips : Assets.iconsIcLipsOn), () {
+              itemMakeup(
+                  (lipsClick == false
+                      ? Assets.iconsIcLips
+                      : Assets.iconsIcLipsOn), () {
                 setState(() {
                   clearAll();
                   lipsClick = !lipsClick;
                 });
               }),
-              itemMakeup(eyesClick == false ? Assets.iconsIcEyes : Assets.iconsIcEyesOn, () {
+              itemMakeup(
+                  eyesClick == false
+                      ? Assets.iconsIcEyes
+                      : Assets.iconsIcEyesOn, () {
                 setState(() {
                   clearAll();
                   eyesClick = !eyesClick;
                 });
               }),
-              itemMakeup(faceClick == false ? Assets.iconsIcFace : Assets.iconsIcFaceOn, () {
+              itemMakeup(
+                  faceClick == false
+                      ? Assets.iconsIcFace
+                      : Assets.iconsIcFaceOn, () {
                 setState(() {
                   clearAll();
                   faceClick = !faceClick;
                 });
               }),
-              itemMakeup(nailsClick == false ? Assets.iconsIcNails : Assets.iconsIcNailsOn, () {
+              itemMakeup(
+                  nailsClick == false
+                      ? Assets.iconsIcNails
+                      : Assets.iconsIcNailsOn, () {
                 setState(() {
                   clearAll();
                   nailsClick = !nailsClick;
                 });
               }),
-              itemMakeup(hairClick == false ?  Assets.iconsIcHair : Assets.iconsIcHairOn, () {
+              itemMakeup(
+                  hairClick == false
+                      ? Assets.iconsIcHair
+                      : Assets.iconsIcHairOn, () {
                 setState(() {
                   clearAll();
                   hairClick = !hairClick;
@@ -499,6 +511,13 @@ class _MakeupPageState extends State<MakeupPage> {
             ],
           ),
           Constant.xSizedBox8,
+          Constant.xSizedBox8,
+          if (lipsClick) lipsList(),
+          if (eyesClick) eyesList(),
+          if (faceClick) faceList(),
+          if (nailsClick) nailsList(),
+          if (hairClick) hairList(),
+          Constant.xSizedBox12,
         ],
       ),
     );
@@ -662,13 +681,6 @@ class _MakeupPageState extends State<MakeupPage> {
                             ),
                             Constant.xSizedBox16,
                             sheet(),
-                            Constant.xSizedBox8,
-                            if (lipsClick) lipsList(),
-                            if (eyesClick) eyesList(),
-                            if (faceClick) faceList(),
-                            if (nailsClick) nailsList(),
-                            if (hairClick) hairList(),
-                            Constant.xSizedBox24,
                           ],
                         ),
                       ),

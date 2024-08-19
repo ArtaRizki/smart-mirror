@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/services.dart'; 
 import 'package:permission_handler/permission_handler.dart';
 import 'package:smart_mirror/common/component/custom_navigator.dart';
 import 'package:smart_mirror/common/helper/constant.dart';

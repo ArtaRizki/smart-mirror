@@ -156,7 +156,6 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
     Assets.imagesImgHighlighter4,
   ];
 
-
   Future<bool> checkPermissionStatuses() async {
     for (var permission in permissions) {
       if (await permission.status != PermissionStatus.granted) {
@@ -253,8 +252,7 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
     );
   }
 
-  void changeModel(
-      BuildContext context) {
+  void changeModel(BuildContext context) {
     CustomDialog.newDialog(
         context: context,
         title: Row(
@@ -269,7 +267,10 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
                 Navigator.pop(context);
               },
             ),
-            Text("How would you like to try on the makeup?", style: Constant.whiteRegular12,),
+            Text(
+              "How would you like to try on the makeup?",
+              style: Constant.whiteRegular12,
+            ),
           ],
         ),
         titlePadding: EdgeInsets.zero,
@@ -280,9 +281,18 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Image.asset(Assets.imagesImgUpPhoto, scale: 3,),
-                Image.asset(Assets.imagesImgUpVideo, scale: 3,),
-                Image.asset(Assets.imagesImgModel, scale: 3,),
+                Image.asset(
+                  Assets.imagesImgUpPhoto,
+                  scale: 3,
+                ),
+                Image.asset(
+                  Assets.imagesImgUpVideo,
+                  scale: 3,
+                ),
+                Image.asset(
+                  Assets.imagesImgModel,
+                  scale: 3,
+                ),
               ],
             ),
           ),
@@ -452,7 +462,8 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
               ),
               child: Row(
                 children: [
-                  CircleAvatar(radius: 8, backgroundColor: choiceColorList[index]),
+                  CircleAvatar(
+                      radius: 8, backgroundColor: choiceColorList[index]),
                   Constant.xSizedBox4,
                   Text(
                     textColorList[index],
@@ -486,7 +497,8 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
               );
             return InkWell(
                 onTap: () async {},
-                child: CircleAvatar(radius: 12, backgroundColor: colorChoiceList[index]));
+                child: CircleAvatar(
+                    radius: 12, backgroundColor: colorChoiceList[index]));
           },
         ),
       ),
@@ -570,7 +582,7 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
       // height: 100,
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       decoration: BoxDecoration(
-        color: Colors.transparent,
+        color: Colors.black54,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(16),
           topRight: Radius.circular(16),
@@ -727,36 +739,40 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
                                       CusNav.nPush(context, CameraVideoPage());
                                     }, Assets.iconsIcCamera),
                                     Constant.xSizedBox12,
-                                    iconSidebar(
-                                        () async {
-                                            ///[Flip Camera]
-                                            if (isFlippingCamera == null ||
-                                                isFlippingCamera!.isCompleted) {
-                                              isFlippingCamera = Completer();
-                                              isFlippingCamera!.complete(
-                                                  await availableCameras().then((value) async {
-                                                    for (var camera in value) {
-                                                      if (camera.lensDirection ==
-                                                          (controller.description.lensDirection ==
-                                                              CameraLensDirection.front
-                                                              ? CameraLensDirection.back
-                                                              : CameraLensDirection.front)) {
-                                                        await controller.dispose();
-                                                        cameraSetupCompleter = Completer();
+                                    iconSidebar(() async {
+                                      ///[Flip Camera]
+                                      if (isFlippingCamera == null ||
+                                          isFlippingCamera!.isCompleted) {
+                                        isFlippingCamera = Completer();
+                                        isFlippingCamera!.complete(
+                                            await availableCameras()
+                                                .then((value) async {
+                                          for (var camera in value) {
+                                            if (camera.lensDirection ==
+                                                (controller.description
+                                                            .lensDirection ==
+                                                        CameraLensDirection
+                                                            .front
+                                                    ? CameraLensDirection.back
+                                                    : CameraLensDirection
+                                                        .front)) {
+                                              await controller.dispose();
+                                              cameraSetupCompleter =
+                                                  Completer();
 
-                                                        await _initCamera(camera: camera);
-                                                        setState(() {});
-                                                        break;
-                                                      }
-                                                    }
-
-                                                    await Future.delayed(
-                                                        const Duration(seconds: 1, milliseconds: 500));
-                                                  }));
-                                            } else {
-                                              print('Not completed!');
+                                              await _initCamera(camera: camera);
+                                              setState(() {});
+                                              break;
                                             }
-                                        }, Assets.iconsIcFlipCamera),
+                                          }
+
+                                          await Future.delayed(const Duration(
+                                              seconds: 1, milliseconds: 500));
+                                        }));
+                                      } else {
+                                        print('Not completed!');
+                                      }
+                                    }, Assets.iconsIcFlipCamera),
                                     Constant.xSizedBox12,
                                     iconSidebar(
                                         () async {}, Assets.iconsIcScale),
@@ -770,10 +786,9 @@ class _OcrCameraPage2State extends State<OcrCameraPage2> {
                                     iconSidebar(
                                         () async {}, Assets.iconsIcReset),
                                     Constant.xSizedBox12,
-                                    iconSidebar(
-                                        () async {
-                                          changeModel(context);
-                                        }, Assets.iconsIcChoose),
+                                    iconSidebar(() async {
+                                      changeModel(context);
+                                    }, Assets.iconsIcChoose),
                                     Constant.xSizedBox12,
                                     iconSidebar(
                                         () async {}, Assets.iconsIcShare),
