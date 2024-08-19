@@ -11,7 +11,6 @@ import 'package:smart_mirror/common/helper/constant.dart';
 import 'package:smart_mirror/generated/assets.dart';
 import 'package:smart_mirror/src/camera/camera_page.dart';
 import 'package:smart_mirror/src/camera2/camera_video_page.dart';
-import 'package:smart_mirror/src/camera2/face/blusher_view.dart';
 import 'package:smart_mirror/src/camera2/makeup_page.dart';
 import 'package:smart_mirror/utils/utils.dart';
 
@@ -33,7 +32,10 @@ class _HighlighterViewState extends State<HighlighterView> {
   bool isFlipCameraSupported = false;
   File? file;
   bool makeupOrAccessories = false;
-  bool oneOrDual = false;
+  bool onOffVisibel = false;
+  int? skinSelected = 0;
+  int? colorSelected = 0;
+  int? typeSelected = 0;
 
   @override
   void initState() {
@@ -121,11 +123,12 @@ class _HighlighterViewState extends State<HighlighterView> {
     Color(0xFF342112),
     Color(0xFF4A2912),
   ];
-  List<String> highlighterList = [
-    Assets.imagesImgHighlighter1,
-    Assets.imagesImgHighlighter2,
-    Assets.imagesImgHighlighter3,
-    Assets.imagesImgHighlighter4,
+  List<String> blusherList = [
+    Assets.imagesImgBlusher1,
+    Assets.imagesImgBlusher2,
+    Assets.imagesImgBlusher3,
+    Assets.imagesImgBlusher4,
+    Assets.imagesImgBlusher5,
   ];
 
   @override
@@ -158,7 +161,7 @@ class _HighlighterViewState extends State<HighlighterView> {
     } else {
       await availableCameras().then((value) async {
         isFlipCameraSupported = value.indexWhere((element) =>
-                element.lensDirection == CameraLensDirection.front) !=
+        element.lensDirection == CameraLensDirection.front) !=
             -1;
 
         for (var camera in value) {
@@ -336,24 +339,24 @@ class _HighlighterViewState extends State<HighlighterView> {
                       isFlippingCamera = Completer();
                       isFlippingCamera!.complete(
                           await availableCameras().then((value) async {
-                        for (var camera in value) {
-                          if (camera.lensDirection ==
-                              (controller.description.lensDirection ==
+                            for (var camera in value) {
+                              if (camera.lensDirection ==
+                                  (controller.description.lensDirection ==
                                       CameraLensDirection.front
-                                  ? CameraLensDirection.back
-                                  : CameraLensDirection.front)) {
-                            await controller.dispose();
-                            cameraSetupCompleter = Completer();
+                                      ? CameraLensDirection.back
+                                      : CameraLensDirection.front)) {
+                                await controller.dispose();
+                                cameraSetupCompleter = Completer();
 
-                            await _initCamera(camera: camera);
-                            setState(() {});
-                            break;
-                          }
-                        }
+                                await _initCamera(camera: camera);
+                                setState(() {});
+                                break;
+                              }
+                            }
 
-                        await Future.delayed(
-                            const Duration(seconds: 1, milliseconds: 500));
-                      }));
+                            await Future.delayed(
+                                const Duration(seconds: 1, milliseconds: 500));
+                          }));
                     } else {
                       print('Not completed!');
                     }
@@ -375,7 +378,7 @@ class _HighlighterViewState extends State<HighlighterView> {
     );
   }
 
-  Widget colorChip() {
+  Widget typeChip() {
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
@@ -386,17 +389,24 @@ class _HighlighterViewState extends State<HighlighterView> {
           itemCount: typeList.length,
           separatorBuilder: (_, __) => Constant.xSizedBox8,
           itemBuilder: (context, index) {
-            return Container(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                    color: index == 0 ? Colors.white : Colors.transparent),
-              ),
-              child: Center(
-                child: Text(
-                  typeList[index],
-                  style: TextStyle(color: Colors.white, fontSize: 10),
+            return InkWell(
+              onTap: () {
+                setState(() {
+                  typeSelected = index;
+                });
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                      color: index == typeSelected ? Colors.white : Colors.transparent),
+                ),
+                child: Center(
+                  child: Text(
+                    typeList[index],
+                    style: TextStyle(color: Colors.white, fontSize: 10),
+                  ),
                 ),
               ),
             );
@@ -419,14 +429,34 @@ class _HighlighterViewState extends State<HighlighterView> {
           itemBuilder: (context, index) {
             if (index == 0)
               return InkWell(
-                onTap: () async {},
+                onTap: () async {
+                  setState(() {
+                    colorSelected = 0;
+                    onOffVisibel = true;
+                  });
+                },
                 child: Icon(Icons.do_not_disturb_alt_sharp,
                     color: Colors.white, size: 25),
               );
             return InkWell(
-                onTap: () async {},
-                child: CircleAvatar(
-                    radius: 12, backgroundColor: colorChoiceList[index]));
+                onTap: () async {
+                  setState(() {
+                    colorSelected = index;
+                    onOffVisibel = false;
+                  });
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                        color: index == colorSelected && onOffVisibel == false
+                            ? Colors.white
+                            : Colors.transparent),
+                  ),
+                  child: CircleAvatar(
+                      radius: 12, backgroundColor: colorChoiceList[index]),
+                ));
           },
         ),
       ),
@@ -437,11 +467,11 @@ class _HighlighterViewState extends State<HighlighterView> {
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
-        height: 50,
+        height: 55,
         child: ListView.separated(
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
-          itemCount: highlighterList.length,
+          itemCount: blusherList.length,
           separatorBuilder: (_, __) => Constant.xSizedBox12,
           itemBuilder: (context, index) {
             // if (index == 0)
@@ -450,18 +480,30 @@ class _HighlighterViewState extends State<HighlighterView> {
             //     child: Icon(Icons.do_not_disturb_alt_sharp,
             //         color: Colors.white, size: 25),
             //   );
-            return InkWell(
-                onTap: () async {},
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 50,
-                      height: 50,
-                      child: Image.asset(highlighterList[index]),
-                    ),
-                  ],
-                ));
+            return Container(
+              padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+              decoration: BoxDecoration(
+                // borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                    color: index == skinSelected ? Colors.white : Colors.transparent),
+              ),
+              child: InkWell(
+                  onTap: () async {
+                    setState(() {
+                      skinSelected = index;
+                    });
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 50,
+                        height: 50,
+                        child: Image.asset(blusherList[index]),
+                      ),
+                    ],
+                  )),
+            );
           },
         ),
       ),
@@ -531,13 +573,13 @@ class _HighlighterViewState extends State<HighlighterView> {
                         ),
                         Container(
                           padding:
-                              EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                           color: Color(0xFFC89A44),
                           child: Center(
                               child: Text(
-                            "Add to cart",
-                            style: TextStyle(color: Colors.white, fontSize: 10),
-                          )),
+                                "Add to cart",
+                                style: TextStyle(color: Colors.white, fontSize: 10),
+                              )),
                         )
                       ],
                     )
@@ -551,69 +593,6 @@ class _HighlighterViewState extends State<HighlighterView> {
 
   Widget separator() {
     return Divider(thickness: 1, color: Colors.white);
-  }
-
-  Widget typeChip() {
-    return Container(
-      height: 30,
-      child: ListView.separated(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: 7,
-        separatorBuilder: (_, __) => Constant.xSizedBox8,
-        itemBuilder: (context, index) {
-          return Container(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.white),
-            ),
-            child: Center(
-              child: Text(
-                'Sheer',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white, fontSize: 10),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget typeText() {
-    return Container(
-      height: 30,
-      child: ListView.separated(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemCount: 7,
-        separatorBuilder: (_, __) => Constant.xSizedBox8,
-        itemBuilder: (context, index) {
-          return Center(
-            child: Text(
-              'Ombre',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-                shadows: index != 0
-                    ? null
-                    : [
-                        BoxShadow(
-                          offset: Offset(0, 0),
-                          color: Colors.white,
-                          spreadRadius: 0,
-                          blurRadius: 10,
-                        ),
-                      ],
-              ),
-            ),
-          );
-          ;
-        },
-      ),
-    );
   }
 
   Widget sheet() {
@@ -635,7 +614,7 @@ class _HighlighterViewState extends State<HighlighterView> {
             colorChoice(),
             Constant.xSizedBox8,
             separator(),
-            colorChip(),
+            typeChip(),
             separator(),
             highlighterChoice(),
             Constant.xSizedBox4,
@@ -717,7 +696,7 @@ class _HighlighterViewState extends State<HighlighterView> {
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
         systemOverlayStyle:
-            const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+        const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
       ),
       extendBodyBehindAppBar: true,
       body: FutureBuilder<String?>(
@@ -730,17 +709,17 @@ class _HighlighterViewState extends State<HighlighterView> {
           } else if (snapshot.data != null) {
             return Center(
                 child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text('Setup Camera Failed'),
-                Text(
-                  snapshot.data!,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
-              ],
-            ));
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text('Setup Camera Failed'),
+                    Text(
+                      snapshot.data!,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  ],
+                ));
           } else {
             return LayoutBuilder(
               builder: (p0, p1) {
@@ -788,10 +767,10 @@ class _HighlighterViewState extends State<HighlighterView> {
                                     }, Assets.iconsIcCamera),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                        () async {}, Assets.iconsIcFlipCamera),
+                                            () async {}, Assets.iconsIcFlipCamera),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                        () async {}, Assets.iconsIcScale),
+                                            () async {}, Assets.iconsIcScale),
                                     Constant.xSizedBox12,
                                     iconSidebar(() async {
                                       setState(() {
@@ -800,15 +779,13 @@ class _HighlighterViewState extends State<HighlighterView> {
                                     }, Assets.iconsIcCompareOff),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                        () async {}, Assets.iconsIcResetOff),
+                                            () async {}, Assets.iconsIcResetOff),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                        () async {}, Assets.iconsIcChoose),
+                                            () async {}, Assets.iconsIcChoose),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                        () async {
-                                          CusNav.nPush(context, BlusherView());
-                                        }, Assets.iconsIcShare),
+                                            () async {}, Assets.iconsIcShare),
                                   ],
                                 ),
                               ),

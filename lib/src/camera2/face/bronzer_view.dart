@@ -33,6 +33,10 @@ class _BronzerViewState extends State<BronzerView> {
   bool isFlipCameraSupported = false;
   File? file;
   bool makeupOrAccessories = false;
+  int? skinSelected = 0;
+  int? colorSelected = 0;
+  bool onOffVisibel = false;
+
 
   @override
   void initState() {
@@ -421,14 +425,32 @@ class _BronzerViewState extends State<BronzerView> {
           itemBuilder: (context, index) {
             if (index == 0)
               return InkWell(
-                onTap: () async {},
+                onTap: () async {
+                  setState(() {
+                    colorSelected = 0;
+                    onOffVisibel = true;
+                  });
+                },
                 child: Icon(Icons.do_not_disturb_alt_sharp,
                     color: Colors.white, size: 25),
               );
             return InkWell(
-                onTap: () async {},
-                child: CircleAvatar(
-                    radius: 12, backgroundColor: colorChoiceList[index]));
+                onTap: () async {
+                  setState(() {
+                    colorSelected = index;
+                    onOffVisibel = false;
+                  });
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                        color: index == colorSelected && onOffVisibel == false ? Colors.white : Colors.transparent),
+                  ),
+                  child: CircleAvatar(
+                      radius: 12, backgroundColor: colorChoiceList[index]),
+                ));
           },
         ),
       ),
@@ -439,31 +461,37 @@ class _BronzerViewState extends State<BronzerView> {
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
-        height: 50,
+        height: 55,
         child: ListView.separated(
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
           itemCount: bronzerList.length,
           separatorBuilder: (_, __) => Constant.xSizedBox12,
           itemBuilder: (context, index) {
-            // if (index == 0)
-            //   return InkWell(
-            //     onTap: () async {},
-            //     child: Icon(Icons.do_not_disturb_alt_sharp,
-            //         color: Colors.white, size: 25),
-            //   );
-            return InkWell(
-                onTap: () async {},
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 50,
-                      height: 50,
-                      child: Image.asset(bronzerList[index]),
-                    ),
-                  ],
-                ));
+
+            return Container(
+              padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+              decoration: BoxDecoration(
+                border: Border.all(
+                    color: index == skinSelected ? Colors.white : Colors.transparent),
+              ),
+              child: InkWell(
+                  onTap: () async {
+                    setState(() {
+                      skinSelected = index;
+                    });
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 50,
+                        height: 50,
+                        child: Image.asset(bronzerList[index]),
+                      ),
+                    ],
+                  )),
+            );
           },
         ),
       ),
