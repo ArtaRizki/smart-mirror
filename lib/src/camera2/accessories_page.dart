@@ -31,14 +31,14 @@ import 'package:smart_mirror/utils/utils.dart';
 
 const xHEdgeInsets12 = EdgeInsets.symmetric(horizontal: 12);
 
-class MakeupPage extends StatefulWidget {
-  const MakeupPage({super.key});
+class AccessoriesPage extends StatefulWidget {
+  const AccessoriesPage({super.key});
 
   @override
-  State<MakeupPage> createState() => _MakeupPageState();
+  State<AccessoriesPage> createState() => _AccessoriesPageState();
 }
 
-class _MakeupPageState extends State<MakeupPage> {
+class _AccessoriesPageState extends State<AccessoriesPage> {
   late CameraController controller;
   Completer<String?> cameraSetupCompleter = Completer();
   Completer? isFlippingCamera;
@@ -158,7 +158,7 @@ class _MakeupPageState extends State<MakeupPage> {
     } else {
       await availableCameras().then((value) async {
         isFlipCameraSupported = value.indexWhere((element) =>
-                element.lensDirection == CameraLensDirection.front) !=
+        element.lensDirection == CameraLensDirection.front) !=
             -1;
 
         for (var camera in value) {
@@ -583,7 +583,7 @@ class _MakeupPageState extends State<MakeupPage> {
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
         systemOverlayStyle:
-            const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+        const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
       ),
       extendBodyBehindAppBar: true,
       body: FutureBuilder<String?>(
@@ -596,17 +596,17 @@ class _MakeupPageState extends State<MakeupPage> {
           } else if (snapshot.data != null) {
             return Center(
                 child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text('Setup Camera Failed'),
-                Text(
-                  snapshot.data!,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
-              ],
-            ));
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text('Setup Camera Failed'),
+                    Text(
+                      snapshot.data!,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  ],
+                ));
           } else {
             return LayoutBuilder(
               builder: (p0, p1) {
@@ -661,35 +661,35 @@ class _MakeupPageState extends State<MakeupPage> {
                                         isFlippingCamera!.complete(
                                             await availableCameras()
                                                 .then((value) async {
-                                          for (var camera in value) {
-                                            if (camera.lensDirection ==
-                                                (controller.description
-                                                            .lensDirection ==
+                                              for (var camera in value) {
+                                                if (camera.lensDirection ==
+                                                    (controller.description
+                                                        .lensDirection ==
                                                         CameraLensDirection
                                                             .front
-                                                    ? CameraLensDirection.back
-                                                    : CameraLensDirection
+                                                        ? CameraLensDirection.back
+                                                        : CameraLensDirection
                                                         .front)) {
-                                              await controller.dispose();
-                                              cameraSetupCompleter =
-                                                  Completer();
+                                                  await controller.dispose();
+                                                  cameraSetupCompleter =
+                                                      Completer();
 
-                                              await _initCamera(camera: camera);
-                                              setState(() {});
-                                              break;
-                                            }
-                                          }
+                                                  await _initCamera(camera: camera);
+                                                  setState(() {});
+                                                  break;
+                                                }
+                                              }
 
-                                          await Future.delayed(const Duration(
-                                              seconds: 1, milliseconds: 500));
-                                        }));
+                                              await Future.delayed(const Duration(
+                                                  seconds: 1, milliseconds: 500));
+                                            }));
                                       } else {
                                         print('Not completed!');
                                       }
                                     }, Assets.iconsIcFlipCamera),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                        () async {}, Assets.iconsIcScale),
+                                            () async {}, Assets.iconsIcScale),
                                     Constant.xSizedBox12,
                                     iconSidebar(() async {
                                       setState(() {
@@ -698,13 +698,13 @@ class _MakeupPageState extends State<MakeupPage> {
                                     }, Assets.iconsIcCompare),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                        () async {}, Assets.iconsIcReset),
+                                            () async {}, Assets.iconsIcReset),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                        () async {}, Assets.iconsIcChoose),
+                                            () async {}, Assets.iconsIcChoose),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                        () async {}, Assets.iconsIcShare),
+                                            () async {}, Assets.iconsIcShare),
                                   ],
                                 ),
                               ),

@@ -13,8 +13,26 @@ import 'package:smart_mirror/common/component/custom_textfield.dart';
 import 'package:smart_mirror/common/helper/constant.dart';
 import 'package:smart_mirror/generated/assets.dart';
 import 'package:smart_mirror/src/camera/camera_page.dart';
+import 'package:smart_mirror/src/camera2/accessories_page.dart';
 import 'package:smart_mirror/src/camera2/camera_video_page.dart';
+import 'package:smart_mirror/src/camera2/eyes/eyebrows_view.dart';
+import 'package:smart_mirror/src/camera2/eyes/eyeliner_view.dart';
+import 'package:smart_mirror/src/camera2/eyes/eyeshadow_view.dart';
+import 'package:smart_mirror/src/camera2/eyes/lashes_mascara_view.dart';
+import 'package:smart_mirror/src/camera2/eyes/lenses_view.dart';
+import 'package:smart_mirror/src/camera2/face/blusher_view.dart';
+import 'package:smart_mirror/src/camera2/face/bronzer_view.dart';
+import 'package:smart_mirror/src/camera2/face/concealer_view.dart';
+import 'package:smart_mirror/src/camera2/face/contour_view.dart';
+import 'package:smart_mirror/src/camera2/face/foundation_view.dart';
+import 'package:smart_mirror/src/camera2/face/highlighter_view.dart';
+import 'package:smart_mirror/src/camera2/hair/hair_view.dart';
+import 'package:smart_mirror/src/camera2/lips/lip_color_view.dart';
+import 'package:smart_mirror/src/camera2/lips/lip_liner_view.dart';
+import 'package:smart_mirror/src/camera2/lips/lip_plumber_view.dart';
 import 'package:smart_mirror/src/camera2/makeup_page.dart';
+import 'package:smart_mirror/src/camera2/nails/nail_polish_view.dart';
+import 'package:smart_mirror/src/camera2/nails/presonnails_view.dart';
 import 'package:smart_mirror/utils/utils.dart';
 
 const xHEdgeInsets12 = EdgeInsets.symmetric(horizontal: 12);
@@ -36,6 +54,13 @@ class _OcrCameraPage2State extends State<OcrCameraPage2>
   bool isFlipCameraSupported = false;
   File? file;
   bool makeupOrAccessories = false;
+  bool onOffVisible = false;
+  int? colorSelected = 0;
+  int? colorTextSelected = 0;
+  int? typeSelected = 0;
+  int? modeSelected = 0;
+  bool makeUpOn = false;
+  bool accessoriesOn = false;
 
   @override
   void initState() {
@@ -324,44 +349,106 @@ class _OcrCameraPage2State extends State<OcrCameraPage2>
   }
 
   Widget makeupOrAccessoriesChoice() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
+    return Container(
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.black54,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
+        ),
+      ),
+      child: Column(
         children: [
-          Expanded(
-            child: InkWell(
-              onTap: () {
-                CusNav.nPush(context, MakeupPage());
-              },
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                child: Text(
-                  'Make Up',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
+          Container(
+            child: Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        makeUpOn = true;
+                        accessoriesOn = false;
+                      });
+                    },
+                    child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                      child: Text(
+                        'Make Up',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            shadows: makeUpOn == true
+                                ? [
+                                    BoxShadow(
+                                      offset: Offset(0, 0),
+                                      color: Colors.yellow,
+                                      spreadRadius: 0,
+                                      blurRadius: 10,
+                                    )
+                                  ]
+                                : null),
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                Constant.xSizedBox12,
+                Container(
+                  height: 20,
+                  width: 1,
+                  color: Colors.white,
+                ),
+                Constant.xSizedBox12,
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        accessoriesOn = true;
+                        makeUpOn = false;
+                      });
+                    },
+                    child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                      child: Text(
+                        'Accessories',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            shadows: accessoriesOn == true
+                                ? [
+                                    BoxShadow(
+                                      offset: Offset(0, 0),
+                                      color: Colors.yellow,
+                                      spreadRadius: 0,
+                                      blurRadius: 10,
+                                    )
+                                  ]
+                                : null),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          Constant.xSizedBox24,
-          Expanded(
+          separator(),
+          if (makeUpOn == true) MakeupPage(),
+          if (accessoriesOn == true) AccessoriesPage(),
+          Center(
             child: InkWell(
-              onTap: () {},
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                child: Text(
-                  'Accessories',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-            ),
+                onTap: () {
+                  setState(() {
+                    makeupOrAccessories = !makeupOrAccessories;
+                  });
+                },
+                child: Icon(
+                  Icons.keyboard_arrow_down,
+                  color: Colors.white,
+                )),
           ),
         ],
       ),
@@ -477,23 +564,32 @@ class _OcrCameraPage2State extends State<OcrCameraPage2>
           itemCount: textColorList.length,
           separatorBuilder: (_, __) => Constant.xSizedBox8,
           itemBuilder: (context, index) {
-            return Container(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                    color: index == 0 ? Colors.white : Colors.transparent),
-              ),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                      radius: 8, backgroundColor: choiceColorList[index]),
-                  Constant.xSizedBox4,
-                  Text(
-                    textColorList[index],
-                    style: TextStyle(color: Colors.white, fontSize: 10),
-                  ),
-                ],
+            return InkWell(
+              onTap: () {
+                setState(() {
+                  colorTextSelected = index;
+                });
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                      color: index == colorTextSelected
+                          ? Colors.white
+                          : Colors.transparent),
+                ),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                        radius: 8, backgroundColor: choiceColorList[index]),
+                    Constant.xSizedBox4,
+                    Text(
+                      textColorList[index],
+                      style: TextStyle(color: Colors.white, fontSize: 10),
+                    ),
+                  ],
+                ),
               ),
             );
           },
@@ -515,14 +611,33 @@ class _OcrCameraPage2State extends State<OcrCameraPage2>
           itemBuilder: (context, index) {
             if (index == 0)
               return InkWell(
-                onTap: () async {},
+                onTap: () async {
+                  setState(() {
+                    onOffVisible = true;
+                  });
+                },
                 child: Icon(Icons.do_not_disturb_alt_sharp,
                     color: Colors.white, size: 25),
               );
             return InkWell(
-                onTap: () async {},
-                child: CircleAvatar(
-                    radius: 12, backgroundColor: colorChoiceList[index]));
+                onTap: () async {
+                  setState(() {
+                    colorSelected = index;
+                    onOffVisible = false;
+                  });
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                        color: index == colorSelected && onOffVisible == false
+                            ? Colors.white
+                            : Colors.transparent),
+                  ),
+                  child: CircleAvatar(
+                      radius: 12, backgroundColor: colorChoiceList[index]),
+                ));
           },
         ),
       ),
@@ -544,17 +659,27 @@ class _OcrCameraPage2State extends State<OcrCameraPage2>
           itemCount: typeList.length,
           separatorBuilder: (_, __) => Constant.xSizedBox8,
           itemBuilder: (context, index) {
-            return Container(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.white),
-              ),
-              child: Center(
-                child: Text(
-                  typeList[index],
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white, fontSize: 10),
+            return InkWell(
+              onTap: () async {
+                setState(() {
+                  typeSelected = index;
+                });
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                      color: index == typeSelected
+                          ? Colors.white
+                          : Colors.transparent),
+                ),
+                child: Center(
+                  child: Text(
+                    typeList[index],
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.white, fontSize: 10),
+                  ),
                 ),
               ),
             );
@@ -575,23 +700,29 @@ class _OcrCameraPage2State extends State<OcrCameraPage2>
           itemCount: modeTextList.length,
           separatorBuilder: (_, __) => Constant.xSizedBox8,
           itemBuilder: (context, index) {
-            return Center(
-              child: Text(
-                modeTextList[index],
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  shadows: index != 0
-                      ? null
-                      : [
-                          BoxShadow(
-                            offset: Offset(0, 0),
-                            color: Colors.white,
-                            spreadRadius: 0,
-                            blurRadius: 10,
-                          ),
-                        ],
+            return InkWell(
+              onTap: () async {
+                setState(() {
+                  modeSelected = index;
+                });
+              },
+              child: Center(
+                child: Text(
+                  modeTextList[index],
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      shadows: index == modeSelected
+                          ? [
+                              BoxShadow(
+                                offset: Offset(0, 0),
+                                color: Colors.white,
+                                spreadRadius: 0,
+                                blurRadius: 10,
+                              )
+                            ]
+                          : null),
                 ),
               ),
             );
@@ -604,7 +735,7 @@ class _OcrCameraPage2State extends State<OcrCameraPage2>
   Widget sheet() {
     return Container(
       // height: 100,
-      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.black54,
         borderRadius: BorderRadius.only(
@@ -625,6 +756,20 @@ class _OcrCameraPage2State extends State<OcrCameraPage2>
           Constant.xSizedBox4,
           separator(),
           typeText(),
+          Center(
+            child: InkWell(
+                onTap: () {
+                  setState(() {
+                    makeupOrAccessories = !makeupOrAccessories;
+                    makeUpOn = false;
+                    accessoriesOn = false;
+                  });
+                },
+                child: Icon(
+                  Icons.keyboard_arrow_down,
+                  color: Colors.white,
+                )),
+          ),
           Constant.xSizedBox8,
         ],
       ),
@@ -803,7 +948,8 @@ class _OcrCameraPage2State extends State<OcrCameraPage2>
                                     Constant.xSizedBox12,
                                     iconSidebar(() async {
                                       setState(() {
-                                        makeupOrAccessories = true;
+                                        makeupOrAccessories =
+                                            !makeupOrAccessories;
                                       });
                                     }, Assets.iconsIcCompare),
                                     Constant.xSizedBox12,
@@ -837,6 +983,764 @@ class _OcrCameraPage2State extends State<OcrCameraPage2>
           }
         },
       ),
+    );
+  }
+}
+
+class MakeupPage extends StatefulWidget {
+  const MakeupPage({super.key});
+
+  @override
+  State<MakeupPage> createState() => _MakeupPageState();
+}
+
+class _MakeupPageState extends State<MakeupPage> {
+  late CameraController controller;
+  Completer<String?> cameraSetupCompleter = Completer();
+  Completer? isFlippingCamera;
+  late List<Permission> permissions;
+  bool isRearCamera = true;
+  bool isFlipCameraSupported = false;
+  File? file;
+  bool lipsClick = false;
+  bool eyesClick = false;
+  bool faceClick = false;
+  bool nailsClick = false;
+  bool hairClick = false;
+
+  List<String> lipsType = ['Lip Color', 'Lip Liner', 'Lip Plumper'];
+  List<String> eyesType = [
+    'Eyebrows',
+    'Eye Shadow',
+    'Eye Liner',
+    'Lenses',
+    'EyeLashes'
+  ];
+
+  List<String> faceType = [
+    'Foundation',
+    'Concealar',
+    'Contour',
+    'Blusher',
+    'Bronzer',
+    'Highlighter'
+  ];
+  List<String> nailsType = [
+    'Nail Polish',
+    'Press-on Nails',
+  ];
+  List<String> hairType = [
+    'Hair Color',
+  ];
+
+  clearAll() {
+    lipsClick = false;
+    eyesClick = false;
+    faceClick = false;
+    nailsClick = false;
+    hairClick = false;
+  }
+
+  Widget makeupOrAccessoriesChoice() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        children: [
+          Expanded(
+            child: InkWell(
+              onTap: () {},
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                child: Text(
+                  'Make Up',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Constant.xSizedBox24,
+          Expanded(
+            child: InkWell(
+              onTap: () {},
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                child: Text(
+                  'Accessories',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget itemMakeup(String path, GestureTapCallback? onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Image.asset(path, width: 42, height: 56),
+    );
+  }
+
+  Widget lipsItem(String type, GestureTapCallback? onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+        alignment: Alignment.centerLeft,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: Colors.white),
+        ),
+        child: Text(
+          type,
+          style: TextStyle(color: Colors.white, fontSize: 10),
+        ),
+      ),
+    );
+  }
+
+  Widget lipsList() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 0),
+        height: 30,
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: lipsType.length,
+          separatorBuilder: (_, __) => Constant.xSizedBox8,
+          itemBuilder: (context, index) {
+            return lipsItem(lipsType[index], () {
+              if (index == 0) CusNav.nPush(context, LipColorView());
+              if (index == 1) CusNav.nPush(context, LipLinerView());
+              if (index == 2) CusNav.nPush(context, LipPlumberView());
+            });
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget eyesItem(String type, GestureTapCallback? onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: Colors.white),
+        ),
+        child: Text(
+          type,
+          style: TextStyle(color: Colors.white, fontSize: 10),
+        ),
+      ),
+    );
+  }
+
+  Widget eyesList() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        height: 30,
+        padding: EdgeInsets.symmetric(horizontal: 0),
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: eyesType.length,
+          separatorBuilder: (_, __) => Constant.xSizedBox8,
+          itemBuilder: (context, index) {
+            return eyesItem(eyesType[index], () {
+              if (index == 0) CusNav.nPush(context, EyebrowsView());
+              if (index == 1) CusNav.nPush(context, EyeshadowView());
+              if (index == 2) CusNav.nPush(context, EyelinerView());
+              if (index == 3) CusNav.nPush(context, LensesView());
+              if (index == 4)
+                CusNav.nPush(context, LashesMascaraView(lashes: false));
+            });
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget faceItem(String type, GestureTapCallback? onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: Colors.white),
+        ),
+        child: Text(
+          type,
+          style: TextStyle(color: Colors.white, fontSize: 10),
+        ),
+      ),
+    );
+  }
+
+  Widget faceList() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 0),
+        height: 30,
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: faceType.length,
+          separatorBuilder: (_, __) => Constant.xSizedBox8,
+          itemBuilder: (context, index) {
+            return faceItem(faceType[index], () {
+              if (index == 0) CusNav.nPush(context, FoundationView());
+              if (index == 1) CusNav.nPush(context, ConcealerView());
+              if (index == 2) CusNav.nPush(context, ContourView());
+              if (index == 3) CusNav.nPush(context, BlusherView());
+              if (index == 4) CusNav.nPush(context, BronzerView());
+              if (index == 5) CusNav.nPush(context, HighlighterView());
+            });
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget nailsItem(String type, GestureTapCallback? onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: Colors.white),
+        ),
+        child: Text(
+          type,
+          style: TextStyle(color: Colors.white, fontSize: 10),
+        ),
+      ),
+    );
+  }
+
+  Widget nailsList() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 0),
+        height: 30,
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: nailsType.length,
+          separatorBuilder: (_, __) => Constant.xSizedBox8,
+          itemBuilder: (context, index) {
+            return nailsItem(nailsType[index], () {
+              if (index == 0) CusNav.nPush(context, NailPolishView());
+              if (index == 1) CusNav.nPush(context, PresOnNailsView());
+            });
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget hairItem(String type, GestureTapCallback? onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: Colors.white),
+        ),
+        child: Text(
+          type,
+          style: TextStyle(color: Colors.white, fontSize: 10),
+        ),
+      ),
+    );
+  }
+
+  Widget hairList() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 0),
+        height: 30,
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: hairType.length,
+          separatorBuilder: (_, __) => Constant.xSizedBox8,
+          itemBuilder: (context, index) {
+            return hairItem(hairType[index], () {
+              if (index == 0) CusNav.nPush(context, HairView());
+            });
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget sheet() {
+    return Container(
+      // height: 100,
+      padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+      child: Column(
+        children: [
+          // Container(
+          //   width: 55,
+          //   height: 3,
+          //   decoration: BoxDecoration(
+          //     color: Colors.grey,
+          //     borderRadius: BorderRadius.circular(22),
+          //   ),
+          // ),
+          // Constant.xSizedBox24,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              itemMakeup(
+                  (lipsClick == false
+                      ? Assets.iconsIcLips
+                      : Assets.iconsIcLipsOn), () {
+                setState(() {
+                  clearAll();
+                  lipsClick = !lipsClick;
+                });
+              }),
+              itemMakeup(
+                  eyesClick == false
+                      ? Assets.iconsIcEyes
+                      : Assets.iconsIcEyesOn, () {
+                setState(() {
+                  clearAll();
+                  eyesClick = !eyesClick;
+                });
+              }),
+              itemMakeup(
+                  faceClick == false
+                      ? Assets.iconsIcFace
+                      : Assets.iconsIcFaceOn, () {
+                setState(() {
+                  clearAll();
+                  faceClick = !faceClick;
+                });
+              }),
+              itemMakeup(
+                  nailsClick == false
+                      ? Assets.iconsIcNails
+                      : Assets.iconsIcNailsOn, () {
+                setState(() {
+                  clearAll();
+                  nailsClick = !nailsClick;
+                });
+              }),
+              itemMakeup(
+                  hairClick == false
+                      ? Assets.iconsIcHair
+                      : Assets.iconsIcHairOn, () {
+                setState(() {
+                  clearAll();
+                  hairClick = !hairClick;
+                });
+              }),
+            ],
+          ),
+          Constant.xSizedBox8,
+          Constant.xSizedBox8,
+          if (lipsClick) lipsList(),
+          if (eyesClick) eyesList(),
+          if (faceClick) faceList(),
+          if (nailsClick) nailsList(),
+          Constant.xSizedBox12,
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: sheet(),
+    );
+  }
+}
+
+class AccessoriesPage extends StatefulWidget {
+  const AccessoriesPage({super.key});
+
+  @override
+  State<AccessoriesPage> createState() => _AccessoriesPageState();
+}
+
+class _AccessoriesPageState extends State<AccessoriesPage> {
+  late CameraController controller;
+  Completer<String?> cameraSetupCompleter = Completer();
+  Completer? isFlippingCamera;
+  late List<Permission> permissions;
+  bool isRearCamera = true;
+  bool isFlipCameraSupported = false;
+  File? file;
+  bool headClick = false;
+  bool neckClick = false;
+  bool handClick = false;
+  bool nailsClick = false;
+
+  List<String> headAccType = ['Sunglasses', 'Glasses', 'Earrings', 'Hats', 'Tiaras'];
+  List<String> neckAccType = [
+    'Pendants',
+    'Necklaces',
+    'Chokers',
+    'Scarves',
+  ];
+
+  List<String> handAccType = [
+    'Watches',
+    'Rings',
+    'Bracelets',
+    'Bangles',
+
+  ];
+  List<String> nailsType = [
+    'Nail Polish',
+    'Press-on Nails',
+  ];
+
+  clearAll() {
+    headClick = false;
+    neckClick = false;
+    handClick = false;
+    nailsClick = false;
+  }
+
+  Widget makeupOrAccessoriesChoice() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        children: [
+          Expanded(
+            child: InkWell(
+              onTap: () {},
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                child: Text(
+                  'Make Up',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Constant.xSizedBox24,
+          Expanded(
+            child: InkWell(
+              onTap: () {},
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                child: Text(
+                  'Accessories',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget itemMakeup(String path, GestureTapCallback? onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Image.asset(path, width: 70, height: 70),
+    );
+  }
+
+  Widget lipsItem(String type, GestureTapCallback? onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+        alignment: Alignment.centerLeft,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: Colors.white),
+        ),
+        child: Text(
+          type,
+          style: TextStyle(color: Colors.white, fontSize: 10),
+        ),
+      ),
+    );
+  }
+
+  Widget lipsList() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 0),
+        height: 30,
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: headAccType.length,
+          separatorBuilder: (_, __) => Constant.xSizedBox8,
+          itemBuilder: (context, index) {
+            return lipsItem(headAccType[index], () {
+              if (index == 0) CusNav.nPush(context, LipColorView());
+              if (index == 1) CusNav.nPush(context, LipLinerView());
+              if (index == 2) CusNav.nPush(context, LipPlumberView());
+              if (index == 3) CusNav.nPush(context, LipPlumberView());
+              if (index == 4) CusNav.nPush(context, LipPlumberView());
+            });
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget eyesItem(String type, GestureTapCallback? onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: Colors.white),
+        ),
+        child: Text(
+          type,
+          style: TextStyle(color: Colors.white, fontSize: 10),
+        ),
+      ),
+    );
+  }
+
+  Widget eyesList() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        height: 30,
+        padding: EdgeInsets.symmetric(horizontal: 0),
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: neckAccType.length,
+          separatorBuilder: (_, __) => Constant.xSizedBox8,
+          itemBuilder: (context, index) {
+            return eyesItem(neckAccType[index], () {
+              if (index == 0) CusNav.nPush(context, EyebrowsView());
+              if (index == 1) CusNav.nPush(context, EyeshadowView());
+              if (index == 2) CusNav.nPush(context, EyelinerView());
+              if (index == 3) CusNav.nPush(context, LensesView());
+            });
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget faceItem(String type, GestureTapCallback? onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: Colors.white),
+        ),
+        child: Text(
+          type,
+          style: TextStyle(color: Colors.white, fontSize: 10),
+        ),
+      ),
+    );
+  }
+
+  Widget faceList() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 0),
+        height: 30,
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: handAccType.length,
+          separatorBuilder: (_, __) => Constant.xSizedBox8,
+          itemBuilder: (context, index) {
+            return faceItem(handAccType[index], () {
+              if (index == 0) CusNav.nPush(context, FoundationView());
+              if (index == 1) CusNav.nPush(context, ConcealerView());
+              if (index == 2) CusNav.nPush(context, ContourView());
+              if (index == 3) CusNav.nPush(context, BlusherView());
+
+            });
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget nailsItem(String type, GestureTapCallback? onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: Colors.white),
+        ),
+        child: Text(
+          type,
+          style: TextStyle(color: Colors.white, fontSize: 10),
+        ),
+      ),
+    );
+  }
+
+  Widget nailsList() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 0),
+        height: 30,
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: nailsType.length,
+          separatorBuilder: (_, __) => Constant.xSizedBox8,
+          itemBuilder: (context, index) {
+            return nailsItem(nailsType[index], () {
+              if (index == 0) CusNav.nPush(context, NailPolishView());
+              if (index == 1) CusNav.nPush(context, PresOnNailsView());
+            });
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget hairItem(String type, GestureTapCallback? onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: Colors.white),
+        ),
+        child: Text(
+          type,
+          style: TextStyle(color: Colors.white, fontSize: 10),
+        ),
+      ),
+    );
+  }
+
+
+  Widget sheet() {
+    return Container(
+      // height: 100,
+      padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+      child: Column(
+        children: [
+          // Container(
+          //   width: 55,
+          //   height: 3,
+          //   decoration: BoxDecoration(
+          //     color: Colors.grey,
+          //     borderRadius: BorderRadius.circular(22),
+          //   ),
+          // ),
+          // Constant.xSizedBox24,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              itemMakeup(
+                  (headClick == false
+                      ? Assets.iconsIcHead
+                      : Assets.iconsIcHeadOn), () {
+                setState(() {
+                  clearAll();
+                  headClick = !headClick;
+                });
+              }),
+              itemMakeup(
+                  neckClick == false
+                      ? Assets.iconsIcNeck
+                      : Assets.iconsIcNeckOn, () {
+                setState(() {
+                  clearAll();
+                  neckClick = !neckClick;
+                });
+              }),
+              itemMakeup(
+                  handClick == false
+                      ? Assets.iconsIcHand
+                      : Assets.iconsIcNeckOn, () {
+                setState(() {
+                  clearAll();
+                  handClick = !handClick;
+                });
+              }),
+              itemMakeup(
+                  nailsClick == false
+                      ? Assets.iconsIcNailsAcc
+                      : Assets.iconsIcNailsAccOn, () {
+                setState(() {
+                  clearAll();
+                  nailsClick = !nailsClick;
+                });
+              }),
+
+            ],
+          ),
+          Constant.xSizedBox8,
+          Constant.xSizedBox8,
+          if (headClick) lipsList(),
+          if (neckClick) eyesList(),
+          if (handClick) faceList(),
+          if (nailsClick) nailsList(),
+          Constant.xSizedBox12,
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: sheet(),
     );
   }
 }
