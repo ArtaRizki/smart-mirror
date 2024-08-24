@@ -13,6 +13,7 @@ class Assets {
   static const String fontsInterThin = 'assets/fonts/Inter-Thin.ttf';
   static const String iconsIcCamera = 'assets/icons/ic-camera.png';
   static const String iconsIcChoose = 'assets/icons/ic-choose.png';
+  static const String iconsIcCircle = 'assets/icons/ic-circle.png';
   static const String iconsIcCompare = 'assets/icons/ic-compare.png';
   static const String iconsIcCompareOff = 'assets/icons/ic-compare-off.png';
   static const String iconsIcEyes = 'assets/icons/ic-eyes.png';
@@ -34,10 +35,13 @@ class Assets {
   static const String iconsIcNailsOn = 'assets/icons/ic-nails-on.png';
   static const String iconsIcNeck = 'assets/icons/ic-neck.png';
   static const String iconsIcNeckOn = 'assets/icons/ic-neck-on.png';
+  static const String iconsIcOval = 'assets/icons/ic-oval.png';
+  static const String iconsIcRectangle = 'assets/icons/ic-rectangle.png';
   static const String iconsIcReset = 'assets/icons/ic-reset.png';
   static const String iconsIcResetOff = 'assets/icons/ic-reset-off.png';
   static const String iconsIcScale = 'assets/icons/ic-scale.png';
   static const String iconsIcShare = 'assets/icons/ic-share.png';
+  static const String iconsIcSquare = 'assets/icons/ic-square.png';
   static const String imagesImgBlusher1 = 'assets/images/img-blusher1.png';
   static const String imagesImgBlusher2 = 'assets/images/img-blusher2.png';
   static const String imagesImgBlusher3 = 'assets/images/img-blusher3.png';

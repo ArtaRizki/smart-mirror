@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
@@ -10,22 +9,21 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:smart_mirror/common/component/custom_navigator.dart';
 import 'package:smart_mirror/common/helper/constant.dart';
 import 'package:smart_mirror/generated/assets.dart';
-import 'package:smart_mirror/src/camera/camera_page.dart';
 import 'package:smart_mirror/src/camera2/camera_video_page.dart';
-import 'package:smart_mirror/src/camera2/face/concealer_view.dart';
+import 'package:smart_mirror/src/camera2/makeup/face/highlighter_view.dart';
 import 'package:smart_mirror/src/camera2/makeup_page.dart';
 import 'package:smart_mirror/utils/utils.dart';
 
 const xHEdgeInsets12 = EdgeInsets.symmetric(horizontal: 12);
 
-class FoundationView extends StatefulWidget {
-  const FoundationView({super.key});
+class ContourView extends StatefulWidget {
+  const ContourView({super.key});
 
   @override
-  State<FoundationView> createState() => _FoundationViewState();
+  State<ContourView> createState() => _ContourViewState();
 }
 
-class _FoundationViewState extends State<FoundationView> {
+class _ContourViewState extends State<ContourView> {
   late CameraController controller;
   Completer<String?> cameraSetupCompleter = Completer();
   Completer? isFlippingCamera;
@@ -34,7 +32,9 @@ class _FoundationViewState extends State<FoundationView> {
   bool isFlipCameraSupported = false;
   File? file;
   bool makeupOrAccessories = false;
+  bool oneOrDual = false;
   bool onOffVisibel = false;
+  bool onOffVisibel1 = false;
   int? skinSelected = 0;
   int? colorSelected = 0;
 
@@ -68,7 +68,7 @@ class _FoundationViewState extends State<FoundationView> {
                   _initCamera();
                 } else {
                   Utils.showToast(
-                      'Mohon izinkan Smart-Mirror untuk mengakses Kamera dan Mikrofon');
+                      'Mohon izinkan Janissari untuk mengakses Kamera dan Mikrofon');
                   Navigator.of(context).pop();
                 }
               });
@@ -123,6 +123,13 @@ class _FoundationViewState extends State<FoundationView> {
     Color(0xFF483C32),
     Color(0xFF342112),
     Color(0xFF4A2912),
+  ];
+  List<String> bronzerList = [
+    Assets.imagesImgBronzer,
+    Assets.imagesImgBronzer1,
+    Assets.imagesImgBronzer2,
+    Assets.imagesImgBronzer3,
+    Assets.imagesImgBronzer4,
   ];
 
   @override
@@ -373,47 +380,34 @@ class _FoundationViewState extends State<FoundationView> {
   }
 
   Widget colorChip() {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        height: 30,
-        child: ListView.separated(
-          shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          itemCount: skinList.length,
-          separatorBuilder: (_, __) => Constant.xSizedBox8,
-          itemBuilder: (context, index) {
-            return InkWell(
-              onTap: () {
-                setState(() {
-                  skinSelected = index;
-                });
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                      color: index == skinSelected
-                          ? Colors.white
-                          : Colors.transparent),
+    return Container(
+      height: 30,
+      child: ListView.separated(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: skinList.length,
+        separatorBuilder: (_, __) => Constant.xSizedBox8,
+        itemBuilder: (context, index) {
+          return Container(
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                  color: index == 0 ? Colors.white : Colors.transparent),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                CircleAvatar(radius: 8, backgroundColor: skinColorList[index]),
+                Constant.xSizedBox4,
+                Text(
+                  skinList[index],
+                  style: TextStyle(color: Colors.white, fontSize: 10),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    CircleAvatar(
-                        radius: 8, backgroundColor: skinColorList[index]),
-                    Constant.xSizedBox4,
-                    Text(
-                      skinList[index],
-                      style: TextStyle(color: Colors.white, fontSize: 10),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -440,29 +434,74 @@ class _FoundationViewState extends State<FoundationView> {
                 child: Icon(Icons.do_not_disturb_alt_sharp,
                     color: Colors.white, size: 25),
               );
-            return Row(
-              children: [
-                InkWell(
-                    onTap: () async {
-                      setState(() {
-                        colorSelected = index;
-                        onOffVisibel = false;
-                      });
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                            color:
-                                index == colorSelected && onOffVisibel == false
-                                    ? Colors.white
-                                    : Colors.transparent),
+            return InkWell(
+                onTap: () async {
+                  setState(() {
+                    colorSelected = index;
+                    onOffVisibel = false;
+                  });
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                        color: index == colorSelected && onOffVisibel == false
+                            ? Colors.white
+                            : Colors.transparent),
+                  ),
+                  child: CircleAvatar(
+                      radius: 12, backgroundColor: colorChoiceList[index]),
+                ));
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget bronzerChoice() {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        height: 55,
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: oneOrDual == false ? bronzerList.length : 1,
+          separatorBuilder: (_, __) => Constant.xSizedBox12,
+          itemBuilder: (context, index) {
+            // if (index == 0)
+            //   return InkWell(
+            //     onTap: () async {},
+            //     child: Icon(Icons.do_not_disturb_alt_sharp,
+            //         color: Colors.white, size: 25),
+            //   );
+            return Container(
+              padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+              decoration: BoxDecoration(
+                // borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                    color: index == skinSelected && onOffVisibel1 == false
+                        ? Colors.white
+                        : Colors.transparent),
+              ),
+              child: InkWell(
+                  onTap: () async {
+                    setState(() {
+                      skinSelected = index;
+                      onOffVisibel1 = false;
+                    });
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 50,
+                        height: 50,
+                        child: Image.asset(bronzerList[index]),
                       ),
-                      child: CircleAvatar(
-                          radius: 12, backgroundColor: colorChoiceList[index]),
-                    )),
-              ],
+                    ],
+                  )),
             );
           },
         ),
@@ -619,7 +658,7 @@ class _FoundationViewState extends State<FoundationView> {
 
   Widget sheet() {
     return Container(
-      // height: 100,
+      height: 300,
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 16),
       decoration: BoxDecoration(
         color: Colors.black54,
@@ -628,28 +667,60 @@ class _FoundationViewState extends State<FoundationView> {
           topRight: Radius.circular(16),
         ),
       ),
-      child: Column(
-        children: [
-          Constant.xSizedBox8,
-          colorChip(),
-          Constant.xSizedBox8,
-          colorChoice(),
-          Constant.xSizedBox8,
-          separator(),
-          Constant.xSizedBox4,
-          Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                "View All",
-                style: TextStyle(color: Colors.white, fontSize: 12),
-              )),
-          Constant.xSizedBox8,
-          lipstickChoice(),
-          // Constant.xSizedBox4,
-          // separator(),
-          // typeText(),
-          // Constant.xSizedBox8,
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Constant.xSizedBox8,
+            // colorChip(),
+            colorChoice(),
+            Constant.xSizedBox8,
+            separator(),
+            Row(
+              children: [
+                InkWell(
+                    onTap: () {
+                      setState(() {
+                        oneOrDual = true;
+                      });
+                    },
+                    child: Text(
+                      "One",
+                      style: oneOrDual == true
+                          ? Constant.whiteBold16.copyWith(fontSize: 12)
+                          : Constant.whiteRegular12,
+                    )),
+                SizedBox(
+                  width: 10,
+                ),
+                InkWell(
+                    onTap: () {
+                      setState(() {
+                        oneOrDual = false;
+                      });
+                    },
+                    child: Text(
+                      "Two",
+                      style: oneOrDual == false
+                          ? Constant.whiteBold16.copyWith(fontSize: 12)
+                          : Constant.whiteRegular12,
+                    )),
+              ],
+            ),
+            separator(),
+            bronzerChoice(),
+            Constant.xSizedBox4,
+            separator(),
+            Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  "View All",
+                  style: TextStyle(color: Colors.white, fontSize: 12),
+                )),
+            Constant.xSizedBox4,
+            lipstickChoice(),
+            // Constant.xSizedBox8,
+          ],
+        ),
       ),
     );
   }
@@ -837,7 +908,7 @@ class _FoundationViewState extends State<FoundationView> {
                                         () async {}, Assets.iconsIcChoose),
                                     Constant.xSizedBox12,
                                     iconSidebar(() async {
-                                      CusNav.nPush(context, ConcealerView());
+                                      CusNav.nPush(context, HighlighterView());
                                     }, Assets.iconsIcShare),
                                   ],
                                 ),

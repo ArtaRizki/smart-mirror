@@ -13,26 +13,35 @@ import 'package:smart_mirror/common/component/custom_textfield.dart';
 import 'package:smart_mirror/common/helper/constant.dart';
 import 'package:smart_mirror/generated/assets.dart';
 import 'package:smart_mirror/src/camera/camera_page.dart';
+import 'package:smart_mirror/src/camera2/accessories/hand/bangles_view.dart';
+import 'package:smart_mirror/src/camera2/accessories/hand/bracelets_view.dart';
+import 'package:smart_mirror/src/camera2/accessories/hand/rings_view.dart';
+import 'package:smart_mirror/src/camera2/accessories/hand/watches_view.dart';
+import 'package:smart_mirror/src/camera2/accessories/nails/nail_polish_view.dart';
+import 'package:smart_mirror/src/camera2/accessories/nails/presonnails_view.dart';
+import 'package:smart_mirror/src/camera2/accessories/neck/chokers_view.dart';
+import 'package:smart_mirror/src/camera2/accessories/neck/necklaces_view.dart';
+import 'package:smart_mirror/src/camera2/accessories/neck/pendant_view.dart';
+import 'package:smart_mirror/src/camera2/accessories/neck/scarves_view.dart';
 import 'package:smart_mirror/src/camera2/accessories_page.dart';
 import 'package:smart_mirror/src/camera2/camera_video_page.dart';
-import 'package:smart_mirror/src/camera2/eyes/eyebrows_view.dart';
-import 'package:smart_mirror/src/camera2/eyes/eyeliner_view.dart';
-import 'package:smart_mirror/src/camera2/eyes/eyeshadow_view.dart';
-import 'package:smart_mirror/src/camera2/eyes/lashes_mascara_view.dart';
-import 'package:smart_mirror/src/camera2/eyes/lenses_view.dart';
-import 'package:smart_mirror/src/camera2/face/blusher_view.dart';
-import 'package:smart_mirror/src/camera2/face/bronzer_view.dart';
-import 'package:smart_mirror/src/camera2/face/concealer_view.dart';
-import 'package:smart_mirror/src/camera2/face/contour_view.dart';
-import 'package:smart_mirror/src/camera2/face/foundation_view.dart';
-import 'package:smart_mirror/src/camera2/face/highlighter_view.dart';
-import 'package:smart_mirror/src/camera2/hair/hair_view.dart';
-import 'package:smart_mirror/src/camera2/lips/lip_color_view.dart';
-import 'package:smart_mirror/src/camera2/lips/lip_liner_view.dart';
-import 'package:smart_mirror/src/camera2/lips/lip_plumber_view.dart';
-import 'package:smart_mirror/src/camera2/makeup_page.dart';
-import 'package:smart_mirror/src/camera2/nails/nail_polish_view.dart';
-import 'package:smart_mirror/src/camera2/nails/presonnails_view.dart';
+import 'package:smart_mirror/src/camera2/makeup/eyes/eyebrows_view.dart';
+import 'package:smart_mirror/src/camera2/makeup/eyes/eyeliner_view.dart';
+import 'package:smart_mirror/src/camera2/makeup/eyes/eyeshadow_view.dart';
+import 'package:smart_mirror/src/camera2/makeup/eyes/lashes_mascara_view.dart';
+import 'package:smart_mirror/src/camera2/makeup/eyes/lenses_view.dart';
+import 'package:smart_mirror/src/camera2/makeup/face/blusher_view.dart';
+import 'package:smart_mirror/src/camera2/makeup/face/bronzer_view.dart';
+import 'package:smart_mirror/src/camera2/makeup/face/concealer_view.dart';
+import 'package:smart_mirror/src/camera2/makeup/face/contour_view.dart';
+import 'package:smart_mirror/src/camera2/makeup/face/foundation_view.dart';
+import 'package:smart_mirror/src/camera2/makeup/face/highlighter_view.dart';
+import 'package:smart_mirror/src/camera2/makeup/hair/hair_view.dart';
+import 'package:smart_mirror/src/camera2/makeup/lips/lip_color_view.dart';
+import 'package:smart_mirror/src/camera2/makeup/lips/lip_liner_view.dart';
+import 'package:smart_mirror/src/camera2/makeup/lips/lip_plumber_view.dart';
+import 'package:smart_mirror/src/camera2/makeup/nails/nail_polish_view.dart';
+import 'package:smart_mirror/src/camera2/makeup/nails/presonnails_view.dart';
 import 'package:smart_mirror/utils/utils.dart';
 
 const xHEdgeInsets12 = EdgeInsets.symmetric(horizontal: 12);
@@ -1481,7 +1490,7 @@ class _AccessoriesPageState extends State<AccessoriesPage> {
     );
   }
 
-  Widget lipsItem(String type, GestureTapCallback? onTap) {
+  Widget headItem(String type, GestureTapCallback? onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -1499,7 +1508,7 @@ class _AccessoriesPageState extends State<AccessoriesPage> {
     );
   }
 
-  Widget lipsList() {
+  Widget headList() {
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
@@ -1511,7 +1520,7 @@ class _AccessoriesPageState extends State<AccessoriesPage> {
           itemCount: headAccType.length,
           separatorBuilder: (_, __) => Constant.xSizedBox8,
           itemBuilder: (context, index) {
-            return lipsItem(headAccType[index], () {
+            return headItem(headAccType[index], () {
               if (index == 0) CusNav.nPush(context, LipColorView());
               if (index == 1) CusNav.nPush(context, LipLinerView());
               if (index == 2) CusNav.nPush(context, LipPlumberView());
@@ -1524,7 +1533,7 @@ class _AccessoriesPageState extends State<AccessoriesPage> {
     );
   }
 
-  Widget eyesItem(String type, GestureTapCallback? onTap) {
+  Widget neckItem(String type, GestureTapCallback? onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -1542,7 +1551,7 @@ class _AccessoriesPageState extends State<AccessoriesPage> {
     );
   }
 
-  Widget eyesList() {
+  Widget neckList() {
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
@@ -1554,11 +1563,11 @@ class _AccessoriesPageState extends State<AccessoriesPage> {
           itemCount: neckAccType.length,
           separatorBuilder: (_, __) => Constant.xSizedBox8,
           itemBuilder: (context, index) {
-            return eyesItem(neckAccType[index], () {
-              if (index == 0) CusNav.nPush(context, EyebrowsView());
-              if (index == 1) CusNav.nPush(context, EyeshadowView());
-              if (index == 2) CusNav.nPush(context, EyelinerView());
-              if (index == 3) CusNav.nPush(context, LensesView());
+            return neckItem(neckAccType[index], () {
+              if (index == 0) CusNav.nPush(context, PendantsView());
+              if (index == 1) CusNav.nPush(context, NecklacesView());
+              if (index == 2) CusNav.nPush(context, ChokersView());
+              if (index == 3) CusNav.nPush(context, ScarvesView());
             });
           },
         ),
@@ -1566,7 +1575,7 @@ class _AccessoriesPageState extends State<AccessoriesPage> {
     );
   }
 
-  Widget faceItem(String type, GestureTapCallback? onTap) {
+  Widget handItem(String type, GestureTapCallback? onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -1584,7 +1593,7 @@ class _AccessoriesPageState extends State<AccessoriesPage> {
     );
   }
 
-  Widget faceList() {
+  Widget handList() {
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
@@ -1596,11 +1605,11 @@ class _AccessoriesPageState extends State<AccessoriesPage> {
           itemCount: handAccType.length,
           separatorBuilder: (_, __) => Constant.xSizedBox8,
           itemBuilder: (context, index) {
-            return faceItem(handAccType[index], () {
-              if (index == 0) CusNav.nPush(context, FoundationView());
-              if (index == 1) CusNav.nPush(context, ConcealerView());
-              if (index == 2) CusNav.nPush(context, ContourView());
-              if (index == 3) CusNav.nPush(context, BlusherView());
+            return handItem(handAccType[index], () {
+              if (index == 0) CusNav.nPush(context, WatchesView());
+              if (index == 1) CusNav.nPush(context, RingsView());
+              if (index == 2) CusNav.nPush(context, BraceletsView());
+              if (index == 3) CusNav.nPush(context, BanglesView());
 
             });
           },
@@ -1640,8 +1649,8 @@ class _AccessoriesPageState extends State<AccessoriesPage> {
           separatorBuilder: (_, __) => Constant.xSizedBox8,
           itemBuilder: (context, index) {
             return nailsItem(nailsType[index], () {
-              if (index == 0) CusNav.nPush(context, NailPolishView());
-              if (index == 1) CusNav.nPush(context, PresOnNailsView());
+              if (index == 0) CusNav.nPush(context, NailPolishAccView());
+              if (index == 1) CusNav.nPush(context, PresOnNailsAccView());
             });
           },
         ),
@@ -1649,23 +1658,6 @@ class _AccessoriesPageState extends State<AccessoriesPage> {
     );
   }
 
-  Widget hairItem(String type, GestureTapCallback? onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: Colors.white),
-        ),
-        child: Text(
-          type,
-          style: TextStyle(color: Colors.white, fontSize: 10),
-        ),
-      ),
-    );
-  }
 
 
   Widget sheet() {
@@ -1727,9 +1719,9 @@ class _AccessoriesPageState extends State<AccessoriesPage> {
           ),
           Constant.xSizedBox8,
           Constant.xSizedBox8,
-          if (headClick) lipsList(),
-          if (neckClick) eyesList(),
-          if (handClick) faceList(),
+          if (headClick) headList(),
+          if (neckClick) neckList(),
+          if (handClick) handList(),
           if (nailsClick) nailsList(),
           Constant.xSizedBox12,
         ],
