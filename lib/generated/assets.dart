@@ -16,6 +16,9 @@ class Assets {
   static const String iconsIcCircle = 'assets/icons/ic-circle.png';
   static const String iconsIcCompare = 'assets/icons/ic-compare.png';
   static const String iconsIcCompareOff = 'assets/icons/ic-compare-off.png';
+  static const String iconsIcCrystals = 'assets/icons/ic-crystals.png';
+  static const String iconsIcCuffs = 'assets/icons/ic-cuffs.png';
+  static const String iconsIcDanglings = 'assets/icons/ic-danglings.png';
   static const String iconsIcEyes = 'assets/icons/ic-eyes.png';
   static const String iconsIcEyesOn = 'assets/icons/ic-eyes-on.png';
   static const String iconsIcFace = 'assets/icons/ic-face.png';
@@ -27,6 +30,7 @@ class Assets {
   static const String iconsIcHandOn = 'assets/icons/ic-hand-on.png';
   static const String iconsIcHead = 'assets/icons/ic-head.png';
   static const String iconsIcHeadOn = 'assets/icons/ic-head-on.png';
+  static const String iconsIcHoops = 'assets/icons/ic-hoops.png';
   static const String iconsIcLips = 'assets/icons/ic-lips.png';
   static const String iconsIcLipsOn = 'assets/icons/ic-lips-on.png';
   static const String iconsIcNails = 'assets/icons/ic-nails.png';
@@ -36,12 +40,15 @@ class Assets {
   static const String iconsIcNeck = 'assets/icons/ic-neck.png';
   static const String iconsIcNeckOn = 'assets/icons/ic-neck-on.png';
   static const String iconsIcOval = 'assets/icons/ic-oval.png';
+  static const String iconsIcPearls = 'assets/icons/ic-pearls.png';
   static const String iconsIcRectangle = 'assets/icons/ic-rectangle.png';
   static const String iconsIcReset = 'assets/icons/ic-reset.png';
   static const String iconsIcResetOff = 'assets/icons/ic-reset-off.png';
+  static const String iconsIcRubies = 'assets/icons/ic-rubies.png';
   static const String iconsIcScale = 'assets/icons/ic-scale.png';
   static const String iconsIcShare = 'assets/icons/ic-share.png';
   static const String iconsIcSquare = 'assets/icons/ic-square.png';
+  static const String iconsIcStuds = 'assets/icons/ic-studs.png';
   static const String imagesImgBlusher1 = 'assets/images/img-blusher1.png';
   static const String imagesImgBlusher2 = 'assets/images/img-blusher2.png';
   static const String imagesImgBlusher3 = 'assets/images/img-blusher3.png';
