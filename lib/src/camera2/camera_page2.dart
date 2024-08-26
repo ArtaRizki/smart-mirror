@@ -17,6 +17,11 @@ import 'package:smart_mirror/src/camera2/accessories/hand/bangles_view.dart';
 import 'package:smart_mirror/src/camera2/accessories/hand/bracelets_view.dart';
 import 'package:smart_mirror/src/camera2/accessories/hand/rings_view.dart';
 import 'package:smart_mirror/src/camera2/accessories/hand/watches_view.dart';
+import 'package:smart_mirror/src/camera2/accessories/head/head_earrings_view.dart';
+import 'package:smart_mirror/src/camera2/accessories/head/head_hats_view.dart';
+import 'package:smart_mirror/src/camera2/accessories/head/head_headband_view.dart';
+import 'package:smart_mirror/src/camera2/accessories/head/head_sunglasses_view.dart';
+import 'package:smart_mirror/src/camera2/accessories/head/head_tiaras_view.dart';
 import 'package:smart_mirror/src/camera2/accessories/nails/nail_polish_view.dart';
 import 'package:smart_mirror/src/camera2/accessories/nails/presonnails_view.dart';
 import 'package:smart_mirror/src/camera2/accessories/neck/chokers_view.dart';
@@ -1413,7 +1418,14 @@ class _AccessoriesPageState extends State<AccessoriesPage> {
   bool handClick = false;
   bool nailsClick = false;
 
-  List<String> headAccType = ['Sunglasses', 'Glasses', 'Earrings', 'Hats', 'Tiaras'];
+  List<String> headAccType = [
+    'Sunglasses',
+    'Glasses',
+    'Earrings',
+    'Headband',
+    'Hats',
+    'Tiaras'
+  ];
   List<String> neckAccType = [
     'Pendants',
     'Necklaces',
@@ -1426,7 +1438,6 @@ class _AccessoriesPageState extends State<AccessoriesPage> {
     'Rings',
     'Bracelets',
     'Bangles',
-
   ];
   List<String> nailsType = [
     'Nail Polish',
@@ -1521,11 +1532,12 @@ class _AccessoriesPageState extends State<AccessoriesPage> {
           separatorBuilder: (_, __) => Constant.xSizedBox8,
           itemBuilder: (context, index) {
             return headItem(headAccType[index], () {
-              if (index == 0) CusNav.nPush(context, LipColorView());
-              if (index == 1) CusNav.nPush(context, LipLinerView());
-              if (index == 2) CusNav.nPush(context, LipPlumberView());
-              if (index == 3) CusNav.nPush(context, LipPlumberView());
-              if (index == 4) CusNav.nPush(context, LipPlumberView());
+              if (index == 0) CusNav.nPush(context, HeadSunglassesView());
+              if (index == 1) CusNav.nPush(context, HeadSunglassesView());
+              if (index == 2) CusNav.nPush(context, HeadEarringsView());
+              if (index == 3) CusNav.nPush(context, HeadHeadbandView());
+              if (index == 4) CusNav.nPush(context, HeadHatsView());
+              if (index == 5) CusNav.nPush(context, HeadTiarasView());
             });
           },
         ),
@@ -1610,7 +1622,6 @@ class _AccessoriesPageState extends State<AccessoriesPage> {
               if (index == 1) CusNav.nPush(context, RingsView());
               if (index == 2) CusNav.nPush(context, BraceletsView());
               if (index == 3) CusNav.nPush(context, BanglesView());
-
             });
           },
         ),
@@ -1657,8 +1668,6 @@ class _AccessoriesPageState extends State<AccessoriesPage> {
       ),
     );
   }
-
-
 
   Widget sheet() {
     return Container(
@@ -1714,7 +1723,6 @@ class _AccessoriesPageState extends State<AccessoriesPage> {
                   nailsClick = !nailsClick;
                 });
               }),
-
             ],
           ),
           Constant.xSizedBox8,
