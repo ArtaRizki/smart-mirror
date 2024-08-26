@@ -93,7 +93,7 @@ class _MakeupPageState extends State<MakeupPage> {
           permissions = [
             Permission.camera,
             Permission.microphone,
-            Permission.storage
+            // Permission.storage
           ];
         }
       }).then((value) {
@@ -108,7 +108,7 @@ class _MakeupPageState extends State<MakeupPage> {
                   _initCamera();
                 } else {
                   Utils.showToast(
-                      'Mohon izinkan Janissari untuk mengakses Kamera dan Mikrofon');
+                      'Mohon izinkan untuk mengakses Kamera dan Mikrofon');
                   Navigator.of(context).pop();
                 }
               });
@@ -726,5 +726,3 @@ class _MakeupPageState extends State<MakeupPage> {
     );
   }
 }
-
-

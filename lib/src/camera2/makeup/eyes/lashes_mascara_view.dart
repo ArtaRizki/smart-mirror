@@ -106,7 +106,7 @@ class _LashesMascaraViewState extends State<LashesMascaraView> {
           permissions = [
             Permission.camera,
             Permission.microphone,
-            Permission.storage
+            // Permission.storage
           ];
         }
       }).then((value) {
@@ -121,7 +121,7 @@ class _LashesMascaraViewState extends State<LashesMascaraView> {
                   _initCamera();
                 } else {
                   Utils.showToast(
-                      'Mohon izinkan Janissari untuk mengakses Kamera dan Mikrofon');
+                      'Mohon izinkan untuk mengakses Kamera dan Mikrofon');
                   Navigator.of(context).pop();
                 }
               });
@@ -134,7 +134,7 @@ class _LashesMascaraViewState extends State<LashesMascaraView> {
       // permissions = [
       //   Permission.camera,
       //   Permission.microphone,
-      //   Permission.storage
+      //   // Permission.storage
       // ];
       // checkPermissionStatuses().then((allclear) {
       //   if (allclear) {
@@ -146,7 +146,7 @@ class _LashesMascaraViewState extends State<LashesMascaraView> {
       //           _initCamera();
       //         } else {
       //           Utils.showToast(
-      //               'Mohon izinkan Janissari untuk mengakses Kamera dan Mikrofon');
+      //               'Mohon izinkan untuk mengakses Kamera dan Mikrofon');
       //           Navigator.of(context).pop();
       //         }
       //       });
@@ -280,11 +280,14 @@ class _LashesMascaraViewState extends State<LashesMascaraView> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                    color: index == colorTextSelected ? Colors.white : Colors.transparent),
+                    color: index == colorTextSelected
+                        ? Colors.white
+                        : Colors.transparent),
               ),
               child: Row(
                 children: [
-                  CircleAvatar(radius: 8, backgroundColor: colorMainList[index]),
+                  CircleAvatar(
+                      radius: 8, backgroundColor: colorMainList[index]),
                   Constant.xSizedBox4,
                   Text(
                     colorMainListString[index],
@@ -325,15 +328,17 @@ class _LashesMascaraViewState extends State<LashesMascaraView> {
                   onOffVisible = false;
                 });
               },
-              child:
-                  Container(
-                      padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                            color: index == colorSelected && onOffVisible == false ? Colors.white : Colors.transparent),
-                      ),
-                      child: CircleAvatar(radius: 12, backgroundColor: colorList[index])));
+              child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                        color: index == colorSelected && onOffVisible == false
+                            ? Colors.white
+                            : Colors.transparent),
+                  ),
+                  child: CircleAvatar(
+                      radius: 12, backgroundColor: colorList[index])));
         },
       ),
     );
@@ -363,7 +368,9 @@ class _LashesMascaraViewState extends State<LashesMascaraView> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
                 border: Border.all(
-                    color: index == eyelashSelected ? Colors.white : Colors.transparent),
+                    color: index == eyelashSelected
+                        ? Colors.white
+                        : Colors.transparent),
               ),
               child: typeLashes[index],
             ),

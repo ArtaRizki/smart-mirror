@@ -102,7 +102,7 @@ class _EyelinerViewState extends State<EyelinerView> {
           permissions = [
             Permission.camera,
             Permission.microphone,
-            Permission.storage
+            // Permission.storage
           ];
         }
       }).then((value) {
@@ -117,7 +117,7 @@ class _EyelinerViewState extends State<EyelinerView> {
                   _initCamera();
                 } else {
                   Utils.showToast(
-                      'Mohon izinkan Janissari untuk mengakses Kamera dan Mikrofon');
+                      'Mohon izinkan untuk mengakses Kamera dan Mikrofon');
                   Navigator.of(context).pop();
                 }
               });
@@ -130,7 +130,7 @@ class _EyelinerViewState extends State<EyelinerView> {
       // permissions = [
       //   Permission.camera,
       //   Permission.microphone,
-      //   Permission.storage
+      //   // Permission.storage
       // ];
       // checkPermissionStatuses().then((allclear) {
       //   if (allclear) {
@@ -142,7 +142,7 @@ class _EyelinerViewState extends State<EyelinerView> {
       //           _initCamera();
       //         } else {
       //           Utils.showToast(
-      //               'Mohon izinkan Janissari untuk mengakses Kamera dan Mikrofon');
+      //               'Mohon izinkan untuk mengakses Kamera dan Mikrofon');
       //           Navigator.of(context).pop();
       //         }
       //       });
@@ -363,7 +363,9 @@ class _EyelinerViewState extends State<EyelinerView> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
                 border: Border.all(
-                    color: index == eyebrowSelected ? Colors.white : Colors.transparent),
+                    color: index == eyebrowSelected
+                        ? Colors.white
+                        : Colors.transparent),
               ),
               child: typeEyeLiner[index],
             ),

@@ -53,7 +53,7 @@ class _LipLinerViewState extends State<LipLinerView> {
           permissions = [
             Permission.camera,
             Permission.microphone,
-            Permission.storage
+            // Permission.storage
           ];
         }
       }).then((value) {
@@ -68,7 +68,7 @@ class _LipLinerViewState extends State<LipLinerView> {
                   _initCamera();
                 } else {
                   Utils.showToast(
-                      'Mohon izinkan Janissari untuk mengakses Kamera dan Mikrofon');
+                      'Mohon izinkan untuk mengakses Kamera dan Mikrofon');
                   Navigator.of(context).pop();
                 }
               });
@@ -81,7 +81,7 @@ class _LipLinerViewState extends State<LipLinerView> {
       // permissions = [
       //   Permission.camera,
       //   Permission.microphone,
-      //   Permission.storage
+      //   // Permission.storage
       // ];
       // checkPermissionStatuses().then((allclear) {
       //   if (allclear) {
@@ -93,7 +93,7 @@ class _LipLinerViewState extends State<LipLinerView> {
       //           _initCamera();
       //         } else {
       //           Utils.showToast(
-      //               'Mohon izinkan Janissari untuk mengakses Kamera dan Mikrofon');
+      //               'Mohon izinkan untuk mengakses Kamera dan Mikrofon');
       //           Navigator.of(context).pop();
       //         }
       //       });

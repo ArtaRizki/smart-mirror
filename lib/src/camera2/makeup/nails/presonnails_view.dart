@@ -52,7 +52,7 @@ class _PresOnNailsViewState extends State<PresOnNailsView> {
           permissions = [
             Permission.camera,
             Permission.microphone,
-            Permission.storage
+            // Permission.storage
           ];
         }
       }).then((value) {
@@ -67,7 +67,7 @@ class _PresOnNailsViewState extends State<PresOnNailsView> {
                   _initCamera();
                 } else {
                   Utils.showToast(
-                      'Mohon izinkan Janissari untuk mengakses Kamera dan Mikrofon');
+                      'Mohon izinkan untuk mengakses Kamera dan Mikrofon');
                   Navigator.of(context).pop();
                 }
               });
@@ -80,7 +80,7 @@ class _PresOnNailsViewState extends State<PresOnNailsView> {
       // permissions = [
       //   Permission.camera,
       //   Permission.microphone,
-      //   Permission.storage
+      //   // Permission.storage
       // ];
       // checkPermissionStatuses().then((allclear) {
       //   if (allclear) {
@@ -92,7 +92,7 @@ class _PresOnNailsViewState extends State<PresOnNailsView> {
       //           _initCamera();
       //         } else {
       //           Utils.showToast(
-      //               'Mohon izinkan Janissari untuk mengakses Kamera dan Mikrofon');
+      //               'Mohon izinkan untuk mengakses Kamera dan Mikrofon');
       //           Navigator.of(context).pop();
       //         }
       //       });
@@ -446,13 +446,13 @@ class _PresOnNailsViewState extends State<PresOnNailsView> {
                         ),
                         Container(
                           padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                           color: Color(0xFFC89A44),
                           child: Center(
                               child: Text(
-                                "Add to cart",
-                                style: TextStyle(color: Colors.white, fontSize: 10),
-                              )),
+                            "Add to cart",
+                            style: TextStyle(color: Colors.white, fontSize: 10),
+                          )),
                         )
                       ],
                     )
@@ -474,7 +474,7 @@ class _PresOnNailsViewState extends State<PresOnNailsView> {
         separatorBuilder: (_, __) => Constant.xSizedBox8,
         itemBuilder: (context, index) {
           return InkWell(
-            onTap: (){
+            onTap: () {
               setState(() {
                 colorTextSelected = index;
               });
@@ -484,12 +484,15 @@ class _PresOnNailsViewState extends State<PresOnNailsView> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                    color: index == colorTextSelected ? Colors.white : Colors.transparent),
+                    color: index == colorTextSelected
+                        ? Colors.white
+                        : Colors.transparent),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  CircleAvatar(radius: 8, backgroundColor: nailsColorList[index]),
+                  CircleAvatar(
+                      radius: 8, backgroundColor: nailsColorList[index]),
                   Constant.xSizedBox4,
                   Text(
                     nailsList[index],
@@ -535,7 +538,9 @@ class _PresOnNailsViewState extends State<PresOnNailsView> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                      color: index == colorSelected && onOffVisible == false ? Colors.white : Colors.transparent),
+                      color: index == colorSelected && onOffVisible == false
+                          ? Colors.white
+                          : Colors.transparent),
                 ),
                 child: CircleAvatar(
                     radius: 12, backgroundColor: colorChoiceList[index]),
@@ -597,7 +602,9 @@ class _PresOnNailsViewState extends State<PresOnNailsView> {
               decoration: BoxDecoration(
                 // borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                    color: index == nailSelected ? Colors.white : Colors.transparent),
+                    color: index == nailSelected
+                        ? Colors.white
+                        : Colors.transparent),
               ),
               child: InkWell(
                   onTap: () async {

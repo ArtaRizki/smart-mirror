@@ -100,7 +100,7 @@ class _LensesViewState extends State<LensesView> {
           permissions = [
             Permission.camera,
             Permission.microphone,
-            Permission.storage
+            // Permission.storage
           ];
         }
       }).then((value) {
@@ -115,7 +115,7 @@ class _LensesViewState extends State<LensesView> {
                   _initCamera();
                 } else {
                   Utils.showToast(
-                      'Mohon izinkan Janissari untuk mengakses Kamera dan Mikrofon');
+                      'Mohon izinkan untuk mengakses Kamera dan Mikrofon');
                   Navigator.of(context).pop();
                 }
               });
@@ -128,7 +128,7 @@ class _LensesViewState extends State<LensesView> {
       // permissions = [
       //   Permission.camera,
       //   Permission.microphone,
-      //   Permission.storage
+      //   // Permission.storage
       // ];
       // checkPermissionStatuses().then((allclear) {
       //   if (allclear) {
@@ -140,7 +140,7 @@ class _LensesViewState extends State<LensesView> {
       //           _initCamera();
       //         } else {
       //           Utils.showToast(
-      //               'Mohon izinkan Janissari untuk mengakses Kamera dan Mikrofon');
+      //               'Mohon izinkan untuk mengakses Kamera dan Mikrofon');
       //           Navigator.of(context).pop();
       //         }
       //       });
@@ -274,11 +274,14 @@ class _LensesViewState extends State<LensesView> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                    color: index == colorSelected ? Colors.white : Colors.transparent),
+                    color: index == colorSelected
+                        ? Colors.white
+                        : Colors.transparent),
               ),
               child: Row(
                 children: [
-                  CircleAvatar(radius: 8, backgroundColor: colorMainList[index]),
+                  CircleAvatar(
+                      radius: 8, backgroundColor: colorMainList[index]),
                   Constant.xSizedBox4,
                   Text(
                     colorMainListString[index],
@@ -351,7 +354,9 @@ class _LensesViewState extends State<LensesView> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
                 border: Border.all(
-                    color: index == lensesSelected && onOffVisible == false? Colors.white : Colors.transparent),
+                    color: index == lensesSelected && onOffVisible == false
+                        ? Colors.white
+                        : Colors.transparent),
               ),
               child: typeLenses[index],
             ),

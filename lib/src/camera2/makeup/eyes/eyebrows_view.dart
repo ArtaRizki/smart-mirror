@@ -82,7 +82,7 @@ class _EyebrowsViewState extends State<EyebrowsView> {
           permissions = [
             Permission.camera,
             Permission.microphone,
-            Permission.storage
+            // Permission.storage
           ];
         }
       }).then((value) {
@@ -97,7 +97,7 @@ class _EyebrowsViewState extends State<EyebrowsView> {
                   _initCamera();
                 } else {
                   Utils.showToast(
-                      'Mohon izinkan Janissari untuk mengakses Kamera dan Mikrofon');
+                      'Mohon izinkan untuk mengakses Kamera dan Mikrofon');
                   Navigator.of(context).pop();
                 }
               });
@@ -110,7 +110,7 @@ class _EyebrowsViewState extends State<EyebrowsView> {
       // permissions = [
       //   Permission.camera,
       //   Permission.microphone,
-      //   Permission.storage
+      //   // Permission.storage
       // ];
       // checkPermissionStatuses().then((allclear) {
       //   if (allclear) {
@@ -122,7 +122,7 @@ class _EyebrowsViewState extends State<EyebrowsView> {
       //           _initCamera();
       //         } else {
       //           Utils.showToast(
-      //               'Mohon izinkan Janissari untuk mengakses Kamera dan Mikrofon');
+      //               'Mohon izinkan untuk mengakses Kamera dan Mikrofon');
       //           Navigator.of(context).pop();
       //         }
       //       });
@@ -430,9 +430,7 @@ class _EyebrowsViewState extends State<EyebrowsView> {
                         ? Colors.white
                         : Colors.transparent),
               ),
-              child: Container(
-                  height: 29,
-                  child: typeEyeBrows[index]),
+              child: Container(height: 29, child: typeEyeBrows[index]),
             ),
           );
         },

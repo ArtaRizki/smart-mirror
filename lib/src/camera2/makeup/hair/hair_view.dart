@@ -50,7 +50,7 @@ class _HairViewState extends State<HairView> {
           permissions = [
             Permission.camera,
             Permission.microphone,
-            Permission.storage
+            // Permission.storage
           ];
         }
       }).then((value) {
@@ -65,7 +65,7 @@ class _HairViewState extends State<HairView> {
                   _initCamera();
                 } else {
                   Utils.showToast(
-                      'Mohon izinkan Janissari untuk mengakses Kamera dan Mikrofon');
+                      'Mohon izinkan untuk mengakses Kamera dan Mikrofon');
                   Navigator.of(context).pop();
                 }
               });
@@ -78,7 +78,7 @@ class _HairViewState extends State<HairView> {
       // permissions = [
       //   Permission.camera,
       //   Permission.microphone,
-      //   Permission.storage
+      //   // Permission.storage
       // ];
       // checkPermissionStatuses().then((allclear) {
       //   if (allclear) {
@@ -90,7 +90,7 @@ class _HairViewState extends State<HairView> {
       //           _initCamera();
       //         } else {
       //           Utils.showToast(
-      //               'Mohon izinkan Janissari untuk mengakses Kamera dan Mikrofon');
+      //               'Mohon izinkan untuk mengakses Kamera dan Mikrofon');
       //           Navigator.of(context).pop();
       //         }
       //       });
@@ -349,13 +349,13 @@ class _HairViewState extends State<HairView> {
                         ),
                         Container(
                           padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                           color: Color(0xFFC89A44),
                           child: Center(
                               child: Text(
-                                "Add to cart",
-                                style: TextStyle(color: Colors.white, fontSize: 10),
-                              )),
+                            "Add to cart",
+                            style: TextStyle(color: Colors.white, fontSize: 10),
+                          )),
                         )
                       ],
                     )
@@ -366,7 +366,6 @@ class _HairViewState extends State<HairView> {
       ),
     );
   }
-
 
   Widget noPictureTaken() {
     return SizedBox(
@@ -486,12 +485,15 @@ class _HairViewState extends State<HairView> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                    color: index == colorSelected ? Colors.white : Colors.transparent),
+                    color: index == colorSelected
+                        ? Colors.white
+                        : Colors.transparent),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  CircleAvatar(radius: 8, backgroundColor: hairColorList[index]),
+                  CircleAvatar(
+                      radius: 8, backgroundColor: hairColorList[index]),
                   Constant.xSizedBox4,
                   Text(
                     colorList[index],
@@ -528,7 +530,9 @@ class _HairViewState extends State<HairView> {
               decoration: BoxDecoration(
                 // borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                    color: index == hairSelected ? Colors.white : Colors.transparent),
+                    color: index == hairSelected
+                        ? Colors.white
+                        : Colors.transparent),
               ),
               child: InkWell(
                   onTap: () async {

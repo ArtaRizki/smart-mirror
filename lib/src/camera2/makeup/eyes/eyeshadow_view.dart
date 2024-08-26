@@ -102,7 +102,7 @@ class _EyeshadowViewState extends State<EyeshadowView> {
           permissions = [
             Permission.camera,
             Permission.microphone,
-            Permission.storage
+            // Permission.storage
           ];
         }
       }).then((value) {
@@ -117,7 +117,7 @@ class _EyeshadowViewState extends State<EyeshadowView> {
                   _initCamera();
                 } else {
                   Utils.showToast(
-                      'Mohon izinkan Janissari untuk mengakses Kamera dan Mikrofon');
+                      'Mohon izinkan untuk mengakses Kamera dan Mikrofon');
                   Navigator.of(context).pop();
                 }
               });
@@ -130,7 +130,7 @@ class _EyeshadowViewState extends State<EyeshadowView> {
       // permissions = [
       //   Permission.camera,
       //   Permission.microphone,
-      //   Permission.storage
+      //   // Permission.storage
       // ];
       // checkPermissionStatuses().then((allclear) {
       //   if (allclear) {
@@ -142,7 +142,7 @@ class _EyeshadowViewState extends State<EyeshadowView> {
       //           _initCamera();
       //         } else {
       //           Utils.showToast(
-      //               'Mohon izinkan Janissari untuk mengakses Kamera dan Mikrofon');
+      //               'Mohon izinkan untuk mengakses Kamera dan Mikrofon');
       //           Navigator.of(context).pop();
       //         }
       //       });
@@ -278,11 +278,14 @@ class _EyeshadowViewState extends State<EyeshadowView> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                      color: index == colorTextSelected ? Colors.white : Colors.transparent),
+                      color: index == colorTextSelected
+                          ? Colors.white
+                          : Colors.transparent),
                 ),
                 child: Row(
                   children: [
-                    CircleAvatar(radius: 8, backgroundColor: colorMainList[index]),
+                    CircleAvatar(
+                        radius: 8, backgroundColor: colorMainList[index]),
                     Constant.xSizedBox4,
                     Text(
                       colorMainListString[index],
@@ -324,17 +327,17 @@ class _EyeshadowViewState extends State<EyeshadowView> {
                   onOffVisibel = false;
                 });
               },
-              child:
-                  Container(
-                      padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                            color: index == colorSelected && onOffVisibel == false
-                                ? Colors.white
-                                : Colors.transparent),
-                      ),
-                      child: CircleAvatar(radius: 12, backgroundColor: colorList[index])));
+              child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                        color: index == colorSelected && onOffVisibel == false
+                            ? Colors.white
+                            : Colors.transparent),
+                  ),
+                  child: CircleAvatar(
+                      radius: 12, backgroundColor: colorList[index])));
         },
       ),
     );
@@ -405,19 +408,18 @@ class _EyeshadowViewState extends State<EyeshadowView> {
                 typeComboList[index],
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  shadows: index == typeComboSelected
-                      ?  [
-                  BoxShadow(
-                    offset: Offset(0, 0),
                     color: Colors.white,
-                    spreadRadius: 0,
-                    blurRadius: 10,
-                  ),
-                    ]
-                      : null
-                ),
+                    fontSize: 12,
+                    shadows: index == typeComboSelected
+                        ? [
+                            BoxShadow(
+                              offset: Offset(0, 0),
+                              color: Colors.white,
+                              spreadRadius: 0,
+                              blurRadius: 10,
+                            ),
+                          ]
+                        : null),
               ),
             ),
           );
@@ -445,7 +447,9 @@ class _EyeshadowViewState extends State<EyeshadowView> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
                 border: Border.all(
-                    color: index == eyebrowSelected ? Colors.white : Colors.transparent),
+                    color: index == eyebrowSelected
+                        ? Colors.white
+                        : Colors.transparent),
               ),
               child: typeEyeShadow[index],
             ),
@@ -518,13 +522,13 @@ class _EyeshadowViewState extends State<EyeshadowView> {
                         ),
                         Container(
                           padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                           color: Color(0xFFC89A44),
                           child: Center(
                               child: Text(
-                                "Add to cart",
-                                style: TextStyle(color: Colors.white, fontSize: 10),
-                              )),
+                            "Add to cart",
+                            style: TextStyle(color: Colors.white, fontSize: 10),
+                          )),
                         )
                       ],
                     )

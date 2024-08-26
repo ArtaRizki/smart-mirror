@@ -51,7 +51,7 @@ class _BanglesViewState extends State<BanglesView> {
           permissions = [
             Permission.camera,
             Permission.microphone,
-            Permission.storage
+            // Permission.storage
           ];
         }
       }).then((value) {
@@ -66,7 +66,7 @@ class _BanglesViewState extends State<BanglesView> {
                   _initCamera();
                 } else {
                   Utils.showToast(
-                      'Mohon izinkan Janissari untuk mengakses Kamera dan Mikrofon');
+                      'Mohon izinkan untuk mengakses Kamera dan Mikrofon');
                   Navigator.of(context).pop();
                 }
               });
@@ -79,7 +79,7 @@ class _BanglesViewState extends State<BanglesView> {
       // permissions = [
       //   Permission.camera,
       //   Permission.microphone,
-      //   Permission.storage
+      //   // Permission.storage
       // ];
       // checkPermissionStatuses().then((allclear) {
       //   if (allclear) {
@@ -91,7 +91,7 @@ class _BanglesViewState extends State<BanglesView> {
       //           _initCamera();
       //         } else {
       //           Utils.showToast(
-      //               'Mohon izinkan Janissari untuk mengakses Kamera dan Mikrofon');
+      //               'Mohon izinkan untuk mengakses Kamera dan Mikrofon');
       //           Navigator.of(context).pop();
       //         }
       //       });
@@ -127,8 +127,13 @@ class _BanglesViewState extends State<BanglesView> {
     Color(0xFFE0467C),
   ];
 
-
-  List<String> chipList = ['Silver', 'Silver-Plated', 'Gold-Plated', 'Brass', 'Stair'];
+  List<String> chipList = [
+    'Silver',
+    'Silver-Plated',
+    'Gold-Plated',
+    'Brass',
+    'Stair'
+  ];
 
   @override
   void dispose() {
@@ -160,7 +165,7 @@ class _BanglesViewState extends State<BanglesView> {
     } else {
       await availableCameras().then((value) async {
         isFlipCameraSupported = value.indexWhere((element) =>
-        element.lensDirection == CameraLensDirection.front) !=
+                element.lensDirection == CameraLensDirection.front) !=
             -1;
 
         for (var camera in value) {
@@ -338,24 +343,24 @@ class _BanglesViewState extends State<BanglesView> {
                       isFlippingCamera = Completer();
                       isFlippingCamera!.complete(
                           await availableCameras().then((value) async {
-                            for (var camera in value) {
-                              if (camera.lensDirection ==
-                                  (controller.description.lensDirection ==
+                        for (var camera in value) {
+                          if (camera.lensDirection ==
+                              (controller.description.lensDirection ==
                                       CameraLensDirection.front
-                                      ? CameraLensDirection.back
-                                      : CameraLensDirection.front)) {
-                                await controller.dispose();
-                                cameraSetupCompleter = Completer();
+                                  ? CameraLensDirection.back
+                                  : CameraLensDirection.front)) {
+                            await controller.dispose();
+                            cameraSetupCompleter = Completer();
 
-                                await _initCamera(camera: camera);
-                                setState(() {});
-                                break;
-                              }
-                            }
+                            await _initCamera(camera: camera);
+                            setState(() {});
+                            break;
+                          }
+                        }
 
-                            await Future.delayed(
-                                const Duration(seconds: 1, milliseconds: 500));
-                          }));
+                        await Future.delayed(
+                            const Duration(seconds: 1, milliseconds: 500));
+                      }));
                     } else {
                       print('Not completed!');
                     }
@@ -440,13 +445,13 @@ class _BanglesViewState extends State<BanglesView> {
                         ),
                         Container(
                           padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                              EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                           color: Color(0xFFC89A44),
                           child: Center(
                               child: Text(
-                                "Add to cart",
-                                style: TextStyle(color: Colors.white, fontSize: 10),
-                              )),
+                            "Add to cart",
+                            style: TextStyle(color: Colors.white, fontSize: 10),
+                          )),
                         )
                       ],
                     )
@@ -468,7 +473,7 @@ class _BanglesViewState extends State<BanglesView> {
         separatorBuilder: (_, __) => Constant.xSizedBox8,
         itemBuilder: (context, index) {
           return InkWell(
-            onTap: (){
+            onTap: () {
               setState(() {
                 colorTextSelected = index;
               });
@@ -478,12 +483,15 @@ class _BanglesViewState extends State<BanglesView> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                    color: index == colorTextSelected ? Colors.white : Colors.transparent),
+                    color: index == colorTextSelected
+                        ? Colors.white
+                        : Colors.transparent),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  CircleAvatar(radius: 8, backgroundColor: circleColorList[index]),
+                  CircleAvatar(
+                      radius: 8, backgroundColor: circleColorList[index]),
                   Constant.xSizedBox4,
                   Text(
                     colorsTextList[index],
@@ -529,7 +537,9 @@ class _BanglesViewState extends State<BanglesView> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                      color: index == colorSelected && onOffVisible == false ? Colors.white : Colors.transparent),
+                      color: index == colorSelected && onOffVisible == false
+                          ? Colors.white
+                          : Colors.transparent),
                 ),
                 child: CircleAvatar(
                     radius: 12, backgroundColor: colorChoiceList[index]),
@@ -559,7 +569,9 @@ class _BanglesViewState extends State<BanglesView> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                    color: index == typeSelected ? Colors.white : Colors.transparent),
+                    color: index == typeSelected
+                        ? Colors.white
+                        : Colors.transparent),
               ),
               child: Text(
                 chipList[index],
@@ -676,7 +688,7 @@ class _BanglesViewState extends State<BanglesView> {
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
         systemOverlayStyle:
-        const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+            const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
       ),
       extendBodyBehindAppBar: true,
       body: FutureBuilder<String?>(
@@ -689,17 +701,17 @@ class _BanglesViewState extends State<BanglesView> {
           } else if (snapshot.data != null) {
             return Center(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Text('Setup Camera Failed'),
-                    Text(
-                      snapshot.data!,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )
-                  ],
-                ));
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text('Setup Camera Failed'),
+                Text(
+                  snapshot.data!,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+              ],
+            ));
           } else {
             return LayoutBuilder(
               builder: (p0, p1) {
@@ -747,10 +759,10 @@ class _BanglesViewState extends State<BanglesView> {
                                     }, Assets.iconsIcCamera),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                            () async {}, Assets.iconsIcFlipCamera),
+                                        () async {}, Assets.iconsIcFlipCamera),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                            () async {}, Assets.iconsIcScale),
+                                        () async {}, Assets.iconsIcScale),
                                     Constant.xSizedBox12,
                                     iconSidebar(() async {
                                       setState(() {
@@ -759,13 +771,13 @@ class _BanglesViewState extends State<BanglesView> {
                                     }, Assets.iconsIcCompareOff),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                            () async {}, Assets.iconsIcResetOff),
+                                        () async {}, Assets.iconsIcResetOff),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                            () async {}, Assets.iconsIcChoose),
+                                        () async {}, Assets.iconsIcChoose),
                                     Constant.xSizedBox12,
                                     iconSidebar(
-                                            () async {}, Assets.iconsIcShare),
+                                        () async {}, Assets.iconsIcShare),
                                   ],
                                 ),
                               ),
