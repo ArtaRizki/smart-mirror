@@ -52,7 +52,9 @@ import 'package:smart_mirror/utils/utils.dart';
 const xHEdgeInsets12 = EdgeInsets.symmetric(horizontal: 12);
 
 class OcrCameraPage2 extends StatefulWidget {
-  const OcrCameraPage2({super.key});
+  OcrCameraPage2({super.key, this.makeUpOn, this.accessoriesOn});
+  bool? makeUpOn;
+  bool? accessoriesOn;
 
   @override
   State<OcrCameraPage2> createState() => _OcrCameraPage2State();
@@ -67,18 +69,19 @@ class _OcrCameraPage2State extends State<OcrCameraPage2>
   bool isRearCamera = true;
   bool isFlipCameraSupported = false;
   File? file;
-  bool makeupOrAccessories = false;
   bool onOffVisible = false;
   int? colorSelected = 0;
   int? colorTextSelected = 0;
   int? typeSelected = 0;
   int? modeSelected = 0;
   bool makeUpOn = false;
-  bool accessoriesOn = false;
+  bool accessoriesOn = true;
 
   @override
   void initState() {
     super.initState();
+    makeUpOn = widget.makeUpOn ?? makeUpOn;
+    accessoriesOn = widget.accessoriesOn ?? accessoriesOn;
     WidgetsBinding.instance.addObserver(this);
     if (Platform.isAndroid) {
       DeviceInfoPlugin().androidInfo.then((value) {
@@ -452,18 +455,18 @@ class _OcrCameraPage2State extends State<OcrCameraPage2>
           separator(),
           if (makeUpOn == true) MakeupPage(),
           if (accessoriesOn == true) AccessoriesPage(),
-          Center(
-            child: InkWell(
-                onTap: () {
-                  setState(() {
-                    makeupOrAccessories = !makeupOrAccessories;
-                  });
-                },
-                child: Icon(
-                  Icons.keyboard_arrow_down,
-                  color: Colors.white,
-                )),
-          ),
+          // Center(
+          //   child: InkWell(
+          //       onTap: () {
+          //         setState(() {
+          //           makeupOrAccessories = !makeupOrAccessories;
+          //         });
+          //       },
+          //       child: Icon(
+          //         Icons.keyboard_arrow_down,
+          //         color: Colors.white,
+          //       )),
+          // ),
         ],
       ),
     );
@@ -770,20 +773,20 @@ class _OcrCameraPage2State extends State<OcrCameraPage2>
           Constant.xSizedBox4,
           separator(),
           typeText(),
-          Center(
-            child: InkWell(
-                onTap: () {
-                  setState(() {
-                    makeupOrAccessories = !makeupOrAccessories;
-                    makeUpOn = false;
-                    accessoriesOn = false;
-                  });
-                },
-                child: Icon(
-                  Icons.keyboard_arrow_down,
-                  color: Colors.white,
-                )),
-          ),
+          // Center(
+          //   child: InkWell(
+          //       onTap: () {
+          //         setState(() {
+          //           // makeupOrAccessories = !makeupOrAccessories;
+          //           makeUpOn = false;
+          //           accessoriesOn = false;
+          //         });
+          //       },
+          //       child: Icon(
+          //         Icons.keyboard_arrow_down,
+          //         color: Colors.white,
+          //       )),
+          // ),
           Constant.xSizedBox8,
         ],
       ),
@@ -962,8 +965,8 @@ class _OcrCameraPage2State extends State<OcrCameraPage2>
                                     Constant.xSizedBox12,
                                     iconSidebar(() async {
                                       setState(() {
-                                        makeupOrAccessories =
-                                            !makeupOrAccessories;
+                                        // makeupOrAccessories =
+                                        //     !makeupOrAccessories;
                                       });
                                     }, Assets.iconsIcCompare),
                                     Constant.xSizedBox12,
@@ -981,9 +984,10 @@ class _OcrCameraPage2State extends State<OcrCameraPage2>
                               ),
                             ),
                             Constant.xSizedBox16,
-                            makeupOrAccessories
-                                ? makeupOrAccessoriesChoice()
-                                : sheet(),
+                            // makeupOrAccessories
+                            //     ?
+                            makeupOrAccessoriesChoice()
+                            // : sheet(),
                             // file != null ? pictureTaken() : noPictureTaken(),
                             // pictureTaken(),
                           ],

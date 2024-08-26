@@ -9,6 +9,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:smart_mirror/common/component/custom_navigator.dart';
 import 'package:smart_mirror/common/helper/constant.dart';
 import 'package:smart_mirror/generated/assets.dart';
+import 'package:smart_mirror/src/camera2/camera_page2.dart';
 import 'package:smart_mirror/src/camera2/camera_video_page.dart';
 import 'package:smart_mirror/src/camera2/makeup/face/contour_view.dart';
 import 'package:smart_mirror/src/camera2/makeup_page.dart';
@@ -225,51 +226,6 @@ class _BronzerViewState extends State<BronzerView> {
                     Constant.xSizedBox16,
                     Icon(Icons.share_outlined, color: Colors.white),
                   ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget makeupOrAccessoriesChoice() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        children: [
-          Expanded(
-            child: InkWell(
-              onTap: () {
-                CusNav.nPush(context, MakeupPage());
-              },
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                child: Text(
-                  'Make Up',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Constant.xSizedBox24,
-          Expanded(
-            child: InkWell(
-              onTap: () {},
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                child: Text(
-                  'Accessories',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
                 ),
               ),
             ),
@@ -717,7 +673,10 @@ class _BronzerViewState extends State<BronzerView> {
         leadingWidth: 84,
         titleSpacing: 0,
         leading: InkWell(
-          onTap: () => Navigator.pop(context),
+          onTap: () {
+            CusNav.nPop(context);
+            CusNav.nPushReplace(context, OcrCameraPage2(makeUpOn: true));
+          },
           child: Container(
             margin: const EdgeInsets.only(top: 8),
             // padding: EdgeInsets.all(8),
@@ -873,9 +832,7 @@ class _BronzerViewState extends State<BronzerView> {
                               ),
                             ),
                             Constant.xSizedBox16,
-                            makeupOrAccessories
-                                ? makeupOrAccessoriesChoice()
-                                : sheet(),
+                            sheet(),
                             // file != null ? pictureTaken() : noPictureTaken(),
                             // pictureTaken(),
                           ],

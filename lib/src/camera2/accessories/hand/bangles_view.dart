@@ -9,6 +9,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:smart_mirror/common/component/custom_navigator.dart';
 import 'package:smart_mirror/common/helper/constant.dart';
 import 'package:smart_mirror/generated/assets.dart';
+import 'package:smart_mirror/src/camera2/camera_page2.dart' as c;
 import 'package:smart_mirror/src/camera2/camera_video_page.dart';
 import 'package:smart_mirror/src/camera2/makeup_page.dart';
 import 'package:smart_mirror/utils/utils.dart';
@@ -658,7 +659,10 @@ class _BanglesViewState extends State<BanglesView> {
         leadingWidth: 84,
         titleSpacing: 0,
         leading: InkWell(
-          onTap: () => Navigator.pop(context),
+          onTap: () {
+            CusNav.nPop(context);
+            CusNav.nPushReplace(context, c.OcrCameraPage2(accessoriesOn: true));
+          },
           child: Container(
             margin: const EdgeInsets.only(top: 8),
             // padding: EdgeInsets.all(8),
