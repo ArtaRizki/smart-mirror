@@ -611,11 +611,9 @@ class _WatchesViewState extends State<WatchesView> {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
               decoration: BoxDecoration(
+                color: index == shapesSelected ? Color(0xffCA9C43) : null,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                    color: index == shapesSelected
-                        ? Colors.white
-                        : Colors.transparent),
+                border: Border.all(color: Colors.white),
               ),
               child: Row(
                 children: [
@@ -652,11 +650,9 @@ class _WatchesViewState extends State<WatchesView> {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
               decoration: BoxDecoration(
+                color: index == materialSelected ? Color(0xffCA9C43) : null,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                    color: index == materialSelected
-                        ? Colors.white
-                        : Colors.transparent),
+                border: Border.all(color: Colors.white),
               ),
               child: Center(
                 child: Text(

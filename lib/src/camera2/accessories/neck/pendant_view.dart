@@ -561,11 +561,9 @@ class _PendantsViewState extends State<PendantsView> {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
               decoration: BoxDecoration(
+                color: index == typeSelected ? Color(0xffCA9C43) : null,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                    color: index == typeSelected
-                        ? Colors.white
-                        : Colors.transparent),
+                border: Border.all(color: Colors.white),
               ),
               child: Text(
                 chipList[index],
