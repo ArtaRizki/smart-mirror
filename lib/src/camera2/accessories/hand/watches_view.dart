@@ -624,7 +624,7 @@ class _WatchesViewState extends State<WatchesView> {
 
   Widget materialChoice() {
     return Container(
-      height: 18,
+      height: 23,
       child: ListView.separated(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
@@ -644,9 +644,11 @@ class _WatchesViewState extends State<WatchesView> {
                 border: Border.all(
                     color: index == materialSelected ? Colors.white : Colors.transparent),
               ),
-              child: Text(
-                materialList[index],
-                style: TextStyle(color: Colors.white, fontSize: 10),
+              child: Center(
+                child: Text(
+                  materialList[index],
+                  style: TextStyle(color: Colors.white, fontSize: 10),
+                ),
               ),
             ),
           );
