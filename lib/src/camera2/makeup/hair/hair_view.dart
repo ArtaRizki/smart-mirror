@@ -33,12 +33,12 @@ class _HairViewState extends State<HairView> {
   bool isFlipCameraSupported = false;
   File? file;
   bool makeupOrAccessories = false;
-  int? colorSelected = 0;
+  int? mainColorSelected;
+  int? subColorSelected;
   int? hairSelected = 0;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (Platform.isAndroid) {
       DeviceInfoPlugin().androidInfo.then((value) {
@@ -433,7 +433,7 @@ class _HairViewState extends State<HairView> {
           return InkWell(
             onTap: () {
               setState(() {
-                colorSelected = index;
+                mainColorSelected = index;
               });
             },
             child: Container(
@@ -441,7 +441,7 @@ class _HairViewState extends State<HairView> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                    color: index == colorSelected
+                    color: index == mainColorSelected
                         ? Colors.white
                         : Colors.transparent),
               ),

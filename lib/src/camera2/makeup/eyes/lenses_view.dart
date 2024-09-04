@@ -34,7 +34,8 @@ class _LensesViewState extends State<LensesView> {
   File? file;
   double sliderValue = 0;
   bool onOffVisible = false;
-  int? colorSelected = 0;
+  int? mainColorSelected;
+  int? subColorSelected;
   int? lensesSelected = 0;
 
   List<Color> colorMainList = [
@@ -88,7 +89,6 @@ class _LensesViewState extends State<LensesView> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (Platform.isAndroid) {
       DeviceInfoPlugin().androidInfo.then((value) {
@@ -267,7 +267,7 @@ class _LensesViewState extends State<LensesView> {
           return InkWell(
             onTap: () {
               setState(() {
-                colorSelected = index;
+                mainColorSelected = index;
               });
             },
             child: Container(
@@ -275,7 +275,7 @@ class _LensesViewState extends State<LensesView> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                    color: index == colorSelected
+                    color: index == mainColorSelected
                         ? Colors.white
                         : Colors.transparent),
               ),

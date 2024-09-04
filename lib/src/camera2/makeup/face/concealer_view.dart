@@ -35,11 +35,11 @@ class _ConcealerViewState extends State<ConcealerView> {
   bool makeupOrAccessories = false;
   bool onOffVisible = false;
   int? skinSelected = 0;
-  int? colorSelected = 0;
+  int? mainColorSelected;
+  int? subColorSelected;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (Platform.isAndroid) {
       DeviceInfoPlugin().androidInfo.then((value) {
@@ -396,7 +396,7 @@ class _ConcealerViewState extends State<ConcealerView> {
             return InkWell(
                 onTap: () async {
                   setState(() {
-                    colorSelected = index;
+                    mainColorSelected = index;
                     onOffVisible = false;
                   });
                 },
@@ -405,9 +405,10 @@ class _ConcealerViewState extends State<ConcealerView> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                        color: index == colorSelected && onOffVisible == false
-                            ? Colors.white
-                            : Colors.transparent),
+                        color:
+                            index == mainColorSelected && onOffVisible == false
+                                ? Colors.white
+                                : Colors.transparent),
                   ),
                   child: CircleAvatar(
                       radius: 12, backgroundColor: colorChoiceList[index]),

@@ -46,7 +46,6 @@ class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     cController.complete();
     WidgetsBinding.instance.addObserver(this);

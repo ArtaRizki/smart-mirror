@@ -33,14 +33,14 @@ class _BlusherViewState extends State<BlusherView> {
   bool isFlipCameraSupported = false;
   File? file;
   bool makeupOrAccessories = false;
-  bool onOffVisibel = false;
+  bool onOffVisible = false;
   int? skinSelected = 0;
-  int? colorSelected = 0;
+  int? mainColorSelected;
+  int? subColorSelected;
   int? typeSelected = 0;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (Platform.isAndroid) {
       DeviceInfoPlugin().androidInfo.then((value) {
@@ -389,8 +389,8 @@ class _BlusherViewState extends State<BlusherView> {
               return InkWell(
                 onTap: () async {
                   setState(() {
-                    colorSelected = 0;
-                    onOffVisibel = true;
+                    mainColorSelected = 0;
+                    onOffVisible = true;
                   });
                 },
                 child: Icon(Icons.do_not_disturb_alt_sharp,
@@ -399,8 +399,8 @@ class _BlusherViewState extends State<BlusherView> {
             return InkWell(
                 onTap: () async {
                   setState(() {
-                    colorSelected = index;
-                    onOffVisibel = false;
+                    mainColorSelected = index;
+                    onOffVisible = false;
                   });
                 },
                 child: Container(
@@ -408,9 +408,10 @@ class _BlusherViewState extends State<BlusherView> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                        color: index == colorSelected && onOffVisibel == false
-                            ? Colors.white
-                            : Colors.transparent),
+                        color:
+                            index == mainColorSelected && onOffVisible == false
+                                ? Colors.white
+                                : Colors.transparent),
                   ),
                   child: CircleAvatar(
                       radius: 12, backgroundColor: colorChoiceList[index]),

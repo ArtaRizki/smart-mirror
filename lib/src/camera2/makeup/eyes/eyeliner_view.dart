@@ -35,7 +35,8 @@ class _EyelinerViewState extends State<EyelinerView> {
   double sliderValue = 0;
   bool onOffVisible = false;
   int? eyebrowSelected = 0;
-  int? colorSelected = 0;
+  int? subColorSelected;
+  int? mainColorSelected;
   int? colorTextSelected = 0;
 
   List<Color> colorMainList = [
@@ -90,7 +91,6 @@ class _EyelinerViewState extends State<EyelinerView> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (Platform.isAndroid) {
       DeviceInfoPlugin().androidInfo.then((value) {
@@ -321,7 +321,7 @@ class _EyelinerViewState extends State<EyelinerView> {
           return InkWell(
               onTap: () async {
                 setState(() {
-                  colorSelected = index;
+                  mainColorSelected = index;
                   onOffVisible = false;
                 });
               },
@@ -330,9 +330,10 @@ class _EyelinerViewState extends State<EyelinerView> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                        color: index == colorSelected && onOffVisible == false
-                            ? Colors.white
-                            : Colors.transparent),
+                        color:
+                            index == mainColorSelected && onOffVisible == false
+                                ? Colors.white
+                                : Colors.transparent),
                   ),
                   child: CircleAvatar(
                       radius: 12, backgroundColor: colorList[index])));

@@ -6,6 +6,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_mirror/common/component/custom_button.dart';
 import 'package:smart_mirror/common/component/custom_dialog.dart';
 import 'package:smart_mirror/common/component/custom_navigator.dart';
@@ -13,21 +14,6 @@ import 'package:smart_mirror/common/component/custom_textfield.dart';
 import 'package:smart_mirror/common/helper/constant.dart';
 import 'package:smart_mirror/generated/assets.dart';
 import 'package:smart_mirror/src/camera/camera_page.dart';
-import 'package:smart_mirror/src/camera2/accessories/hand/bangles_view.dart';
-import 'package:smart_mirror/src/camera2/accessories/hand/bracelets_view.dart';
-import 'package:smart_mirror/src/camera2/accessories/hand/rings_view.dart';
-import 'package:smart_mirror/src/camera2/accessories/hand/watches_view.dart';
-import 'package:smart_mirror/src/camera2/accessories/head/head_earrings_view.dart';
-import 'package:smart_mirror/src/camera2/accessories/head/head_hats_view.dart';
-import 'package:smart_mirror/src/camera2/accessories/head/head_headband_view.dart';
-import 'package:smart_mirror/src/camera2/accessories/head/head_sunglasses_view.dart';
-import 'package:smart_mirror/src/camera2/accessories/head/head_tiaras_view.dart';
-import 'package:smart_mirror/src/camera2/accessories/nails/nail_polish_view.dart';
-import 'package:smart_mirror/src/camera2/accessories/nails/presonnails_view.dart';
-import 'package:smart_mirror/src/camera2/accessories/neck/chokers_view.dart';
-import 'package:smart_mirror/src/camera2/accessories/neck/necklaces_view.dart';
-import 'package:smart_mirror/src/camera2/accessories/neck/pendant_view.dart';
-import 'package:smart_mirror/src/camera2/accessories/neck/scarves_view.dart';
 import 'package:smart_mirror/src/camera2/accessories_page.dart';
 import 'package:smart_mirror/src/camera2/camera_video_page.dart';
 import 'package:smart_mirror/src/camera2/makeup/eyes/eyebrows_view.dart';
@@ -47,6 +33,7 @@ import 'package:smart_mirror/src/camera2/makeup/lips/lip_liner_view.dart';
 import 'package:smart_mirror/src/camera2/makeup/lips/lip_plumber_view.dart';
 import 'package:smart_mirror/src/camera2/makeup/nails/nail_polish_view.dart';
 import 'package:smart_mirror/src/camera2/makeup/nails/presonnails_view.dart';
+import 'package:smart_mirror/src/provider/smart_mirror_provider.dart';
 import 'package:smart_mirror/utils/utils.dart';
 
 const xHEdgeInsets12 = EdgeInsets.symmetric(horizontal: 12);
@@ -70,12 +57,13 @@ class _OcrCameraPage2State extends State<OcrCameraPage2>
   bool isFlipCameraSupported = false;
   File? file;
   bool onOffVisible = false;
-  int? colorSelected = 0;
+  int? mainColorSelected;
+  int? subColorSelected;
   int? colorTextSelected = 0;
   int? typeSelected = 0;
   int? modeSelected = 0;
-  bool makeUpOn = false;
-  bool accessoriesOn = true;
+  bool makeUpOn = true;
+  bool accessoriesOn = false;
 
   @override
   void initState() {
@@ -639,7 +627,7 @@ class _OcrCameraPage2State extends State<OcrCameraPage2>
             return InkWell(
                 onTap: () async {
                   setState(() {
-                    colorSelected = index;
+                    mainColorSelected = index;
                     onOffVisible = false;
                   });
                 },
@@ -648,9 +636,10 @@ class _OcrCameraPage2State extends State<OcrCameraPage2>
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                        color: index == colorSelected && onOffVisible == false
-                            ? Colors.white
-                            : Colors.transparent),
+                        color:
+                            index == mainColorSelected && onOffVisible == false
+                                ? Colors.white
+                                : Colors.transparent),
                   ),
                   child: CircleAvatar(
                       radius: 12, backgroundColor: colorChoiceList[index]),
@@ -1140,6 +1129,7 @@ class _MakeupPageState extends State<MakeupPage> {
           separatorBuilder: (_, __) => Constant.xSizedBox8,
           itemBuilder: (context, index) {
             return lipsItem(lipsType[index], () {
+              context.read<SmartMirrorProvider>().resetData();
               if (index == 0) CusNav.nPush(context, LipColorView());
               if (index == 1) CusNav.nPush(context, LipLinerView());
               if (index == 2) CusNav.nPush(context, LipPlumberView());
@@ -1181,6 +1171,7 @@ class _MakeupPageState extends State<MakeupPage> {
           separatorBuilder: (_, __) => Constant.xSizedBox8,
           itemBuilder: (context, index) {
             return eyesItem(eyesType[index], () {
+              context.read<SmartMirrorProvider>().resetData();
               if (index == 0) CusNav.nPush(context, EyebrowsView());
               if (index == 1) CusNav.nPush(context, EyeshadowView());
               if (index == 2) CusNav.nPush(context, EyelinerView());
@@ -1225,6 +1216,7 @@ class _MakeupPageState extends State<MakeupPage> {
           separatorBuilder: (_, __) => Constant.xSizedBox8,
           itemBuilder: (context, index) {
             return faceItem(faceType[index], () {
+              context.read<SmartMirrorProvider>().resetData();
               if (index == 0) CusNav.nPush(context, FoundationView());
               if (index == 1) CusNav.nPush(context, ConcealerView());
               if (index == 2) CusNav.nPush(context, ContourView());
@@ -1269,6 +1261,7 @@ class _MakeupPageState extends State<MakeupPage> {
           separatorBuilder: (_, __) => Constant.xSizedBox8,
           itemBuilder: (context, index) {
             return nailsItem(nailsType[index], () {
+              context.read<SmartMirrorProvider>().resetData();
               if (index == 0) CusNav.nPush(context, NailPolishView());
               if (index == 1) CusNav.nPush(context, PresOnNailsView());
             });
@@ -1309,6 +1302,7 @@ class _MakeupPageState extends State<MakeupPage> {
           separatorBuilder: (_, __) => Constant.xSizedBox8,
           itemBuilder: (context, index) {
             return hairItem(hairType[index], () {
+              context.read<SmartMirrorProvider>().resetData();
               if (index == 0) CusNav.nPush(context, HairView());
             });
           },
@@ -1536,12 +1530,12 @@ class _AccessoriesPageState extends State<AccessoriesPage> {
           separatorBuilder: (_, __) => Constant.xSizedBox8,
           itemBuilder: (context, index) {
             return headItem(headAccType[index], () {
-              if (index == 0) CusNav.nPush(context, HeadSunglassesView());
-              if (index == 1) CusNav.nPush(context, HeadSunglassesView());
-              if (index == 2) CusNav.nPush(context, HeadEarringsView());
-              if (index == 3) CusNav.nPush(context, HeadHeadbandView());
-              if (index == 4) CusNav.nPush(context, HeadHatsView());
-              if (index == 5) CusNav.nPush(context, HeadTiarasView());
+              // if (index == 0) CusNav.nPush(context, HeadSunglassesView());
+              // if (index == 1) CusNav.nPush(context, HeadSunglassesView());
+              // if (index == 2) CusNav.nPush(context, HeadEarringsView());
+              // if (index == 3) CusNav.nPush(context, HeadHeadbandView());
+              // if (index == 4) CusNav.nPush(context, HeadHatsView());
+              // if (index == 5) CusNav.nPush(context, HeadTiarasView());
             });
           },
         ),
@@ -1580,10 +1574,10 @@ class _AccessoriesPageState extends State<AccessoriesPage> {
           separatorBuilder: (_, __) => Constant.xSizedBox8,
           itemBuilder: (context, index) {
             return neckItem(neckAccType[index], () {
-              if (index == 0) CusNav.nPush(context, PendantsView());
-              if (index == 1) CusNav.nPush(context, NecklacesView());
-              if (index == 2) CusNav.nPush(context, ChokersView());
-              if (index == 3) CusNav.nPush(context, ScarvesView());
+              // if (index == 0) CusNav.nPush(context, PendantsView());
+              // if (index == 1) CusNav.nPush(context, NecklacesView());
+              // if (index == 2) CusNav.nPush(context, ChokersView());
+              // if (index == 3) CusNav.nPush(context, ScarvesView());
             });
           },
         ),
@@ -1622,10 +1616,10 @@ class _AccessoriesPageState extends State<AccessoriesPage> {
           separatorBuilder: (_, __) => Constant.xSizedBox8,
           itemBuilder: (context, index) {
             return handItem(handAccType[index], () {
-              if (index == 0) CusNav.nPush(context, WatchesView());
-              if (index == 1) CusNav.nPush(context, RingsView());
-              if (index == 2) CusNav.nPush(context, BraceletsView());
-              if (index == 3) CusNav.nPush(context, BanglesView());
+              // if (index == 0) CusNav.nPush(context, WatchesView());
+              // if (index == 1) CusNav.nPush(context, RingsView());
+              // if (index == 2) CusNav.nPush(context, BraceletsView());
+              // if (index == 3) CusNav.nPush(context, BanglesView());
             });
           },
         ),
@@ -1664,8 +1658,8 @@ class _AccessoriesPageState extends State<AccessoriesPage> {
           separatorBuilder: (_, __) => Constant.xSizedBox8,
           itemBuilder: (context, index) {
             return nailsItem(nailsType[index], () {
-              if (index == 0) CusNav.nPush(context, NailPolishAccView());
-              if (index == 1) CusNav.nPush(context, PresOnNailsAccView());
+              // if (index == 0) CusNav.nPush(context, NailPolishAccView());
+              // if (index == 1) CusNav.nPush(context, PresOnNailsAccView());
             });
           },
         ),
@@ -1730,11 +1724,6 @@ class _AccessoriesPageState extends State<AccessoriesPage> {
             ],
           ),
           Constant.xSizedBox8,
-          Constant.xSizedBox8,
-          if (headClick) headList(),
-          if (neckClick) neckList(),
-          if (handClick) handList(),
-          if (nailsClick) nailsList(),
           Constant.xSizedBox12,
         ],
       ),

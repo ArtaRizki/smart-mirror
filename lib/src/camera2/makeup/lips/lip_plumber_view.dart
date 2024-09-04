@@ -33,12 +33,12 @@ class _LipPlumberViewState extends State<LipPlumberView> {
   bool isFlipCameraSupported = false;
   File? file;
   bool makeupOrAccessories = false;
-  int? colorSelected = 0;
-  bool onOffVisibel = false;
+  int? mainColorSelected;
+  int? subColorSelected;
+  bool onOffVisible = false;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (Platform.isAndroid) {
       DeviceInfoPlugin().androidInfo.then((value) {
@@ -378,8 +378,8 @@ class _LipPlumberViewState extends State<LipPlumberView> {
             return InkWell(
               onTap: () async {
                 setState(() {
-                  colorSelected = 0;
-                  onOffVisibel = true;
+                  mainColorSelected = 0;
+                  onOffVisible = true;
                 });
               },
               child: Icon(Icons.do_not_disturb_alt_sharp,
@@ -388,8 +388,8 @@ class _LipPlumberViewState extends State<LipPlumberView> {
           return InkWell(
             onTap: () async {
               setState(() {
-                colorSelected = index;
-                onOffVisibel = false;
+                mainColorSelected = index;
+                onOffVisible = false;
               });
             },
             child: Container(
@@ -397,7 +397,7 @@ class _LipPlumberViewState extends State<LipPlumberView> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                    color: index == colorSelected && onOffVisibel == false
+                    color: index == mainColorSelected && onOffVisible == false
                         ? Colors.white
                         : Colors.transparent),
               ),

@@ -35,12 +35,12 @@ class _PresOnNailsViewState extends State<PresOnNailsView> {
   bool makeupOrAccessories = false;
   bool onOffVisible = false;
   int? nailSelected = 0;
-  int? colorSelected = 0;
+  int? mainColorSelected;
+  int? subColorSelected;
   int? colorTextSelected = 0;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (Platform.isAndroid) {
       DeviceInfoPlugin().androidInfo.then((value) {
@@ -485,7 +485,7 @@ class _PresOnNailsViewState extends State<PresOnNailsView> {
           return InkWell(
               onTap: () async {
                 setState(() {
-                  colorSelected = index;
+                  mainColorSelected = index;
                   onOffVisible = false;
                 });
               },
@@ -494,7 +494,7 @@ class _PresOnNailsViewState extends State<PresOnNailsView> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                      color: index == colorSelected && onOffVisible == false
+                      color: index == mainColorSelected && onOffVisible == false
                           ? Colors.white
                           : Colors.transparent),
                 ),

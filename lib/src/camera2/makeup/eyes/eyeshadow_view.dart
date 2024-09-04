@@ -33,9 +33,10 @@ class _EyeshadowViewState extends State<EyeshadowView> {
   bool isFlipCameraSupported = false;
   File? file;
   double sliderValue = 0;
-  bool onOffVisibel = false;
+  bool onOffVisible = false;
   int? eyebrowSelected = 0;
-  int? colorSelected = 0;
+  int? mainColorSelected;
+  int? subColorSelected;
   int? colorTextSelected = 0;
   int? typeSelected = 0;
   int? typeComboSelected = 0;
@@ -90,7 +91,6 @@ class _EyeshadowViewState extends State<EyeshadowView> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (Platform.isAndroid) {
       DeviceInfoPlugin().androidInfo.then((value) {
@@ -315,7 +315,7 @@ class _EyeshadowViewState extends State<EyeshadowView> {
             return InkWell(
               onTap: () async {
                 setState(() {
-                  onOffVisibel = true;
+                  onOffVisible = true;
                 });
               },
               child: Icon(Icons.do_not_disturb_alt_sharp,
@@ -324,8 +324,8 @@ class _EyeshadowViewState extends State<EyeshadowView> {
           return InkWell(
               onTap: () async {
                 setState(() {
-                  colorSelected = index;
-                  onOffVisibel = false;
+                  mainColorSelected = index;
+                  onOffVisible = false;
                 });
               },
               child: Container(
@@ -333,9 +333,10 @@ class _EyeshadowViewState extends State<EyeshadowView> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                        color: index == colorSelected && onOffVisibel == false
-                            ? Colors.white
-                            : Colors.transparent),
+                        color:
+                            index == mainColorSelected && onOffVisible == false
+                                ? Colors.white
+                                : Colors.transparent),
                   ),
                   child: CircleAvatar(
                       radius: 12, backgroundColor: colorList[index])));

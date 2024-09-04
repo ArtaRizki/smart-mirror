@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'dart:developer';
 import 'package:smart_mirror/common/helper/constant.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:smart_mirror/src/camera2/camera_page2.dart';
+import 'package:smart_mirror/src/provider/smart_mirror_provider.dart';
 import 'utils/nav_observer.dart';
 part 'common/routes.dart';
 
@@ -67,35 +69,41 @@ class MyApp extends StatelessWidget {
     // checkLang(context);
     return Sizer(
       builder: (context, orientation, deviceType) {
-        return MaterialApp(
-          title: 'Smart Mirror',
-          restorationScopeId: 'root',
-          // localizationsDelegates: context.localizationDelegates,
-          // supportedLocales: context.supportedLocales,
-          // locale: context.locale,
-          // localizationsDelegates: [
-          //   GlobalMaterialLocalizations.delegate,
-          //   GlobalWidgetsLocalizations.delegate,
-          // ],
-          // supportedLocales: const [Locale('id', 'ID'), Locale('en')],
-          // locale: const Locale('id'),
-          navigatorObservers: [XNObsever()],
-          navigatorKey: NavigationService.navigatorKey,
-          theme: Constant.mainThemeData,
-          color: Constant.primaryColor,
-          initialRoute: '/',
-          routes: _routes,
-          builder: (context, child) {
-            child = EasyLoading.init()(
-                context, child); // assuming this is returning a widget
-            log(MediaQuery.of(context).size.toString());
-            return MediaQuery(
-              data: MediaQuery.of(context)
-                  .copyWith(textScaler: const TextScaler.linear(1.0)),
-              child: child,
-            );
-          },
-          debugShowCheckedModeBanner: false,
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider<SmartMirrorProvider>(
+                create: (c) => SmartMirrorProvider())
+          ],
+          child: MaterialApp(
+            title: 'Smart Mirror',
+            restorationScopeId: 'root',
+            // localizationsDelegates: context.localizationDelegates,
+            // supportedLocales: context.supportedLocales,
+            // locale: context.locale,
+            // localizationsDelegates: [
+            //   GlobalMaterialLocalizations.delegate,
+            //   GlobalWidgetsLocalizations.delegate,
+            // ],
+            // supportedLocales: const [Locale('id', 'ID'), Locale('en')],
+            // locale: const Locale('id'),
+            navigatorObservers: [XNObsever()],
+            navigatorKey: NavigationService.navigatorKey,
+            theme: Constant.mainThemeData,
+            color: Constant.primaryColor,
+            initialRoute: '/',
+            routes: _routes,
+            builder: (context, child) {
+              child = EasyLoading.init()(
+                  context, child); // assuming this is returning a widget
+              log(MediaQuery.of(context).size.toString());
+              return MediaQuery(
+                data: MediaQuery.of(context)
+                    .copyWith(textScaler: const TextScaler.linear(1.0)),
+                child: child,
+              );
+            },
+            debugShowCheckedModeBanner: false,
+          ),
         );
       },
     );

@@ -51,7 +51,8 @@ class BaseController<S extends BaseState> {
   }
 
   Future<String?> getToken() async {
-    return (await preferences())!.getString('token');
+    return 'hb2vxjo1ayu0agrkr97eprrl5rccqotc';
+    // return (await preferences())!.getString('token');
   }
 
   Future<http.Response> get(String url,
@@ -59,15 +60,15 @@ class BaseController<S extends BaseState> {
     Map<String, String> h = <String, String>{};
     h.putIfAbsent('Connection', () => 'Keep-Alive');
     h.putIfAbsent('accept', () => 'application/json');
-    var token = await getToken();
-    if (token != null) h.putIfAbsent('Authorization', () => 'Bearer $token');
+    var token = 'hb2vxjo1ayu0agrkr97eprrl5rccqotc';
+    h.putIfAbsent('Authorization', () => 'Bearer $token');
     if (headers != null) h.addAll(headers as Map<String, String>);
 
     log("==== PARAMETERS ====");
     // log("IP PUBLIC : $ipv4");
     log("URL : $url");
     log("BODY : $body");
-    // log("HEADERS : ${h}");
+    log("HEADERS : ${h}");
 
     String param = Uri(queryParameters: body).query;
     log("PARAM : $param");
@@ -89,7 +90,8 @@ class BaseController<S extends BaseState> {
     log("RESPONSE GET $url : ${response.body}");
     log("====================");
 
-    String log2 = "Log : " "==== PARAMETERS ===="
+    String log2 = "Log : "
+            "==== PARAMETERS ===="
             '\r\n' +
         "URL : $url"
             '\r\n' +
@@ -168,8 +170,8 @@ class BaseController<S extends BaseState> {
     Map<String, String> h = <String, String>{};
     h.putIfAbsent('Connection', () => 'keep-alive');
     h.putIfAbsent('Accept', () => 'application/json');
-    var token = await getToken();
-    if (token != null) h.putIfAbsent('Authorization', () => 'Bearer $token');
+    var token = 'hb2vxjo1ayu0agrkr97eprrl5rccqotc';
+    h.putIfAbsent('Authorization', () => 'Bearer $token');
     if (headers != null) h.addAll(headers);
 
     if (files == null) {
@@ -177,7 +179,7 @@ class BaseController<S extends BaseState> {
       // log("IP PUBLIC : $ipv4");
       log("URL : $url");
       log("BODY : $body");
-      // log("HEADERS : ${h}");
+      log("HEADERS : ${h}");
       final uri = Uri.parse(url);
       // final bodyUri = Uri.https(uri.authority, uri.path, body);
       Response response = await http
@@ -188,7 +190,8 @@ class BaseController<S extends BaseState> {
       log("RESPONSE POST $url STATUS CODE : ${response.statusCode}");
       log("RESPONSE POST $url : ${response.body}");
       log("====================");
-      String log2 = "Log : " "==== PARAMETERS ===="
+      String log2 = "Log : "
+              "==== PARAMETERS ===="
               '\r\n' +
           "URL : $url"
               '\r\n' +
@@ -277,7 +280,8 @@ class BaseController<S extends BaseState> {
               onTimeout: () => http.Response("Timeout", 504));
       log("RESPONSE POST FILE $url : ${response.body}");
       log("====================");
-      String log2 = "Log : " "==== PARAMETERS ===="
+      String log2 = "Log : "
+              "==== PARAMETERS ===="
               '\r\n' +
           "URL : $url"
               '\r\n' +
@@ -358,8 +362,8 @@ class BaseController<S extends BaseState> {
     Map<String, String> h = <String, String>{};
     h.putIfAbsent('Connection', () => 'Keep-Alive');
     h.putIfAbsent('accept', () => 'application/json');
-    var token = await getToken();
-    if (token != null) h.putIfAbsent('Authorization', () => 'Bearer $token');
+    var token = 'hb2vxjo1ayu0agrkr97eprrl5rccqotc';
+    h.putIfAbsent('Authorization', () => 'Bearer $token');
     if (headers != null) h.addAll(headers);
 
     if (files == null) {
@@ -374,7 +378,8 @@ class BaseController<S extends BaseState> {
               onTimeout: () => http.Response("Timeout", 504));
       log("RESPONSE PUT $url : ${response.body}");
       log("====================");
-      String log2 = "Log : " "==== PARAMETERS ===="
+      String log2 = "Log : "
+              "==== PARAMETERS ===="
               '\r\n' +
           "URL : $url"
               '\r\n' +
@@ -463,7 +468,8 @@ class BaseController<S extends BaseState> {
               onTimeout: () => http.Response("Timeout", 504));
       log("RESPONSE PUT FILE $url : ${response.body}");
       log("====================");
-      String log2 = "Log : " "==== PARAMETERS ===="
+      String log2 = "Log : "
+              "==== PARAMETERS ===="
               '\r\n' +
           "URL : $url"
               '\r\n' +
@@ -541,8 +547,8 @@ class BaseController<S extends BaseState> {
     Map<String, String> h = <String, String>{};
     h.putIfAbsent('Connection', () => 'Keep-Alive');
     h.putIfAbsent('accept', () => 'application/json');
-    var token = await getToken();
-    if (token != null) h.putIfAbsent('Authorization', () => 'Bearer $token');
+    var token = 'hb2vxjo1ayu0agrkr97eprrl5rccqotc';
+    h.putIfAbsent('Authorization', () => 'Bearer $token');
     if (headers != null) h.addAll(headers as Map<String, String>);
 
     final uri = Uri.parse(url);
@@ -558,7 +564,8 @@ class BaseController<S extends BaseState> {
     log("RESPONSE DELETE $url : ${response.body}");
     log("====================");
 
-    String log2 = "Log : " "==== PARAMETERS ===="
+    String log2 = "Log : "
+            "==== PARAMETERS ===="
             '\r\n' +
         "URL : $url"
             '\r\n' +

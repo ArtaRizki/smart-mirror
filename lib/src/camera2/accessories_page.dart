@@ -79,7 +79,6 @@ class _AccessoriesPageState extends State<AccessoriesPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (Platform.isAndroid) {
       DeviceInfoPlugin().androidInfo.then((value) {

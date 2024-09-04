@@ -33,15 +33,14 @@ class _LipLinerViewState extends State<LipLinerView> {
   bool isFlipCameraSupported = false;
   File? file;
   bool makeupOrAccessories = false;
-  bool onOffVisibel = false;
-  int? mainColorSelected = 0;
-  int? colorSelected = 0;
+  bool onOffVisible = false;
+  int? mainColorSelected;
+  int? subColorSelected;
   int? typeColorSelected = 0;
   int? typeColor2Selected = 0;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (Platform.isAndroid) {
       DeviceInfoPlugin().androidInfo.then((value) {
@@ -402,8 +401,8 @@ class _LipLinerViewState extends State<LipLinerView> {
             return InkWell(
               onTap: () async {
                 setState(() {
-                  colorSelected = 0;
-                  onOffVisibel = true;
+                  mainColorSelected = 0;
+                  onOffVisible = true;
                 });
               },
               child: Icon(Icons.do_not_disturb_alt_sharp,
@@ -412,8 +411,8 @@ class _LipLinerViewState extends State<LipLinerView> {
           return InkWell(
             onTap: () async {
               setState(() {
-                colorSelected = index;
-                onOffVisibel = false;
+                mainColorSelected = index;
+                onOffVisible = false;
               });
             },
             child: Container(
@@ -421,7 +420,7 @@ class _LipLinerViewState extends State<LipLinerView> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                    color: index == colorSelected && onOffVisibel == false
+                    color: index == mainColorSelected && onOffVisible == false
                         ? Colors.white
                         : Colors.transparent),
               ),

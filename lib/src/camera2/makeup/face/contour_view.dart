@@ -34,14 +34,14 @@ class _ContourViewState extends State<ContourView> {
   File? file;
   bool makeupOrAccessories = false;
   bool oneOrDual = false;
-  bool onOffVisibel = false;
-  bool onOffVisibel1 = false;
+  bool onOffVisible = false;
+  bool onOffVisible1 = false;
   int? skinSelected = 0;
-  int? colorSelected = 0;
+  int? mainColorSelected;
+  int? subColorSelected;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (Platform.isAndroid) {
       DeviceInfoPlugin().androidInfo.then((value) {
@@ -383,8 +383,8 @@ class _ContourViewState extends State<ContourView> {
               return InkWell(
                 onTap: () async {
                   setState(() {
-                    colorSelected = 0;
-                    onOffVisibel = true;
+                    mainColorSelected = 0;
+                    onOffVisible = true;
                   });
                 },
                 child: Icon(Icons.do_not_disturb_alt_sharp,
@@ -393,8 +393,8 @@ class _ContourViewState extends State<ContourView> {
             return InkWell(
                 onTap: () async {
                   setState(() {
-                    colorSelected = index;
-                    onOffVisibel = false;
+                    mainColorSelected = index;
+                    onOffVisible = false;
                   });
                 },
                 child: Container(
@@ -402,9 +402,10 @@ class _ContourViewState extends State<ContourView> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                        color: index == colorSelected && onOffVisibel == false
-                            ? Colors.white
-                            : Colors.transparent),
+                        color:
+                            index == mainColorSelected && onOffVisible == false
+                                ? Colors.white
+                                : Colors.transparent),
                   ),
                   child: CircleAvatar(
                       radius: 12, backgroundColor: colorChoiceList[index]),
@@ -437,7 +438,7 @@ class _ContourViewState extends State<ContourView> {
               decoration: BoxDecoration(
                 // borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                    color: index == skinSelected && onOffVisibel1 == false
+                    color: index == skinSelected && onOffVisible1 == false
                         ? Colors.white
                         : Colors.transparent),
               ),
@@ -445,7 +446,7 @@ class _ContourViewState extends State<ContourView> {
                   onTap: () async {
                     setState(() {
                       skinSelected = index;
-                      onOffVisibel1 = false;
+                      onOffVisible1 = false;
                     });
                   },
                   child: Column(

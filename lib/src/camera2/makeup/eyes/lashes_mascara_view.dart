@@ -36,7 +36,8 @@ class _LashesMascaraViewState extends State<LashesMascaraView> {
   double sliderValue = 0;
   bool lashes = true;
   bool onOffVisible = false;
-  int? colorSelected = 0;
+  int? mainColorSelected;
+  int? subColorSelected;
   int? colorTextSelected = 0;
   int? eyelashSelected = 0;
 
@@ -93,7 +94,6 @@ class _LashesMascaraViewState extends State<LashesMascaraView> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     lashes = widget.lashes;
     if (Platform.isAndroid) {
@@ -325,7 +325,7 @@ class _LashesMascaraViewState extends State<LashesMascaraView> {
           return InkWell(
               onTap: () async {
                 setState(() {
-                  colorSelected = index;
+                  mainColorSelected = index;
                   onOffVisible = false;
                 });
               },
@@ -334,9 +334,10 @@ class _LashesMascaraViewState extends State<LashesMascaraView> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                        color: index == colorSelected && onOffVisible == false
-                            ? Colors.white
-                            : Colors.transparent),
+                        color:
+                            index == mainColorSelected && onOffVisible == false
+                                ? Colors.white
+                                : Colors.transparent),
                   ),
                   child: CircleAvatar(
                       radius: 12, backgroundColor: colorList[index])));
