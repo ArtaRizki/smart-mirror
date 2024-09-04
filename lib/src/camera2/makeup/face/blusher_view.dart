@@ -6,13 +6,19 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_mirror/common/component/custom_navigator.dart';
+import 'package:smart_mirror/common/component/skeleton.dart';
 import 'package:smart_mirror/common/helper/constant.dart';
 import 'package:smart_mirror/generated/assets.dart';
 import 'package:smart_mirror/src/camera/camera_page.dart';
 import 'package:smart_mirror/src/camera2/camera_page2.dart';
 import 'package:smart_mirror/src/camera2/camera_video_page.dart';
 import 'package:smart_mirror/src/camera2/makeup_page.dart';
+import 'package:smart_mirror/src/model/product_model.dart';
+import 'package:smart_mirror/src/model/shape_model.dart';
+import 'package:smart_mirror/src/model/texture_model.dart';
+import 'package:smart_mirror/src/provider/smart_mirror_provider.dart';
 import 'package:smart_mirror/utils/utils.dart';
 
 const xHEdgeInsets12 = EdgeInsets.symmetric(horizontal: 12);
@@ -37,10 +43,12 @@ class _BlusherViewState extends State<BlusherView> {
   int? skinSelected = 0;
   int? mainColorSelected;
   int? subColorSelected;
+  int? textureSelected;
   int? typeSelected = 0;
 
   @override
   void initState() {
+    getData();
     super.initState();
     if (Platform.isAndroid) {
       DeviceInfoPlugin().androidInfo.then((value) {
@@ -103,6 +111,23 @@ class _BlusherViewState extends State<BlusherView> {
     }
   }
 
+  getData() async {
+    final p = context.read<SmartMirrorProvider>();
+    await p.getColor();
+    await p.getSubcolor();
+    getTexture();
+    setState(() {});
+  }
+
+  getTexture() async {
+    final p = context.read<SmartMirrorProvider>();
+    await p.getTexture();
+    textureListOptions = p.textureModel.options
+        ?.where((e) => textureList.contains(e?.label ?? ''))
+        .toList();
+    setState(() {});
+  }
+
   List<String> typeList = [
     "Shimmer",
     "Matt",
@@ -130,6 +155,14 @@ class _BlusherViewState extends State<BlusherView> {
     Assets.imagesImgBlusher3,
     Assets.imagesImgBlusher4,
     Assets.imagesImgBlusher5,
+  ];
+
+  List<TextureModelOptions?>? textureListOptions;
+  List<String> textureList = ['Sheer', 'Matt', 'Gloss', 'Shimmer', 'Satin'];
+  List<String> chip2List = [
+    'One',
+    'Dual',
+    'Ombre',
   ];
 
   @override
@@ -236,104 +269,6 @@ class _BlusherViewState extends State<BlusherView> {
     );
   }
 
-  Widget noPictureTaken() {
-    return SizedBox(
-      width: double.infinity,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 6,
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: InkWell(
-                onTap: () {
-                  controller.takePicture().then((imageFile) async {
-                    // File tmp = await compressImage(
-                    //     File(imageFile.path));
-                    file = File(imageFile.path);
-                    // if (controller
-                    //     .value.isPreviewPaused)
-                    //   await controller.resumePreview();
-                    // else
-                    await controller.pausePreview();
-                  });
-                },
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 2),
-                      ),
-                      width: 60,
-                      height: 60,
-                    ),
-                    Icon(
-                      Icons.circle,
-                      color: Colors.white,
-                      size: 60,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 4,
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Visibility(
-                visible: isFlipCameraSupported,
-                child: InkWell(
-                  onTap: () async {
-                    ///[Flip Camera]
-                    if (isFlippingCamera == null ||
-                        isFlippingCamera!.isCompleted) {
-                      isFlippingCamera = Completer();
-                      isFlippingCamera!.complete(
-                          await availableCameras().then((value) async {
-                        for (var camera in value) {
-                          if (camera.lensDirection ==
-                              (controller.description.lensDirection ==
-                                      CameraLensDirection.front
-                                  ? CameraLensDirection.back
-                                  : CameraLensDirection.front)) {
-                            await controller.dispose();
-                            cameraSetupCompleter = Completer();
-
-                            await _initCamera(camera: camera);
-                            setState(() {});
-                            break;
-                          }
-                        }
-
-                        await Future.delayed(
-                            const Duration(seconds: 1, milliseconds: 500));
-                      }));
-                    } else {
-                      print('Not completed!');
-                    }
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.only(right: 16),
-                    width: 35,
-                    height: 35,
-                    decoration: const BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.black26),
-                    child: Icon(Icons.autorenew_rounded, color: Colors.white),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget typeChip() {
     return Align(
       alignment: Alignment.centerLeft,
@@ -374,50 +309,170 @@ class _BlusherViewState extends State<BlusherView> {
     );
   }
 
-  Widget colorChoice() {
-    return Align(
-      alignment: Alignment.centerLeft,
+  Widget colorChipItemShimmer(int index) {
+    final colorList = context.watch<SmartMirrorProvider>().colorModel.options;
+    return Skeleton<bool>(
+      width: 70,
+      height: 40,
+      value: context.watch<SmartMirrorProvider>().colorModel.options != null
+          ? false
+          : null,
       child: Container(
-        height: 30,
-        child: ListView.separated(
-          shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          itemCount: colorChoiceList.length,
-          separatorBuilder: (_, __) => Constant.xSizedBox12,
-          itemBuilder: (context, index) {
-            if (index == 0)
-              return InkWell(
-                onTap: () async {
-                  setState(() {
-                    mainColorSelected = 0;
-                    onOffVisible = true;
-                  });
-                },
-                child: Icon(Icons.do_not_disturb_alt_sharp,
-                    color: Colors.white, size: 25),
-              );
-            return InkWell(
-                onTap: () async {
-                  setState(() {
-                    mainColorSelected = index;
-                    onOffVisible = false;
-                  });
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                        color:
-                            index == mainColorSelected && onOffVisible == false
-                                ? Colors.white
-                                : Colors.transparent),
-                  ),
-                  child: CircleAvatar(
-                      radius: 12, backgroundColor: colorChoiceList[index]),
-                ));
-          },
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+              color: mainColorSelected == index
+                  ? Colors.white
+                  : Colors.transparent),
         ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            CircleAvatar(radius: 8, backgroundColor: colorList?[index]?.color),
+            Constant.xSizedBox4,
+            Text(
+              colorList?[index]?.label ?? '',
+              style: TextStyle(color: Colors.white, fontSize: 10),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget colorChipItem(int index) {
+    final colorList = context.watch<SmartMirrorProvider>().colorModel.options;
+    return InkWell(
+      onTap: () {
+        final p = context.read<SmartMirrorProvider>();
+        p.selectedColorValue = colorList?[index]?.value ?? '';
+        p.getProductByColor();
+        setState(() {
+          mainColorSelected = index;
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+              color: mainColorSelected == index
+                  ? Colors.white
+                  : Colors.transparent),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            CircleAvatar(radius: 8, backgroundColor: colorList?[index]?.color),
+            Constant.xSizedBox4,
+            Text(
+              colorList?[index]?.label ?? '',
+              style: TextStyle(color: Colors.white, fontSize: 10),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget colorChip() {
+    final colorList = context.watch<SmartMirrorProvider>().colorModel.options;
+    return Container(
+      height: 30,
+      child: ListView.separated(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: colorList?.length ?? 10,
+        separatorBuilder: (_, __) => Constant.xSizedBox8,
+        itemBuilder: (context, index) {
+          if (colorList == null) return colorChipItemShimmer(index);
+          return colorChipItem(index);
+        },
+      ),
+    );
+  }
+
+  Widget subcolorChoiceItemShimmer(int index) {
+    final subcolorList =
+        context.watch<SmartMirrorProvider>().subcolorModel.options;
+    return Skeleton(
+      isCircle: true,
+      value: context.watch<SmartMirrorProvider>().subcolorModel.options != null
+          ? false
+          : null,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+              color: index == subColorSelected && onOffVisible == false
+                  ? Colors.white
+                  : Colors.transparent),
+        ),
+        child: CircleAvatar(
+            radius: 12, backgroundColor: subcolorList?[index]?.color),
+      ),
+    );
+  }
+
+  Widget subcolorChoiceItem(int index) {
+    final subcolorList =
+        context.watch<SmartMirrorProvider>().subcolorModel.options;
+    return InkWell(
+      onTap: () {
+        final p = context.read<SmartMirrorProvider>();
+        p.selectedSubColorValue = subcolorList?[index]?.value ?? '';
+        p.getProductBySubColor();
+        setState(() {
+          subColorSelected = index;
+          onOffVisible = false;
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+              color: index == subColorSelected && onOffVisible == false
+                  ? Colors.white
+                  : Colors.transparent),
+        ),
+        child: CircleAvatar(
+            radius: 12, backgroundColor: subcolorList?[index]?.color),
+      ),
+    );
+  }
+
+  Widget subcolorChoice() {
+    final subcolorList =
+        context.watch<SmartMirrorProvider>().subcolorModel.options;
+    return Container(
+      height: 30,
+      child: ListView.separated(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: subcolorList?.length ?? 10,
+        separatorBuilder: (_, __) => Constant.xSizedBox12,
+        itemBuilder: (context, index) {
+          if (subcolorList == null) return subcolorChoiceItemShimmer(index);
+          if (index == 0)
+            return InkWell(
+              onTap: () async {
+                final p = context.read<SmartMirrorProvider>();
+                p.selectedSubColorValue = null;
+                p.productModel = ProductModel();
+                p.selectedProduct = null;
+                setState(() {
+                  subColorSelected = 0;
+                  onOffVisible = true;
+                });
+              },
+              child: Icon(Icons.do_not_disturb_alt_sharp,
+                  color: Colors.white, size: 25),
+            );
+          return subcolorChoiceItem(index - 1);
+        },
       ),
     );
   }
@@ -552,6 +607,94 @@ class _BlusherViewState extends State<BlusherView> {
     );
   }
 
+  Widget productChoiceItemShimmer(int index) {
+    final item =
+        context.watch<SmartMirrorProvider>().productModel.items?[index];
+    return Skeleton<bool>(
+      width: 120,
+      height: 120,
+      value: context.watch<SmartMirrorProvider>().productModel.items != null
+          ? false
+          : null,
+      child: SizedBox(),
+    );
+  }
+
+  Widget productChoiceItem(int index) {
+    final item =
+        context.watch<SmartMirrorProvider>().productModel.items?[index];
+    return InkWell(
+      onTap: () async {},
+      child: SizedBox(
+        width: 120,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: EdgeInsets.fromLTRB(20, 5, 15, 10),
+              color: Colors.white,
+              width: 120,
+              height: 80,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                      flex: 9,
+                      child: Image.network(
+                          'https://magento-1231949-4398885.cloudwaysapps.com/media/catalog/product${item?.mediaGalleryEntries?.first?.file ?? ''}')),
+                  Expanded(
+                      flex: 1,
+                      child: Icon(
+                        Icons.favorite_border,
+                        color: Colors.black,
+                        size: 18,
+                      )),
+                ],
+              ),
+            ),
+            SizedBox(height: 5),
+            Text(
+              item?.name ?? '',
+              maxLines: 2,
+              style: Constant.whiteBold16
+                  .copyWith(fontSize: 12, overflow: TextOverflow.ellipsis),
+            ),
+            Text(
+              item?.typeId ?? '',
+              style:
+                  Constant.whiteRegular12.copyWith(fontWeight: FontWeight.w300),
+            ),
+            Text("\$${item?.price}", style: Constant.whiteRegular12),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget productChoice() {
+    final productList = context.watch<SmartMirrorProvider>().productModel.items;
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        height: 155,
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: productList == null
+              ? 10
+              : productList.isEmpty
+                  ? 0
+                  : productList.length,
+          separatorBuilder: (_, __) => Constant.xSizedBox12,
+          itemBuilder: (context, index) {
+            if (productList == null) return productChoiceItemShimmer(index);
+            return productChoiceItem(index);
+          },
+        ),
+      ),
+    );
+  }
+
   Widget separator() {
     return Divider(thickness: 1, color: Colors.white);
   }
@@ -572,7 +715,10 @@ class _BlusherViewState extends State<BlusherView> {
           children: [
             // Constant.xSizedBox8,
             // colorChip(),
-            colorChoice(),
+            Constant.xSizedBox8,
+            colorChip(),
+            Constant.xSizedBox8,
+            subcolorChoice(),
             Constant.xSizedBox8,
             separator(),
             typeChip(),
@@ -587,7 +733,7 @@ class _BlusherViewState extends State<BlusherView> {
                   style: TextStyle(color: Colors.white, fontSize: 12),
                 )),
             Constant.xSizedBox4,
-            lipstickChoice(),
+            productChoice(),
             // Constant.xSizedBox8,
           ],
         ),

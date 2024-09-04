@@ -6,13 +6,19 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_mirror/common/component/custom_navigator.dart';
+import 'package:smart_mirror/common/component/skeleton.dart';
 import 'package:smart_mirror/common/helper/constant.dart';
 import 'package:smart_mirror/generated/assets.dart';
 import 'package:smart_mirror/src/camera/camera_page.dart';
 import 'package:smart_mirror/src/camera2/camera_page2.dart';
 import 'package:smart_mirror/src/camera2/camera_video_page.dart';
 import 'package:smart_mirror/src/camera2/makeup_page.dart';
+import 'package:smart_mirror/src/model/product_model.dart';
+import 'package:smart_mirror/src/model/shape_model.dart';
+import 'package:smart_mirror/src/model/texture_model.dart';
+import 'package:smart_mirror/src/provider/smart_mirror_provider.dart';
 import 'package:smart_mirror/utils/utils.dart';
 
 const xHEdgeInsets12 = EdgeInsets.symmetric(horizontal: 12);
@@ -71,6 +77,7 @@ class _EyebrowsViewState extends State<EyebrowsView> {
 
   @override
   void initState() {
+    getData();
     super.initState();
     if (Platform.isAndroid) {
       DeviceInfoPlugin().androidInfo.then((value) {
@@ -141,6 +148,31 @@ class _EyebrowsViewState extends State<EyebrowsView> {
     }
   }
 
+  getData() async {
+    final p = context.read<SmartMirrorProvider>();
+    await p.getColor();
+    await p.getSubcolor();
+    getTexture();
+    setState(() {});
+  }
+
+  getTexture() async {
+    final p = context.read<SmartMirrorProvider>();
+    await p.getTexture();
+    textureListOptions = p.textureModel.options
+        ?.where((e) => textureList.contains(e?.label ?? ''))
+        .toList();
+    setState(() {});
+  }
+
+  List<TextureModelOptions?>? textureListOptions;
+  List<String> textureList = ['Sheer', 'Matt', 'Gloss', 'Shimmer', 'Satin'];
+  List<String> chip2List = [
+    'One',
+    'Dual',
+    'Ombre',
+  ];
+
   Future<bool> checkPermissionStatuses() async {
     for (var permission in permissions) {
       if (await permission.status != PermissionStatus.granted) {
@@ -179,81 +211,88 @@ class _EyebrowsViewState extends State<EyebrowsView> {
     }
   }
 
-  Widget lipstickChoice() {
+  Widget productChoiceItemShimmer(int index) {
+    final item =
+        context.watch<SmartMirrorProvider>().productModel.items?[index];
+    return Skeleton<bool>(
+      width: 120,
+      height: 120,
+      value: context.watch<SmartMirrorProvider>().productModel.items != null
+          ? false
+          : null,
+      child: SizedBox(),
+    );
+  }
+
+  Widget productChoiceItem(int index) {
+    final item =
+        context.watch<SmartMirrorProvider>().productModel.items?[index];
+    return InkWell(
+      onTap: () async {},
+      child: SizedBox(
+        width: 120,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: EdgeInsets.fromLTRB(20, 5, 15, 10),
+              color: Colors.white,
+              width: 120,
+              height: 80,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                      flex: 9,
+                      child: Image.network(
+                          'https://magento-1231949-4398885.cloudwaysapps.com/media/catalog/product${item?.mediaGalleryEntries?.first?.file ?? ''}')),
+                  Expanded(
+                      flex: 1,
+                      child: Icon(
+                        Icons.favorite_border,
+                        color: Colors.black,
+                        size: 18,
+                      )),
+                ],
+              ),
+            ),
+            SizedBox(height: 5),
+            Text(
+              item?.name ?? '',
+              maxLines: 2,
+              style: Constant.whiteBold16
+                  .copyWith(fontSize: 12, overflow: TextOverflow.ellipsis),
+            ),
+            Text(
+              item?.typeId ?? '',
+              style:
+                  Constant.whiteRegular12.copyWith(fontWeight: FontWeight.w300),
+            ),
+            Text("\$${item?.price}", style: Constant.whiteRegular12),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget productChoice() {
+    final productList = context.watch<SmartMirrorProvider>().productModel.items;
     return Align(
       alignment: Alignment.centerLeft,
       child: Container(
-        height: 150,
+        height: 155,
         child: ListView.separated(
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
-          itemCount: 5,
+          itemCount: productList == null
+              ? 10
+              : productList.isEmpty
+                  ? 0
+                  : productList.length,
           separatorBuilder: (_, __) => Constant.xSizedBox12,
           itemBuilder: (context, index) {
-            // if (index == 0)
-            //   return InkWell(
-            //     onTap: () async {},
-            //     child: Icon(Icons.do_not_disturb_alt_sharp,
-            //         color: Colors.white, size: 25),
-            //   );
-            return InkWell(
-                onTap: () async {},
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.fromLTRB(20, 5, 15, 10),
-                      color: Colors.white,
-                      width: 120,
-                      height: 80,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                              flex: 9,
-                              child: Image.asset(Assets.imagesImgLipstick)),
-                          Expanded(
-                              flex: 1,
-                              child: Icon(
-                                Icons.favorite_border,
-                                color: Colors.black,
-                                size: 18,
-                              )),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      "Item name Tom Ford",
-                      style: Constant.whiteBold16.copyWith(fontSize: 12),
-                    ),
-                    Text(
-                      "Brand name",
-                      style: Constant.whiteRegular12
-                          .copyWith(fontWeight: FontWeight.w300),
-                    ),
-                    Row(
-                      children: [
-                        Text("\$15", style: Constant.whiteRegular12),
-                        SizedBox(
-                          width: 30,
-                        ),
-                        Container(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                          color: Color(0xFFC89A44),
-                          child: Center(
-                              child: Text(
-                            "Add to cart",
-                            style: TextStyle(color: Colors.white, fontSize: 10),
-                          )),
-                        )
-                      ],
-                    )
-                  ],
-                ));
+            if (productList == null) return productChoiceItemShimmer(index);
+            return productChoiceItem(index);
           },
         ),
       ),
@@ -318,86 +357,169 @@ class _EyebrowsViewState extends State<EyebrowsView> {
     );
   }
 
+  Widget colorChipItemShimmer(int index) {
+    final colorList = context.watch<SmartMirrorProvider>().colorModel.options;
+    return Skeleton<bool>(
+      width: 70,
+      height: 40,
+      value: context.watch<SmartMirrorProvider>().colorModel.options != null
+          ? false
+          : null,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+              color: mainColorSelected == index
+                  ? Colors.white
+                  : Colors.transparent),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            CircleAvatar(radius: 8, backgroundColor: colorList?[index]?.color),
+            Constant.xSizedBox4,
+            Text(
+              colorList?[index]?.label ?? '',
+              style: TextStyle(color: Colors.white, fontSize: 10),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget colorChipItem(int index) {
+    final colorList = context.watch<SmartMirrorProvider>().colorModel.options;
+    return InkWell(
+      onTap: () {
+        final p = context.read<SmartMirrorProvider>();
+        p.selectedColorValue = colorList?[index]?.value ?? '';
+        p.getProductByColor();
+        setState(() {
+          mainColorSelected = index;
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+              color: mainColorSelected == index
+                  ? Colors.white
+                  : Colors.transparent),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            CircleAvatar(radius: 8, backgroundColor: colorList?[index]?.color),
+            Constant.xSizedBox4,
+            Text(
+              colorList?[index]?.label ?? '',
+              style: TextStyle(color: Colors.white, fontSize: 10),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget colorChip() {
+    final colorList = context.watch<SmartMirrorProvider>().colorModel.options;
     return Container(
       height: 30,
       child: ListView.separated(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
-        itemCount: colorMainList.length,
+        itemCount: colorList?.length ?? 10,
         separatorBuilder: (_, __) => Constant.xSizedBox8,
         itemBuilder: (context, index) {
-          return InkWell(
-            onTap: () {
-              setState(() {
-                typeSelected = index;
-              });
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                    color: index == typeSelected
-                        ? Colors.white
-                        : Colors.transparent),
-              ),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                      radius: 8, backgroundColor: colorMainList[index]),
-                  Constant.xSizedBox4,
-                  Text(
-                    colorMainListString[index],
-                    style: TextStyle(color: Colors.white, fontSize: 10),
-                  ),
-                ],
-              ),
-            ),
-          );
+          if (colorList == null) return colorChipItemShimmer(index);
+          return colorChipItem(index);
         },
       ),
     );
   }
 
-  Widget colorChoice() {
+  Widget subcolorChoiceItemShimmer(int index) {
+    final subcolorList =
+        context.watch<SmartMirrorProvider>().subcolorModel.options;
+    return Skeleton(
+      isCircle: true,
+      value: context.watch<SmartMirrorProvider>().subcolorModel.options != null
+          ? false
+          : null,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+              color: index == subColorSelected && onOffVisible == false
+                  ? Colors.white
+                  : Colors.transparent),
+        ),
+        child: CircleAvatar(
+            radius: 12, backgroundColor: subcolorList?[index]?.color),
+      ),
+    );
+  }
+
+  Widget subcolorChoiceItem(int index) {
+    final subcolorList =
+        context.watch<SmartMirrorProvider>().subcolorModel.options;
+    return InkWell(
+      onTap: () {
+        final p = context.read<SmartMirrorProvider>();
+        p.selectedSubColorValue = subcolorList?[index]?.value ?? '';
+        p.getProductBySubColor();
+        setState(() {
+          subColorSelected = index;
+          onOffVisible = false;
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+              color: index == subColorSelected && onOffVisible == false
+                  ? Colors.white
+                  : Colors.transparent),
+        ),
+        child: CircleAvatar(
+            radius: 12, backgroundColor: subcolorList?[index]?.color),
+      ),
+    );
+  }
+
+  Widget subcolorChoice() {
+    final subcolorList =
+        context.watch<SmartMirrorProvider>().subcolorModel.options;
     return Container(
       height: 30,
       child: ListView.separated(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
-        itemCount: colorList.length,
+        itemCount: subcolorList?.length ?? 10,
         separatorBuilder: (_, __) => Constant.xSizedBox12,
         itemBuilder: (context, index) {
+          if (subcolorList == null) return subcolorChoiceItemShimmer(index);
           if (index == 0)
             return InkWell(
               onTap: () async {
+                final p = context.read<SmartMirrorProvider>();
+                p.selectedSubColorValue = null;
+                p.productModel = ProductModel();
+                p.selectedProduct = null;
                 setState(() {
+                  subColorSelected = 0;
                   onOffVisible = true;
                 });
               },
               child: Icon(Icons.do_not_disturb_alt_sharp,
                   color: Colors.white, size: 25),
             );
-          return InkWell(
-              onTap: () async {
-                setState(() {
-                  mainColorSelected = index;
-                  onOffVisible = false;
-                });
-              },
-              child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                        color:
-                            index == mainColorSelected && onOffVisible == false
-                                ? Colors.white
-                                : Colors.transparent),
-                  ),
-                  child: CircleAvatar(
-                      radius: 12, backgroundColor: colorList[index])));
+          return subcolorChoiceItem(index - 1);
         },
       ),
     );
@@ -492,7 +614,7 @@ class _EyebrowsViewState extends State<EyebrowsView> {
             Constant.xSizedBox8,
             colorChip(),
             Constant.xSizedBox8,
-            colorChoice(),
+            subcolorChoice(),
             Constant.xSizedBox8,
             separator(),
             Constant.xSizedBox4,
@@ -502,7 +624,7 @@ class _EyebrowsViewState extends State<EyebrowsView> {
             slider(),
             Constant.xSizedBox4,
             separator(),
-            lipstickChoice(),
+            productChoice(),
           ],
         ),
       ),

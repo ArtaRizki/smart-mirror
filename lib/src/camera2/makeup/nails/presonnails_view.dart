@@ -6,13 +6,19 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_mirror/common/component/custom_navigator.dart';
+import 'package:smart_mirror/common/component/skeleton.dart';
 import 'package:smart_mirror/common/helper/constant.dart';
 import 'package:smart_mirror/generated/assets.dart';
 import 'package:smart_mirror/src/camera/camera_page.dart';
 import 'package:smart_mirror/src/camera2/camera_page2.dart';
 import 'package:smart_mirror/src/camera2/camera_video_page.dart';
 import 'package:smart_mirror/src/camera2/makeup_page.dart';
+import 'package:smart_mirror/src/model/product_model.dart';
+import 'package:smart_mirror/src/model/shape_model.dart';
+import 'package:smart_mirror/src/model/texture_model.dart';
+import 'package:smart_mirror/src/provider/smart_mirror_provider.dart';
 import 'package:smart_mirror/utils/utils.dart';
 
 const xHEdgeInsets12 = EdgeInsets.symmetric(horizontal: 12);
@@ -37,10 +43,12 @@ class _PresOnNailsViewState extends State<PresOnNailsView> {
   int? nailSelected = 0;
   int? mainColorSelected;
   int? subColorSelected;
-  int? colorTextSelected = 0;
+  int? textureSelected = 0;
+  int? typeColor2Selected = 0;
 
   @override
   void initState() {
+    getData();
     super.initState();
     if (Platform.isAndroid) {
       DeviceInfoPlugin().androidInfo.then((value) {
@@ -103,6 +111,23 @@ class _PresOnNailsViewState extends State<PresOnNailsView> {
     }
   }
 
+  getData() async {
+    final p = context.read<SmartMirrorProvider>();
+    await p.getColor();
+    await p.getSubcolor();
+    getTexture();
+    setState(() {});
+  }
+
+  getTexture() async {
+    final p = context.read<SmartMirrorProvider>();
+    await p.getTexture();
+    textureListOptions = p.textureModel.options
+        ?.where((e) => textureList.contains(e?.label ?? ''))
+        .toList();
+    setState(() {});
+  }
+
   List<String> nailsList = [
     "Yellow",
     "Black",
@@ -135,7 +160,13 @@ class _PresOnNailsViewState extends State<PresOnNailsView> {
     Assets.imagesImgNails3,
   ];
 
-  List<String> chipList = ['Gloss', 'Matt', 'Shimmer'];
+  List<TextureModelOptions?>? textureListOptions;
+  List<String> textureList = ['Sheer', 'Matt', 'Gloss', 'Shimmer', 'Satin'];
+  List<String> chip2List = [
+    'One',
+    'Dual',
+    'Ombre',
+  ];
 
   @override
   void dispose() {
@@ -420,44 +451,257 @@ class _PresOnNailsViewState extends State<PresOnNailsView> {
     );
   }
 
+  Widget productChoiceItemShimmer(int index) {
+    final item =
+        context.watch<SmartMirrorProvider>().productModel.items?[index];
+    return Skeleton<bool>(
+      width: 120,
+      height: 120,
+      value: context.watch<SmartMirrorProvider>().productModel.items != null
+          ? false
+          : null,
+      child: SizedBox(),
+    );
+  }
+
+  Widget productChoiceItem(int index) {
+    final item =
+        context.watch<SmartMirrorProvider>().productModel.items?[index];
+    return InkWell(
+      onTap: () async {},
+      child: SizedBox(
+        width: 120,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: EdgeInsets.fromLTRB(20, 5, 15, 10),
+              color: Colors.white,
+              width: 120,
+              height: 80,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                      flex: 9,
+                      child: Image.network(
+                          'https://magento-1231949-4398885.cloudwaysapps.com/media/catalog/product${item?.mediaGalleryEntries?.first?.file ?? ''}')),
+                  Expanded(
+                      flex: 1,
+                      child: Icon(
+                        Icons.favorite_border,
+                        color: Colors.black,
+                        size: 18,
+                      )),
+                ],
+              ),
+            ),
+            SizedBox(height: 5),
+            Text(
+              item?.name ?? '',
+              maxLines: 2,
+              style: Constant.whiteBold16
+                  .copyWith(fontSize: 12, overflow: TextOverflow.ellipsis),
+            ),
+            Text(
+              item?.typeId ?? '',
+              style:
+                  Constant.whiteRegular12.copyWith(fontWeight: FontWeight.w300),
+            ),
+            Text("\$${item?.price}", style: Constant.whiteRegular12),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget productChoice() {
+    final productList = context.watch<SmartMirrorProvider>().productModel.items;
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        height: 155,
+        child: ListView.separated(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: productList == null
+              ? 10
+              : productList.isEmpty
+                  ? 0
+                  : productList.length,
+          separatorBuilder: (_, __) => Constant.xSizedBox12,
+          itemBuilder: (context, index) {
+            if (productList == null) return productChoiceItemShimmer(index);
+            return productChoiceItem(index);
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget colorChipItemShimmer(int index) {
+    final colorList = context.watch<SmartMirrorProvider>().colorModel.options;
+    return Skeleton<bool>(
+      width: 70,
+      height: 40,
+      value: context.watch<SmartMirrorProvider>().colorModel.options != null
+          ? false
+          : null,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+              color: mainColorSelected == index
+                  ? Colors.white
+                  : Colors.transparent),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            CircleAvatar(radius: 8, backgroundColor: colorList?[index]?.color),
+            Constant.xSizedBox4,
+            Text(
+              colorList?[index]?.label ?? '',
+              style: TextStyle(color: Colors.white, fontSize: 10),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget colorChipItem(int index) {
+    final colorList = context.watch<SmartMirrorProvider>().colorModel.options;
+    return InkWell(
+      onTap: () {
+        final p = context.read<SmartMirrorProvider>();
+        p.selectedColorValue = colorList?[index]?.value ?? '';
+        p.getProductByColor();
+        setState(() {
+          mainColorSelected = index;
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+              color: mainColorSelected == index
+                  ? Colors.white
+                  : Colors.transparent),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            CircleAvatar(radius: 8, backgroundColor: colorList?[index]?.color),
+            Constant.xSizedBox4,
+            Text(
+              colorList?[index]?.label ?? '',
+              style: TextStyle(color: Colors.white, fontSize: 10),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget colorChip() {
+    final colorList = context.watch<SmartMirrorProvider>().colorModel.options;
     return Container(
       height: 30,
       child: ListView.separated(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
-        itemCount: nailsList.length,
+        itemCount: colorList?.length ?? 10,
         separatorBuilder: (_, __) => Constant.xSizedBox8,
         itemBuilder: (context, index) {
-          return InkWell(
-            onTap: () {
-              setState(() {
-                colorTextSelected = index;
-              });
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                    color: index == colorTextSelected
-                        ? Colors.white
-                        : Colors.transparent),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  CircleAvatar(
-                      radius: 8, backgroundColor: nailsColorList[index]),
-                  Constant.xSizedBox4,
-                  Text(
-                    nailsList[index],
-                    style: TextStyle(color: Colors.white, fontSize: 10),
-                  ),
-                ],
-              ),
-            ),
-          );
+          if (colorList == null) return colorChipItemShimmer(index);
+          return colorChipItem(index);
+        },
+      ),
+    );
+  }
+
+  Widget subcolorChoiceItemShimmer(int index) {
+    final subcolorList =
+        context.watch<SmartMirrorProvider>().subcolorModel.options;
+    return Skeleton(
+      isCircle: true,
+      value: context.watch<SmartMirrorProvider>().subcolorModel.options != null
+          ? false
+          : null,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+              color: index == subColorSelected && onOffVisible == false
+                  ? Colors.white
+                  : Colors.transparent),
+        ),
+        child: CircleAvatar(
+            radius: 12, backgroundColor: subcolorList?[index]?.color),
+      ),
+    );
+  }
+
+  Widget subcolorChoiceItem(int index) {
+    final subcolorList =
+        context.watch<SmartMirrorProvider>().subcolorModel.options;
+    return InkWell(
+      onTap: () {
+        final p = context.read<SmartMirrorProvider>();
+        p.selectedSubColorValue = subcolorList?[index]?.value ?? '';
+        p.getProductBySubColor();
+        setState(() {
+          subColorSelected = index;
+          onOffVisible = false;
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+              color: index == subColorSelected && onOffVisible == false
+                  ? Colors.white
+                  : Colors.transparent),
+        ),
+        child: CircleAvatar(
+            radius: 12, backgroundColor: subcolorList?[index]?.color),
+      ),
+    );
+  }
+
+  Widget subcolorChoice() {
+    final subcolorList =
+        context.watch<SmartMirrorProvider>().subcolorModel.options;
+    return Container(
+      height: 30,
+      child: ListView.separated(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemCount: subcolorList?.length ?? 10,
+        separatorBuilder: (_, __) => Constant.xSizedBox12,
+        itemBuilder: (context, index) {
+          if (subcolorList == null) return subcolorChoiceItemShimmer(index);
+          if (index == 0)
+            return InkWell(
+              onTap: () async {
+                final p = context.read<SmartMirrorProvider>();
+                p.selectedSubColorValue = null;
+                p.productModel = ProductModel();
+                p.selectedProduct = null;
+                setState(() {
+                  subColorSelected = 0;
+                  onOffVisible = true;
+                });
+              },
+              child: Icon(Icons.do_not_disturb_alt_sharp,
+                  color: Colors.white, size: 25),
+            );
+          return subcolorChoiceItem(index - 1);
         },
       ),
     );
@@ -506,25 +750,37 @@ class _PresOnNailsViewState extends State<PresOnNailsView> {
     );
   }
 
-  Widget chipChoice() {
+  Widget chip2Choice() {
     return Container(
       height: 18,
       child: ListView.separated(
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
-        itemCount: chipList.length,
+        itemCount: chip2List.length,
         separatorBuilder: (_, __) => Constant.xSizedBox12,
         itemBuilder: (context, index) {
-          return Container(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                  color: index == 0 ? Colors.white : Colors.transparent),
-            ),
+          return InkWell(
+            onTap: () {
+              setState(() {
+                typeColor2Selected = index;
+              });
+            },
             child: Text(
-              chipList[index],
-              style: TextStyle(color: Colors.white, fontSize: 10),
+              chip2List[index],
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 10,
+                shadows: typeColor2Selected != index
+                    ? null
+                    : [
+                        BoxShadow(
+                          offset: Offset(0, 0),
+                          color: Colors.white,
+                          spreadRadius: 0,
+                          blurRadius: 10,
+                        ),
+                      ],
+              ),
             ),
           );
         },
@@ -607,14 +863,14 @@ class _PresOnNailsViewState extends State<PresOnNailsView> {
             Constant.xSizedBox8,
             colorChip(),
             Constant.xSizedBox8,
-            colorChoice(),
+            subcolorChoice(),
             Constant.xSizedBox4,
             separator(),
             Constant.xSizedBox4,
             itemChoice(),
             separator(),
             Constant.xSizedBox8,
-            lipstickChoice(),
+            productChoice(),
             Constant.xSizedBox8,
             // typeChip(),
             // Constant.xSizedBox4,
