@@ -4,11 +4,11 @@ import 'dart:async';
 import 'package:path/path.dart';
 import 'package:async/async.dart';
 
-Future<http.MultipartFile> getMultipart(String field, File _image) async {
-  var imageFile = _image;
+Future<http.MultipartFile> getMultipart(String field, File image) async {
+  var imageFile = image;
   // ignore: deprecated_member_use
   var stream = http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
-  var length = await _image.length();
+  var length = await image.length();
 
   var multipartFile = http.MultipartFile(
     field,

@@ -16,9 +16,9 @@ class CustomContainer {
   }) {
     return Container(
       margin: margin ?? EdgeInsets.zero,
-      padding: padding ?? EdgeInsets.all(12),
-      width: width ?? null,
-      height: height ?? null,
+      padding: padding ?? const EdgeInsets.all(12),
+      width: width,
+      height: height,
       decoration: BoxDecoration(
         color: color ?? Colors.white,
         image: image,
@@ -29,7 +29,7 @@ class CustomContainer {
               color: Colors.grey.withOpacity(0.5),
               spreadRadius: 1,
               blurRadius: 1,
-              offset: Offset(0, 1), // changes position of shadow
+              offset: const Offset(0, 1), // changes position of shadow
             ),
         ],
       ),
@@ -38,7 +38,7 @@ class CustomContainer {
   }
 
   static Center mainNotFoundImage() {
-    return Center(
+    return const Center(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -84,7 +84,7 @@ class CustomContainer {
             snap: true,
             builder: (context, scrollController) {
               return Container(
-                padding: EdgeInsets.all(12),
+                padding: const EdgeInsets.all(12),
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
@@ -103,7 +103,7 @@ class CustomContainer {
                         borderRadius: BorderRadius.circular(22),
                       ),
                     ),
-                    SizedBox(height: 18),
+                    const SizedBox(height: 18),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [child],
@@ -136,7 +136,7 @@ class CustomContainer {
           snap: true,
           builder: (context, scrollController) {
             return Container(
-              padding: EdgeInsets.all(12),
+              padding: const EdgeInsets.all(12),
               decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -155,7 +155,7 @@ class CustomContainer {
                       borderRadius: BorderRadius.circular(22),
                     ),
                   ),
-                  SizedBox(height: 18),
+                  const SizedBox(height: 18),
                   Expanded(child: ListView(children: [child])),
                 ],
               ),
@@ -178,7 +178,7 @@ class CustomContainer {
           padding:
               EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Container(
-            padding: EdgeInsets.all(12),
+            padding: const EdgeInsets.all(12),
             decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
@@ -197,7 +197,7 @@ class CustomContainer {
                     borderRadius: BorderRadius.circular(22),
                   ),
                 ),
-                SizedBox(height: 18),
+                const SizedBox(height: 18),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [child],

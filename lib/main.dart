@@ -1,18 +1,17 @@
 import 'dart:async';
 import 'package:flutter/services.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer';
-import 'package:smart-mirror/common/helper/constant.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'dart:developer';
+import 'package:smart_mirror/common/helper/constant.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:smart_mirror/src/camera2/camera_page2.dart';
+import 'package:smart_mirror/src/provider/smart_mirror_provider.dart';
 import 'utils/nav_observer.dart';
-import 'utils/utils.dart';
-
 part 'common/routes.dart';
 
 void main() {
@@ -47,7 +46,7 @@ void main() {
       statusBarIconBrightness: Brightness.light,
       statusBarBrightness: Brightness.light,
     ));
-    runApp(MyApp());
+    runApp(const MyApp());
   }, (error, stack) {
     // FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
   });
@@ -72,25 +71,11 @@ class MyApp extends StatelessWidget {
       builder: (context, orientation, deviceType) {
         return MultiProvider(
           providers: [
-            // ChangeNotifierProvider<DivisionProvider>(
-            //     create: (context) => DivisionProvider()),
-            // ChangeNotifierProvider<DataAddProvider>(
-            //     create: (context) => DataAddProvider()),
-            // ChangeNotifierProvider<UserManageProvider>(
-            //     create: (context) => UserManageProvider()),
-            // ChangeNotifierProvider<ProfileProvider>(
-            //     create: (context) => ProfileProvider()),
-            // ChangeNotifierProvider<PltaProvider>(
-            //     create: (context) => PltaProvider()),
-            // ChangeNotifierProvider<TurbineProvider>(
-            //     create: (context) => TurbineProvider()),
-            // ChangeNotifierProvider<AuthProvider>(
-            //     create: (context) => AuthProvider()),
-            // ChangeNotifierProvider<HomeProvider>(
-            //     create: (context) => HomeProvider()),
+            ChangeNotifierProvider<SmartMirrorProvider>(
+                create: (c) => SmartMirrorProvider())
           ],
           child: MaterialApp(
-            title: 'HY TUTORIAL',
+            title: 'Smart Mirror',
             restorationScopeId: 'root',
             // localizationsDelegates: context.localizationDelegates,
             // supportedLocales: context.supportedLocales,
@@ -99,8 +84,8 @@ class MyApp extends StatelessWidget {
             //   GlobalMaterialLocalizations.delegate,
             //   GlobalWidgetsLocalizations.delegate,
             // ],
-            supportedLocales: [Locale('id', 'ID'), Locale('en')],
-            locale: Locale('id'),
+            // supportedLocales: const [Locale('id', 'ID'), Locale('en')],
+            // locale: const Locale('id'),
             navigatorObservers: [XNObsever()],
             navigatorKey: NavigationService.navigatorKey,
             theme: Constant.mainThemeData,
@@ -112,9 +97,9 @@ class MyApp extends StatelessWidget {
                   context, child); // assuming this is returning a widget
               log(MediaQuery.of(context).size.toString());
               return MediaQuery(
-                child: child,
                 data: MediaQuery.of(context)
-                    .copyWith(textScaler: TextScaler.linear(1.0)),
+                    .copyWith(textScaler: const TextScaler.linear(1.0)),
+                child: child,
               );
             },
             debugShowCheckedModeBanner: false,

@@ -15,12 +15,12 @@ class CustomAlert {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
     final snackBar = SnackBar(
       backgroundColor: (isError) ? Colors.red : color ?? Constant.primaryColor,
-      margin: EdgeInsets.all(22),
-      action: action ?? null,
-      duration: duration ?? Duration(seconds: 2),
+      margin: const EdgeInsets.all(22),
+      action: action,
+      duration: duration ?? const Duration(seconds: 2),
       content: Text(
         text,
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.w500,
           fontSize: 15,

@@ -1,12 +1,11 @@
 
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class CaptureResultDialog extends StatelessWidget {
   final Uint8List? bytes;
 
-  const CaptureResultDialog(this.bytes, {Key? key}) : super(key: key);
+  const CaptureResultDialog(this.bytes, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,11 +13,11 @@ class CaptureResultDialog extends StatelessWidget {
       appBar: AppBar(
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
         elevation: .1,
       ),
       body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 12),
+        margin: const EdgeInsets.symmetric(horizontal: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -26,7 +25,7 @@ class CaptureResultDialog extends StatelessWidget {
               flex: 1,
               child: Container(
                   alignment: Alignment.center,
-                  child: Text(
+                  child: const Text(
                     'Apakah Anda ingin menggunakan foto ini?',
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -36,11 +35,11 @@ class CaptureResultDialog extends StatelessWidget {
               ),
             ),
 
-            Spacer(),
+            const Spacer(),
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                       color: Colors.black54,
                       offset: Offset(
@@ -60,27 +59,27 @@ class CaptureResultDialog extends StatelessWidget {
                 ),
               )
             ),
-            Spacer(),
+            const Spacer(),
 
             ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pop(true);
                 },
-                child: Text(
+                child: const Text(
                     'Ya'
                 )
             ),
-            SizedBox.square(dimension: 12,),
+            const SizedBox.square(dimension: 12,),
             ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text(
+                child: const Text(
                     'Tidak'
                 )
             ),
 
-            SizedBox(height: 32,)
+            const SizedBox(height: 32,)
           ],
         ),
       ),

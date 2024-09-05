@@ -11,12 +11,12 @@ class Constant {
   /// Please be carefully to change this keys because might affect with all entire project .
   ///
   static const String MAPS_KEY = "AIzaSyDDPvYz8jGLntwWp-Nii2F7bvGADm504Ts";
-  static const String DOMAIN = "103.59.94.19";
-  static const String DOMAIN2 = "103.59.94.19";
-  static const String BASE_API_FULL = "http://${DOMAIN}/v1";
-  static const String BASE_API_FULL2 = "http://${DOMAIN2}/v1";
-  static const String BASE_API_FULL3 = "http://${DOMAIN}";
-  static const String APP_NAME = "HY TUTORIAL";
+  static const String DOMAIN = "magento-1231949-4398885.cloudwaysapps.com";
+  static const String DOMAIN2 = "magento-1231949-4398885.cloudwaysapps.com";
+  static const String BASE_API_FULL = "https://$DOMAIN/en/rest/V1/";
+  static const String BASE_API_FULL2 = "https://$DOMAIN2/en/rest/V1/";
+  static const String BASE_API_FULL3 = "https://$DOMAIN";
+  static const String APP_NAME = "Smart Mirror";
 
   /// COlORS
   ///
@@ -25,39 +25,40 @@ class Constant {
   ///
   /// Constant.firstColor;
   ///
-  static Color primaryColor = Color(0xFF084B83);
-  static Color secondaryColor = Color(0xFF10345A);
-  static Color thirdColor = Color(0xFFFBBB00);
-  static Color tertiaryColor = Color(0xFF8CC6FF);
-  static Color quarteryColor = Color(0xFFC5E2FF);
-  static Color tableBlueColor = Color(0xFFE9F0FF);
+  static Color primaryColor = const Color(0xFF084B83);
+  static Color secondaryColor = const Color(0xFF10345A);
+  static Color thirdColor = const Color(0xFFFBBB00);
+  static Color sampleColor = const Color(0xFFC89A44);
+  static Color tertiaryColor = const Color(0xFF8CC6FF);
+  static Color quarteryColor = const Color(0xFFC5E2FF);
+  static Color tableBlueColor = const Color(0xFFE9F0FF);
   static Color darkGrayColor = Colors.grey.shade800;
   static Color grayColor = Colors.grey.shade600;
   static Color lightGrayColor = Colors.grey.shade400;
-  static Color textHintColor = Color(0xFFE6E8E7);
-  static Color textHintColor2 = Color(0xFF949494);
-  static Color darkGrayButtonColor = Color(0xff0000008A);
-  static Color bgFieldColor = Color(0xff8CC6FF4D);
-  static Color textColor = Color(0xFF3E3A39);
-  static Color textColor2 = Color(0xFF535152);
-  static Color textKomisiColor = Color(0xFFFFCB47);
-  static Color textPriceColor = Color(0xFF3DA11A);
-  static Color backgroundColor = Color(0xFFF9F9F9);
-  static Color textColorBlack = Color(0xff1D273B);
+  static Color textHintColor = const Color(0xFFE6E8E7);
+  static Color textHintColor2 = const Color(0xFF949494);
+  static Color darkGrayButtonColor = const Color(0xff0000008a);
+  static Color bgFieldColor = const Color(0xff8cc6ff4d);
+  static Color textColor = const Color(0xFF3E3A39);
+  static Color textColor2 = const Color(0xFF535152);
+  static Color textKomisiColor = const Color(0xFFFFCB47);
+  static Color textPriceColor = const Color(0xFF3DA11A);
+  static Color backgroundColor = const Color(0xFFF9F9F9);
+  static Color textColorBlack = const Color(0xff1D273B);
   static Color textColorWhite = Colors.white;
-  static Color textColorBlue = Color(0xFF041E42);
-  static Color timerColor = Color(0xFFE7B641);
-  static Color progressColor = Color(0xFFF5C34B);
+  static Color textColorBlue = const Color(0xFF041E42);
+  static Color timerColor = const Color(0xFFE7B641);
+  static Color progressColor = const Color(0xFFF5C34B);
   // static Color textPriceColor = Color(0xFF3DA11A);
-  static Color textOnAuthColor = Color(0xFF21272A);
-  static Color greyIndicatorColor = Color(0xFFD9D9D9);
+  static Color textOnAuthColor = const Color(0xFF21272A);
+  static Color greyIndicatorColor = const Color(0xFFD9D9D9);
   // static Color backgroundColor = Color(0xFFF9F9F9);
-  static Color borderLightColor = Color(0xFFEAEAEA);
-  static Color borderRegularColor = Color(0xFF9D9B9B);
-  static Color borderSearchColor = Color(0xFF949494);
-  static Color greenColor = Color(0xFF2C7C4F);
-  static Color redColor = Color(0xFFEA0315);
-  static Color blueColor = Color(0xFF093CA9);
+  static Color borderLightColor = const Color(0xFFEAEAEA);
+  static Color borderRegularColor = const Color(0xFF9D9B9B);
+  static Color borderSearchColor = const Color(0xFF949494);
+  static Color greenColor = const Color(0xFF2C7C4F);
+  static Color redColor = const Color(0xFFEA0315);
+  static Color blueColor = const Color(0xFF093CA9);
 
   static TextStyle primaryTextStyle =
       TextStyle(fontFamily: 'Inter', color: textColor);
@@ -86,7 +87,7 @@ class Constant {
     color: textColor,
     fontWeight: FontWeight.bold,
   );
-  static TextStyle iBlack = TextStyle(fontFamily: 'Inter');
+  static TextStyle iBlack = const TextStyle(fontFamily: 'Inter');
 
   static TextStyle iPrimaryMedium8 = TextStyle(
     fontFamily: 'Inter',
@@ -152,7 +153,7 @@ class Constant {
     fontFamily: 'Inter',
     color: textColorBlack,
     fontSize: 16,
-    shadows: [
+    shadows: const [
       Shadow(
           // bottomLeft
           offset: Offset(-1.5, -1.5),
@@ -188,7 +189,7 @@ class Constant {
     fontFamily: 'Inter',
     color: textColorBlack,
     fontSize: 40,
-    shadows: [
+    shadows: const [
       Shadow(
           // bottomLeft
           offset: Offset(-1.5, -1.5),
@@ -329,7 +330,7 @@ class Constant {
     fontSize: 16,
     fontWeight: bold,
   );
-  static TextStyle whiteRegular12 = TextStyle(
+  static TextStyle whiteRegular12 = const TextStyle(
     fontFamily: 'Inter',
     color: Colors.white,
     fontSize: 12,
@@ -398,7 +399,7 @@ class Constant {
 
   static ThemeData mainThemeData = ThemeData(
     visualDensity: VisualDensity.adaptivePlatformDensity,
-    indicatorColor: Colors.black,
+    indicatorColor: Colors.white,
     dividerColor: Colors.transparent,
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
@@ -412,7 +413,7 @@ class Constant {
     appBarTheme: AppBarTheme(
       backgroundColor: primaryColor,
       elevation: 0,
-      systemOverlayStyle: SystemUiOverlayStyle(
+      systemOverlayStyle: const SystemUiOverlayStyle(
         statusBarColor: Colors.white, // <-- SEE HERE
         // systemNavigationBarColor: primaryColor,
         // systemNavigationBarIconBrightness: Brightness.dark,

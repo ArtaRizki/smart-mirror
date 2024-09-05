@@ -14,7 +14,7 @@ class CustomButton {
       double? fontSize,
       BorderRadiusGeometry? borderRadius}) {
     return Padding(
-      padding: margin ?? EdgeInsets.all(0),
+      padding: margin ?? const EdgeInsets.all(0),
       child: ElevatedButton(
         style: ButtonStyle(
           backgroundColor: WidgetStateProperty.all<Color>(color ??
@@ -26,7 +26,7 @@ class CustomButton {
         ),
         onPressed: enabled ? onClick : null,
         child: Container(
-          padding: contentPadding ?? EdgeInsets.all(16),
+          padding: contentPadding ?? const EdgeInsets.all(16),
           alignment: stretched ? Alignment.center : null,
           child: Text(
             text,
@@ -56,7 +56,7 @@ class CustomButton {
     BorderRadiusGeometry? borderRadius,
   }) {
     return Padding(
-      padding: margin ?? EdgeInsets.all(0),
+      padding: margin ?? const EdgeInsets.all(0),
       child: ElevatedButton(
         style: ButtonStyle(
           backgroundColor: WidgetStateProperty.all<Color>(color ??
@@ -68,24 +68,24 @@ class CustomButton {
         ),
         onPressed: enabled ? onClick : null,
         child: Container(
-          padding: contentPadding ?? EdgeInsets.all(16),
+          padding: contentPadding ?? const EdgeInsets.all(16),
           alignment: stretched ? Alignment.center : null,
           child: Row(
             children: [
               Expanded(
                 flex: 4,
                 child: !EasyLoading.isShow
-                    ? SizedBox()
-                    : Align(
+                    ? const SizedBox()
+                    : const Align(
                         alignment: Alignment.centerRight,
                         child: Padding(
-                          padding: const EdgeInsets.only(right: 8),
+                          padding: EdgeInsets.only(right: 8),
                           child: SizedBox(
                             width: 24,
                             height: 20,
                             child: FittedBox(
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(
+                                padding: EdgeInsets.symmetric(
                                     horizontal: 4, vertical: 2),
                                 child: CircularProgressIndicator(
                                   color: Colors.white,
@@ -130,7 +130,7 @@ class CustomButton {
       double? fontSize,
       BorderRadiusGeometry? borderRadius}) {
     return Padding(
-      padding: margin ?? EdgeInsets.all(0),
+      padding: margin ?? const EdgeInsets.all(0),
       child: ElevatedButton(
         style: ButtonStyle(
           backgroundColor:
@@ -142,12 +142,12 @@ class CustomButton {
         ),
         onPressed: onClick,
         child: Container(
-          padding: contentPadding ?? EdgeInsets.all(16),
+          padding: contentPadding ?? const EdgeInsets.all(16),
           alignment: stretched ? Alignment.center : null,
           child: Row(
             children: [
               icon,
-              SizedBox(width: 4),
+              const SizedBox(width: 4),
               Text(
                 text,
                 style: textStyle ??
@@ -173,14 +173,14 @@ class CustomButton {
       double? fontSize,
       BorderRadiusGeometry? borderRadius}) {
     return Padding(
-      padding: margin ?? EdgeInsets.all(0),
+      padding: margin ?? const EdgeInsets.all(0),
       child: InkWell(
         onTap: onClick,
         child: Container(
           decoration: BoxDecoration(
               color: color ?? Constant.primaryColor,
               borderRadius: borderRadius ?? BorderRadius.circular(15)),
-          padding: contentPadding ?? EdgeInsets.all(16),
+          padding: contentPadding ?? const EdgeInsets.all(16),
           alignment: stretched ? Alignment.center : null,
           child: Text(
             text,
@@ -206,19 +206,19 @@ class CustomButton {
       double? fontSize,
       BorderRadiusGeometry? borderRadius}) {
     return Padding(
-      padding: margin ?? EdgeInsets.all(0),
+      padding: margin ?? const EdgeInsets.all(0),
       child: InkWell(
         onTap: onClick,
         child: Container(
           decoration: BoxDecoration(
               color: color ?? Constant.primaryColor,
               borderRadius: borderRadius ?? BorderRadius.circular(25)),
-          padding: contentPadding ?? EdgeInsets.all(16),
+          padding: contentPadding ?? const EdgeInsets.all(16),
           alignment: stretched ? Alignment.center : null,
           child: Row(
             children: [
               icon,
-              SizedBox(width: 2),
+              const SizedBox(width: 2),
               Text(
                 text,
                 style: textStyle ??
@@ -247,11 +247,11 @@ class CustomButton {
       Color? textColor,
       BorderRadiusGeometry? borderRadius}) {
     return Padding(
-      padding: margin ?? EdgeInsets.all(0),
+      padding: margin ?? const EdgeInsets.all(0),
       child: ElevatedButton(
         style: ButtonStyle(
           padding: WidgetStateProperty.all(contentPadding ??
-              EdgeInsets.symmetric(vertical: 16, horizontal: 14)),
+              const EdgeInsets.symmetric(vertical: 16, horizontal: 14)),
           backgroundColor: WidgetStateProperty.all<Color>(Colors.transparent),
           shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
@@ -298,7 +298,7 @@ class CustomButton {
     MainAxisAlignment? mainAxisAlignment,
   }) {
     return Padding(
-      padding: margin ?? EdgeInsets.all(0),
+      padding: margin ?? const EdgeInsets.all(0),
       child: ElevatedButton(
         style: ButtonStyle(
           backgroundColor: WidgetStateProperty.all<Color>(Colors.white),
@@ -316,13 +316,13 @@ class CustomButton {
         ),
         onPressed: onClick,
         child: Container(
-          padding: contentPadding ?? EdgeInsets.all(16),
+          padding: contentPadding ?? const EdgeInsets.all(16),
           alignment: stretched ? Alignment.center : null,
           child: Row(
             mainAxisAlignment: mainAxisAlignment ?? MainAxisAlignment.start,
             children: [
               icon,
-              SizedBox(width: 4),
+              const SizedBox(width: 4),
               Text(
                 text,
                 style: textStyle ??
@@ -343,21 +343,21 @@ class CustomButton {
   static Widget secondaryButtonBlack(String text, VoidCallback onClick,
       {EdgeInsetsGeometry? margin, BorderRadiusGeometry? borderRadius}) {
     return Padding(
-      padding: margin ?? EdgeInsets.all(0),
+      padding: margin ?? const EdgeInsets.all(0),
       child: ElevatedButton(
         style: ButtonStyle(
           backgroundColor: WidgetStateProperty.all<Color>(Colors.transparent),
           shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: borderRadius ?? BorderRadius.circular(12.0),
-              side: BorderSide(color: Colors.black),
+              side: const BorderSide(color: Colors.black),
             ),
           ),
           elevation: WidgetStateProperty.all<double>(0),
         ),
         onPressed: onClick,
         child: Container(
-          padding: EdgeInsets.all(12),
+          padding: const EdgeInsets.all(12),
           alignment: Alignment.center,
           child: Text(
             text,
@@ -375,21 +375,21 @@ class CustomButton {
   static Widget logoutButton(String text, VoidCallback onClick,
       {EdgeInsetsGeometry? margin}) {
     return Padding(
-      padding: margin ?? EdgeInsets.all(0),
+      padding: margin ?? const EdgeInsets.all(0),
       child: ElevatedButton(
         style: ButtonStyle(
           backgroundColor: WidgetStateProperty.all<Color>(Colors.transparent),
           shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.0),
-              side: BorderSide(color: Colors.red),
+              side: const BorderSide(color: Colors.red),
             ),
           ),
           elevation: WidgetStateProperty.all<double>(0),
         ),
         onPressed: onClick,
         child: Container(
-          padding: EdgeInsets.all(12),
+          padding: const EdgeInsets.all(12),
           alignment: Alignment.center,
           child: Text(
             text,
@@ -410,23 +410,13 @@ class CustomButton {
     VoidCallback callback,
   ) {
     return ElevatedButton(
-      child: Container(
-        width: 80,
-        child: Text(
-          tag,
-          style: TextStyle(
-            fontSize: 14,
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ),
       onPressed: callback,
       style: ButtonStyle(
         backgroundColor: WidgetStateProperty.all(
           color,
         ),
         padding: WidgetStateProperty.all<EdgeInsets>(
-          EdgeInsets.only(
+          const EdgeInsets.only(
             right: 8,
             left: 8,
           ),
@@ -436,6 +426,16 @@ class CustomButton {
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25.0),
           ),
+        ),
+      ),
+      child: Container(
+        width: 80,
+        child: Text(
+          tag,
+          style: TextStyle(
+            fontSize: 14,
+          ),
+          textAlign: TextAlign.center,
         ),
       ),
     );
