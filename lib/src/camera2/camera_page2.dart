@@ -1382,6 +1382,7 @@ class _MakeupPageState extends State<MakeupPage> {
           if (eyesClick) eyesList(),
           if (faceClick) faceList(),
           if (nailsClick) nailsList(),
+          if (hairClick) hairList(),
           Constant.xSizedBox12,
         ],
       ),
